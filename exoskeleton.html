@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exoskeleton Project</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            background: #00509e;
+            color: white;
+            padding: 20px 0;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        /* Content Container */
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Section Titles */
+        h2 {
+            color: #00509e;
+            margin-top: 30px;
+        }
+
+        /* Ongoing Work Section */
+        .ongoing {
+            margin-top: 20px;
+        }
+
+        .images {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .images img {
+            width: 30%;
+            max-width: 300px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .images img:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>Exoskeleton Project</h1>
+    </header>
+
+    <!-- Content Container -->
+    <div class="container">
+        <!-- Concept Section -->
+        <section class="concept">
+<h2>Concept</h2>
+    <p>
+        Gait perturbations are unexpected disruptions in a person’s walking pattern, such as slips, trips, or uneven terrain, which can lead to instability and falls. These are especially critical for individuals with impaired balance, such as older adults or those with neurological conditions.
+    </p>
+    <p>
+        The exoskeleton is designed to detect and respond to gait perturbations in real time by using a combination of <strong>Inertial Measurement Units (IMUs)</strong> and a <strong>gait perturbation detection algorithm</strong>. This system ensures adaptive and precise stabilization when needed.
+    </p>
+    <ul>
+        <li>
+            <strong>IMUs:</strong> Sensors including accelerometers and gyroscopes monitor the user’s movements continuously to identify deviations from normal gait patterns.
+        </li>
+        <li>
+            <strong>Gait Perturbation Detection Algorithm:</strong> Processes the IMU data to determine the specific nature and timing of a disturbance.
+        </li>
+        <li>
+            <strong>Actuator Feedback:</strong> The detection algorithm provides real-time feedback to the actuators to:
+            <ul>
+                <li><strong>Determine which actuators to activate:</strong> Identifies the specific joints (hip, knee, or ankle) that require stabilization or repositioning.</li>
+                <li><strong>Time their activation:</strong> Ensures actuators engage immediately upon detecting instability.</li>
+                <li><strong>Adjust actuation levels:</strong> Calculates the precise force or movement needed to restore stability without overcompensating.</li>
+            </ul>
+        </li>
+    </ul>
+    <p>
+        By combining IMU data with advanced detection and actuation algorithms, the exoskeleton provides seamless, adaptive responses to gait disturbances. This ensures users maintain balance and confidence during mobility, enhancing safety and reducing the risk of falls.
+    </p>
+         </section>
+
+        <!-- Ongoing Work Section -->
+        <section class="ongoing">
+            <h2>Ongoing Work</h2>
+            <p>
+                This project is a collaborative effort involving a team of mechanical engineers and an electrical and computer engineer (ECE). It combines CAD design, experimental bench setups, and biomechanical testing to refine the exoskeleton's functionality.
+            </p>
+            <div class="images">
+                <img src="Exoskeleton(1).png" alt="Bench Setup 1">
+                <img src="Exoskeleton(2).jpg" alt="Bench Setup 2">
+                <img src="Exoskeleton(3).jpg" alt="CAD Design">
+            </div>
+        </section>
+    </div>
+</body>
+</html>

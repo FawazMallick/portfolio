@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fawaz Mallick - Portfolio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: white;
+            background: url('Background.jpeg') no-repeat center center/cover;
+            background-attachment: fixed;
+            line-height: 1.6;
+        }
+
+        /* Header Section */
+        header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.6); /* Black overlay for better text visibility */
+            color: white;
+            text-align: center;
+            padding: 100px 20px;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+       header img {
+    width: 15%; /* Profile image takes 15% of the viewport width */
+    max-width: 200px; /* Limit maximum size */
+    height: auto;
+    border-radius: 50%;
+    border: 3px solid white;
+    object-fit: cover;
+}
+
+        /* Main Content */
+        main {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.7); /* Semi-transparent background for readability */
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+        }
+
+        main h2 {
+            color: #f4f4f4;
+            margin-bottom: 15px;
+        }
+
+        main p {
+            color: #d4d4d4;
+            margin-bottom: 15px;
+        }
+
+        .projects ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .projects ul li {
+            margin-bottom: 15px;
+        }
+
+        .projects ul li a {
+            text-decoration: none;
+            color: #00c3ff;
+            font-weight: bold;
+        }
+
+        .projects ul li a:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer Section */
+        footer {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px 0;
+            margin-top: 30px;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <h1>Fawaz Mallick</h1>
+        <h2>Senior Biomedical Engineer at Rowan University</h2>
+        <img src="profile.png" alt="Profile Picture">
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <h2>About Me: My Journey</h2>
+        <p> My name is Fawaz Mallick, and I grew up in the vibrant city of Dubai, UAE, where I was surrounded by a blend of cultures and ideas. Currently, I am a Senior Biomedical Engineer studying in the United States at Rowan University. My journey into biomedical engineering began with a fascination for biology and technology and a desire to merge the two to solve real-world problems. Initially, I chose BME to combine my interests in healthcare and engineering, but it was during my studies that I discovered my passion for robotics.
+
+Working on projects like surgical robots and exoskeletons has allowed me to explore how robotics can revolutionize healthcare by enhancing precision and enabling life-changing rehabilitation. My interests lie in leveraging robotics to address complex challenges, automate processes, and create innovative solutions that improve lives. I am driven by the potential of robotics to transform healthcare, and I am excited to continue this journey of learning, innovation, and contribution to a better future.
+        </p>
+
+        <h2>Education</h2>
+        <p>B.S. in Biomedical Engineering, Rowan University</p>
+        <p>GPA: 3.56 (Cum Laude)</p>
+
+        <h2>Experience</h2>
+        <div class="projects">
+            <ul>
+                <li>
+                    <strong>Project 1:</strong> <a href="6dof.html">6-DOF Surgical Robot</a>
+                    <p>A surgical robot designed for femur fracture realignment with a modified A* pathfinding algorithm.</p>
+                </li>
+                <li>
+                    <strong>Project 2:</strong> <a href="exoskeleton.html">Exoskeleton for Gait Perturbation</a>
+                    <p>An assistive device to stabilize users during slips and falls.</p>
+                </li>
+                <li>
+                    <strong>Project 3:</strong> <a href="opensim.html">OpenSim Gait Simulation</a>
+                    <p>Using simulations to analyze gait perturbations and create corrective actions.</p>
+                </li>
+            </ul>
+        </div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2024 Fawaz Mallick. All rights reserved.</p>
+        <p>Contact: <a href="mailto:fawaz.mallick@example.com">fawaz.mallick@example.com</a></p>
+    </footer>
+</body>
+</html>

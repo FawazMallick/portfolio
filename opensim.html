@@ -3,74 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenSim Simulation</title>
+    <title>OpenSim Gait Simulation</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #e0e0e0;
+            color: #333;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
         }
 
-        /* Header */
         header {
             text-align: center;
-            background: #00509e;
+            background-color: #000;
             color: white;
             padding: 20px 0;
         }
 
         header h1 {
             margin: 0;
-            font-size: 2.5rem;
+            font-size: 2.2rem;
         }
 
-        /* Content Container */
         .container {
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 20px auto;
             padding: 20px;
             background: white;
             border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        /* Section Titles */
         h2 {
             color: #00509e;
             margin-top: 30px;
         }
 
-        /* Work In Progress Section */
-        .work-progress {
-            text-align: center;
-            font-style: italic;
-            color: #777;
-            margin-top: 30px;
+        p {
+            line-height: 1.6;
+        }
+
+        .images {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .images img {
+            max-width: 48%;
+            height: auto;
+            border: 2px solid #ccc;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
     <!-- Header -->
     <header>
-        <h1>OpenSim Simulation to Detect & Prevent Gait Perturbations</h1>
+        <h1>OpenSim Gait Simulation</h1>
     </header>
 
-    <!-- Content Container -->
     <div class="container">
         <!-- Concept Section -->
         <section class="concept">
-            <h2>Concept</h2>
-            <p>
-                This project leverages OpenSim to detect muscles that are activated during slip recovery. The goal is to identify these recovery muscles and activate them using electrical stimulation in real-time. By simulating gait perturbations in OpenSim, we can pinpoint the specific muscle groups involved in regaining balance and develop algorithms to stimulate these muscles efficiently during slips or trips.
-            </p>
+            <h2>What?</h2>
+            <p>This project leverages OpenSim to develop a biomechanical model of the interaction between a human subject and a lower limb exoskeleton device. The goal was to analyze forces at the contact points of the device, such as at the thigh or shank, and simulate the effectiveness of different exoskeleton designs, and to develop a real time controller in aiding movement and balance correction.</p>
+            <div class="images">
+                <img src="Screenshot 2025-05-31 173351.png" alt="What Image">
+            </div>
         </section>
 
-        <!-- Work In Progress Section -->
-        <section class="work-progress">
-            <h2>Work in Progress</h2>
-            <p>This page is under development and will be updated as the project progresses.</p>
+        <!-- How Section -->
+        <section class="how">
+            <h2>How?</h2>
+            <p>The exoskeleton was first modeled in SolidWorks with simplified geometry. This CAD model was then exported and imported into OpenSim as a custom body attached to the standard human musculoskeletal model. Joint constraints were defined to simulate realistic behavior.</p>
+            <p>Contact forces between the exoskeleton and the human model were modeled using the "elastic foundation force" class in Opensim. This places a spring at key contact points, and the force is calculated based on the compression of the spring. To simulate real motion, IMU data collected from walking trials were read through Arduino and appended to the model. Ground truth data from force-sensitive resistors (FSRs) were used to validate the simulation output.</p>
+            <div class="images">
+                <img src="Hip Brace (1).png" alt="How Image">
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section class="results">
+            <h2>Results</h2>
+            <p>Plots of interaction forces for different motions (walking, squatting, side-stepping, and stair-stepping) were generated from both the experimental FSRs and OpenSim simulations. These datasets were overlaid to compare trends and verify simulation fidelity. The results show that the simulation closely matches the experimental force patterns that were obtained</p>
+            <div class="images">
+                <img src="best_result_walk_sim.jpg" alt="Results Image">
+            </div>
         </section>
     </div>
 </body>

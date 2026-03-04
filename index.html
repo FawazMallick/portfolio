@@ -10,8 +10,7 @@
             margin: 0;
             padding: 0;
             color: white;
-            background: url('Background.jpeg') no-repeat center center/cover;
-            background-attachment: fixed;
+            background-color: #000;   /* plain background */
             line-height: 1.6;
         }
 
@@ -21,10 +20,16 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: rgba(0, 0, 0, 0.6); /* Black overlay for better text visibility */
+            background: #1f1f1f;
             color: white;
             text-align: center;
+
+            max-width: 800px;
+            margin: 30px auto;
             padding: 100px 20px;
+
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
         }
 
         header h1 {
@@ -51,7 +56,7 @@
             max-width: 800px;
             margin: 30px auto;
             padding: 20px;
-            background: rgba(0, 0, 0, 0.7); /* Semi-transparent background for readability */
+            background: rgba(40, 40, 40, 0.9); /* Semi-transparent background for readability */
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
         }
@@ -111,15 +116,14 @@
    <main>
  <h2>About Me: My Journey</h2>
 <p>
-    I am Fawaz Mallick, a recent graduate with a B.S. in Biomedical Engineering from Rowan University. I am currently pursuing a master's degree in Mechanical Engineering at Carnegie Mellon University, with a focus on robotic systems.    
-<br><br>
-    My experiences span across mechanical, electrical, and biomedical engineering disciplines, from developing a surgical robot system and wearable exoskeleton to developing an AI-based fracture detection tool. Working in both academic and hands-on environments has taught me how to manage complex responsibilities, communicate across disciplines, and adapt quickly to new challenges. I’m passionate about using robotics and engineering to drive innovation in healthcare and beyond.
+  I’m Fawaz Mallick, a Biomedical Engineering graduate from Rowan University, and I’m currently pursuing an M.S. in Mechanical Engineering at Carnegie Mellon University with a focus on robotic systems.
+  <br><br>
+  My background is built around robotics and real-world engineering work across mechanical, electrical, and biomedical domains. I’ve contributed to projects ranging from a 6-DOF surgical robot system for femur fracture realignment, where I developed a modified A* pathfinding approach, to a wearable exoskeleton project focused on stabilizing gait during slips and falls. I’ve also worked on an AI-based fracture detection project aimed at identifying fracture sites to support surgical planning.
+  <br><br>
+  Across these projects, I’ve worked with robotics fundamentals like kinematics, dynamics, modeling and simulation, and control, while also building practical engineering habits: breaking down messy problems into clear deliverables, documenting work, collaborating across roles, and adapting quickly when requirements change. I’m comfortable moving between research and implementation, whether that’s building and testing systems, working through technical literature, or translating an idea into something that can be evaluated with experiments.
+  <br><br>
+  At CMU, I balance multiple responsibilities: I serve as an Assistant Housefellow supporting a first-year residential community, I work as a Research Assistant in AI/ML-based human intent prediction, and I’m a full-time graduate student. I’m especially interested in robotics that interacts directly with people — assistive systems, rehabilitation, and medical robotics, where strong engineering has a direct impact on safety, usability, and outcomes.
 </p>
-
-
-  <h2>Education</h2>
-  <p>B.S. in Biomedical Engineering, Rowan University</p>
-  <p>GPA: 3.56 (Cum Laude)</p>
 
  <h2>Research Projects</h2>
 <div class="projects">
@@ -136,7 +140,18 @@
             <strong>Project 3:</strong> <a href="opensim.html">OpenSim Gait Simulation</a>
             <p>Using simulations to analyze gait perturbations and create corrective actions.</p>
         </li>
+	<li>
+	    <strong>Publication 1:</strong><a href="publication.html"> Publication from Opensim & Exoskeleton Project<a>
     </ul>
+</div>
+
+ <h2>Work Experience</h2>
+<div class="projects">
+    <ul>
+        <li>
+            <strong> Experience 1:</strong> <a href="af.html">Assistant Housefellow</a>
+	    <p>Managing student staff to create a strong residential experience for first year student community living in campus.</p>
+</li>
 </div>
 
 <h2>Academic Projects</h2>
@@ -152,19 +167,30 @@
 
  <h2>Relevant Coursework</h2>
 <ul>
-  <li>Introduction to Robotics – Kinematics, dynamics, MATLAB (Peter Corke Toolbox)</li>
-  <li>Biomechanics – Human motion, forces, and modeling</li>
-  <li>Finite Element Analysis (FEA) – Mechanical stress and deformation</li>
-  <li>Modeling & Simulation – Mathematical and computational modeling</li>
-  <li>Mechanical Foundations – Statics and dynamics</li>
-  <li>Electrical Foundations – Circuit theory, signal analysis</li>
-  <li>Regulatory Practices – FDA, ISO standards, and device testing</li>
+  <li><strong>Intro to Deep Learning</strong> – Neural network fundamentals; architectures such as MLPs, CNNs, and LSTMs; implementation and training; optimization methods including backpropagation, Adam/AdamW, RMSProp, momentum SGD, L-BFGS; regularization including L1/L2 and weight decay.</li>
+
+  <li><strong>Optimal Control & Reinforcement Learning</strong> – Optimization for dynamical systems; policy optimization; methods including gradient descent, line search, local vs. global minima, random restarts, and simulated annealing; comparisons between optimal control and reinforcement learning for dynamic optimization.</li>
+
+  <li><strong>Machine Learning & AI for Engineering</strong> – Core ML methods including regression, classification, SVMs, and decision trees; practical implementation using Python libraries such as PyTorch, NumPy, Matplotlib, Pandas, and Seaborn.</li>
+
+  <li><strong>Modern Control Theory</strong> – State-space modeling; control design methods including LQR and MPC; PID control; Kalman filtering.</li>
+
+  <li><strong>Robot Dynamics & Analysis</strong> – Forward kinematics and dynamics; robot manipulation; trajectory optimization.</li>
+
+  <li><strong>Introduction to Robotics</strong> – Kinematics and dynamics; MATLAB (Peter Corke Robotics Toolbox).</li>
+
+  <li><strong>Biomechanics</strong> – Human motion analysis, forces, and modeling.</li>
+
+  <li><strong>Finite Element Analysis (FEA)</strong> – Stress/strain analysis and mechanical deformation.</li>
+
+  <li><strong>Modeling & Simulation</strong> – Mathematical and computational modeling techniques.</li>
+
+  <li><strong>Mechanical Foundations</strong> – Statics and dynamics.</li>
+
+  <li><strong>Electrical Foundations</strong> – Circuit theory and signal analysis.</li>
+
+  <li><strong>Regulatory Practices</strong> – FDA/ISO standards and medical device testing considerations.</li>
 </ul>
-
-
-  <h2>📄 Download My Full Portfolio</h2>
-  <p><a href="Mallick_Portfolio.pdf" download="Mallick_Portfolio.pdf">Download Portfolio (PDF)</a></p>
-</main>
 
     <!-- Footer Section -->
     <footer>

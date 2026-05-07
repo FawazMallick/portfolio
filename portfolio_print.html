@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fawaz Mallick — Portfolio PDF</title>
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    :root {
+      --accent: #1a5fb4;
+      --accent2: #1b7e6e;
+      --text:   #111;
+      --muted:  #555;
+      --light:  #f5f7fa;
+      --border: #d8dde6;
+    }
+
+    html { font-size: 11pt; }
+
+    body {
+      font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+      color: var(--text);
+      background: #fff;
+      line-height: 1.55;
+      padding: 2.2cm 2.5cm 2.2cm 2.5cm;
+      max-width: 21cm;
+      margin: 0 auto;
+    }
+
+    .print-btn {
+      position: fixed; top:1.5rem; right:1.5rem;
+      background: var(--accent); color:#fff; border:none;
+      padding:0.6rem 1.4rem; border-radius:8px; font-size:0.9rem;
+      font-weight:600; cursor:pointer; box-shadow:0 3px 12px rgba(26,95,180,0.3);
+      transition:background 0.2s;
+    }
+    .print-btn:hover { background:#1248a0; }
+
+    @media print {
+      .print-btn { display:none !important; }
+      body { padding: 1.5cm; }
+      .page-break { page-break-before: always; }
+      a { color: inherit; }
+    }
+
+    header {
+      border-bottom: 2.5px solid var(--accent);
+      padding-bottom: 1.2rem;
+      margin-bottom: 1.6rem;
+    }
+    header h1 {
+      font-size: 2rem; font-weight: 800; letter-spacing:-0.03em;
+      color: var(--accent); margin-bottom: 0.25rem;
+    }
+    .header-role {
+      font-size: 1rem; font-weight: 500; color: var(--muted);
+      margin-bottom: 0.6rem;
+    }
+    .header-contact {
+      display:flex; flex-wrap:wrap; gap:1.5rem;
+      font-size:0.82rem; color:var(--muted);
+    }
+    .header-contact a { color: var(--accent); text-decoration:none; }
+
+    h2 {
+      font-size:0.72rem; text-transform:uppercase; letter-spacing:0.16em;
+      font-weight:700; color:var(--accent); margin-top:1.6rem; margin-bottom:0.9rem;
+      border-bottom: 1px solid var(--border); padding-bottom: 0.35rem;
+    }
+
+    .about-text { font-size:0.9rem; color:var(--muted); line-height:1.6; }
+
+    .skills-table { width:100%; border-collapse:collapse; }
+    .skills-table td { width:50%; vertical-align:top; padding:0.3rem 0 0.3rem 0; }
+    .skills-table td:first-child { padding-right:1.5rem; }
+    .skill-row { display:flex; gap:0.4rem 0.5rem; flex-wrap:wrap; margin-bottom:0.6rem; }
+    .skill-cat  { font-size:0.78rem; font-weight:700; color:var(--text); margin-bottom:0.3rem; }
+    .sk {
+      background:var(--light); border:1px solid var(--border);
+      color:var(--text); font-size:0.72rem; padding:0.18rem 0.55rem;
+      border-radius:100px; font-weight:500;
+    }
+
+    .proj { margin-bottom:1.3rem; padding-bottom:1.3rem; border-bottom:1px solid var(--border); }
+    .proj:last-child { border-bottom:none; }
+    .proj-head { display:flex; justify-content:space-between; align-items:baseline; gap:1rem; margin-bottom:0.3rem; }
+    .proj-head h3 { font-size:0.96rem; font-weight:700; color:var(--text); flex:1; }
+    .proj-badge {
+      font-size:0.66rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em;
+      padding:0.15rem 0.6rem; border-radius:100px; white-space:nowrap;
+    }
+    .b-pub  { background:#fff8e1; color:#996a00; border:1px solid #ffe082; }
+    .b-res  { background:#e8f0fe; color:var(--accent); border:1px solid #c5d8fa; }
+    .b-acad { background:#e6f6f3; color:var(--accent2); border:1px solid #b2dfdb; }
+    .proj p  { font-size:0.86rem; color:var(--muted); margin-bottom:0.5rem; }
+    .proj-result {
+      background:var(--light); border-left:3px solid var(--accent);
+      padding:0.45rem 0.7rem; font-size:0.82rem; color:var(--text);
+      margin-bottom:0.5rem; border-radius:0 5px 5px 0;
+    }
+    .proj-result strong { color:var(--accent); }
+    .proj-tags { display:flex; flex-wrap:wrap; gap:0.35rem; margin-top:0.4rem; }
+    .ptag {
+      background:var(--light); border:1px solid var(--border);
+      font-size:0.7rem; padding:0.15rem 0.5rem; border-radius:5px; color:var(--muted);
+    }
+
+    .tl { display:flex; flex-direction:column; gap:0; }
+    .tl-row { display:flex; gap:1.5rem; padding-bottom:1.1rem; }
+    .tl-date { width:90px; min-width:90px; font-size:0.78rem; color:var(--muted); text-align:right; padding-top:0.15rem; }
+    .tl-content { flex:1; border-left:2px solid var(--border); padding-left:1rem; }
+    .tl-content h3 { font-size:0.93rem; font-weight:700; color:var(--text); margin-bottom:0.1rem; }
+    .tl-org { font-size:0.8rem; font-weight:600; color:var(--accent); margin-bottom:0.35rem; }
+    .tl-content p { font-size:0.82rem; color:var(--muted); }
+
+    .course-list { display:grid; grid-template-columns:1fr 1fr; gap:0.5rem 1.5rem; }
+    .course-item { font-size:0.82rem; }
+    .course-item strong { color:var(--text); font-weight:600; }
+    .course-item span   { color:var(--muted); }
+
+    .doc-footer {
+      margin-top:2rem; padding-top:1rem; border-top:1px solid var(--border);
+      font-size:0.76rem; color:var(--muted); text-align:center;
+    }
+  </style>
+</head>
+<body>
+
+<button class="print-btn" onclick="window.print()">⬇ Save as PDF</button>
+
+<header>
+  <h1>Fawaz Mallick</h1>
+  <div class="header-role">Robotics &amp; AI Engineer &nbsp;|&nbsp; M.S. Mechanical Engineering Candidate, Carnegie Mellon University</div>
+  <div class="header-contact">
+    <span>✉ <a href="mailto:fawazmallick9@gmail.com">fawazmallick9@gmail.com</a></span>
+    <span>🔗 <a href="https://fawazmallick.github.io/portfolio/">fawazmallick.github.io/portfolio</a></span>
+    <span>💻 <a href="https://github.com/fawazmallick">github.com/fawazmallick</a></span>
+    <span>📍 Pittsburgh, PA</span>
+  </div>
+</header>
+
+<h2>Profile</h2>
+<p class="about-text">Biomedical Engineering graduate (Rowan University) and current M.S. Mechanical Engineering student at CMU, specializing in robotic systems, intelligent control, and assistive devices. Published researcher (IFAC 2025) with end-to-end project experience spanning algorithm design, hardware fabrication, and experimental validation. Comfortable bridging the gap between theoretical control/ML methods and physical prototypes. Seeking full-time roles in robotics, AI, or systems engineering.</p>
+
+<h2>Technical Skills</h2>
+<table class="skills-table">
+  <tr>
+    <td>
+      <div class="skill-cat">Robotics &amp; Control</div>
+      <div class="skill-row">
+        <span class="sk">Kinematics &amp; Dynamics</span><span class="sk">Trajectory Opt.</span>
+        <span class="sk">Motion Planning (A*)</span><span class="sk">Haptic Feedback</span>
+        <span class="sk">LQR · MPC · PID</span><span class="sk">Kalman Filter</span>
+        <span class="sk">State-Space Modeling</span>
+      </div>
+      <div class="skill-cat" style="margin-top:0.6rem;">AI / Machine Learning</div>
+      <div class="skill-row">
+        <span class="sk">PyTorch</span><span class="sk">CNN · MLP · LSTM</span>
+        <span class="sk">ResNet-50</span><span class="sk">Backpropagation</span>
+        <span class="sk">Adam / AdamW</span><span class="sk">Reinforcement Learning</span>
+        <span class="sk">Policy Optimization</span>
+      </div>
+    </td>
+    <td>
+      <div class="skill-cat">Engineering Tools</div>
+      <div class="skill-row">
+        <span class="sk">MATLAB / Simulink</span><span class="sk">SolidWorks</span>
+        <span class="sk">OpenSim</span><span class="sk">Arduino</span>
+        <span class="sk">3D Printing</span><span class="sk">Laser Cutting</span><span class="sk">FEA</span>
+      </div>
+      <div class="skill-cat" style="margin-top:0.6rem;">Programming &amp; Data</div>
+      <div class="skill-row">
+        <span class="sk">Python</span><span class="sk">MATLAB</span>
+        <span class="sk">NumPy · Pandas</span><span class="sk">Matplotlib</span><span class="sk">Git</span>
+      </div>
+      <div class="skill-cat" style="margin-top:0.6rem;">Sensing &amp; Hardware</div>
+      <div class="skill-row">
+        <span class="sk">IMU Sensors</span><span class="sk">FSR Sensors</span>
+        <span class="sk">Sensor Fusion</span><span class="sk">Load Frame Cal.</span>
+        <span class="sk">ISO / ASTM Standards</span>
+      </div>
+    </td>
+  </tr>
+</table>
+
+<h2>Projects &amp; Research</h2>
+
+<div class="proj">
+  <div class="proj-head">
+    <h3>★ Estimating Human–Exoskeleton Interaction Forces via Instrumented Thigh Brace &amp; OpenSim</h3>
+    <span class="proj-badge b-pub">Published · IFAC 2025</span>
+  </div>
+  <p>Developed wearable FSR-embedded thigh brace, designed 3D-printed sensor housings, calibrated sensors with load frame, ran walking trials with three subjects, and built an OpenSim contact simulation. Combined data to characterize human–exoskeleton interaction forces during gait.</p>
+  <div class="proj-result"><strong>Published:</strong> IFAC PapersOnLine (2025). Captured walking interface forces, revealed hip-motion correlations, validated OpenSim trends vs. FSR ground truth.</div>
+  <div class="proj-tags">
+    <span class="ptag">Exoskeleton</span><span class="ptag">OpenSim</span><span class="ptag">FSR Sensors</span>
+    <span class="ptag">Wearable Robotics</span><span class="ptag">Biomechanics</span><span class="ptag">IFAC 2025</span>
+  </div>
+</div>
+
+<div class="proj">
+  <div class="proj-head">
+    <h3>Robossis — 6-DOF Surgical Robot for Femur Fracture Realignment</h3>
+    <span class="proj-badge b-res">Research</span>
+  </div>
+  <p>Designed 6-DOF surgical robotic platform in MATLAB. Developed modified A* for 6D configuration-space pathfinding, Bezier-curve trajectory smoothing, and spring-mass-damper haptic feedback. Submitted to IEEE IROS.</p>
+  <div class="proj-result"><strong>Results:</strong> Simulated femur realignment with ≤3.0 mm translational and ≤1.5° rotational deviation.</div>
+  <div class="proj-tags">
+    <span class="ptag">MATLAB</span><span class="ptag">A* Algorithm</span><span class="ptag">Haptic Feedback</span>
+    <span class="ptag">6-DOF</span><span class="ptag">Surgical Robotics</span><span class="ptag">IEEE IROS</span>
+  </div>
+</div>
+
+<div class="proj">
+  <div class="proj-head">
+    <h3>Lower-Limb Exoskeleton for Gait Perturbation Stabilization</h3>
+    <span class="proj-badge b-res">Research</span>
+  </div>
+  <p>Led multidisciplinary team through full design cycle: SolidWorks CAD, 3D printing &amp; laser cutting, iterative ISO/ASTM risk analysis, and benchtop/human-subject ergonomics testing.</p>
+  <div class="proj-result"><strong>Outcome:</strong> Functional prototype with improved ergonomics and safety margins over prior iterations.</div>
+  <div class="proj-tags">
+    <span class="ptag">SolidWorks</span><span class="ptag">3D Printing</span><span class="ptag">ISO/ASTM</span>
+    <span class="ptag">Risk Analysis</span><span class="ptag">Human Testing</span>
+  </div>
+</div>
+
+<div class="proj">
+  <div class="proj-head">
+    <h3>OpenSim Biomechanical Gait Simulation with Real-Time IMU Integration</h3>
+    <span class="proj-badge b-res">Research</span>
+  </div>
+  <p>Built OpenSim model coupling musculoskeletal human with SolidWorks exoskeleton. Modeled contact via elastic foundation forces. Drove simulation with live Arduino IMU data; validated against FSR ground truth across four motion types.</p>
+  <div class="proj-result"><strong>Results:</strong> Simulation closely matched experimental FSR data for walking, squatting, side-stepping, stair-stepping.</div>
+  <div class="proj-tags">
+    <span class="ptag">OpenSim</span><span class="ptag">IMU</span><span class="ptag">Arduino</span>
+    <span class="ptag">FSR</span><span class="ptag">Sensor Fusion</span>
+  </div>
+</div>
+
+<div class="proj">
+  <div class="proj-head">
+    <h3>AI-Based Fracture Detection &amp; Surgical Planning — ResNet-50</h3>
+    <span class="proj-badge b-acad">Academic</span>
+  </div>
+  <p>Built and trained ResNet-50 CNN in MATLAB on manually annotated X-ray fracture dataset. Benchmarked AI predictions against expert surgeon annotations using spatial overlap metrics.</p>
+  <div class="proj-result"><strong>Results:</strong> High visual agreement with expert annotations — demonstrating AI viability for pre-operative planning.</div>
+  <div class="proj-tags">
+    <span class="ptag">ResNet-50</span><span class="ptag">CNN</span><span class="ptag">MATLAB</span>
+    <span class="ptag">Medical AI</span><span class="ptag">Computer Vision</span>
+  </div>
+</div>
+
+<div class="proj">
+  <div class="proj-head">
+    <h3>Deep Learning Projects — CMU Introduction to Deep Learning</h3>
+    <span class="proj-badge b-acad">Academic</span>
+  </div>
+  <p>PyTorch implementation of MLP/CNN/LSTM architectures from scratch, including forward/backward passes, optimization (Adam, AdamW, RMSProp, momentum SGD, L-BFGS), and regularization (L1/L2 weight decay).</p>
+  <div class="proj-tags">
+    <span class="ptag">PyTorch</span><span class="ptag">MLP · CNN · LSTM</span>
+    <span class="ptag">Backpropagation</span><span class="ptag">Adam/AdamW</span>
+  </div>
+</div>
+
+<div class="proj">
+  <div class="proj-head">
+    <h3>Optimal Control &amp; Reinforcement Learning Projects — CMU</h3>
+    <span class="proj-badge b-acad">Academic</span>
+  </div>
+  <p>Applied gradient-based trajectory optimization, line search, global methods (random restarts, simulated annealing), and LQR/policy-gradient RL to continuous dynamical control problems.</p>
+  <div class="proj-tags">
+    <span class="ptag">Optimal Control</span><span class="ptag">Reinforcement Learning</span>
+    <span class="ptag">LQR</span><span class="ptag">Gradient Descent</span><span class="ptag">Simulated Annealing</span>
+  </div>
+</div>
+
+<h2>Education &amp; Experience</h2>
+<div class="tl">
+  <div class="tl-row">
+    <div class="tl-date">2024 – Present</div>
+    <div class="tl-content">
+      <h3>M.S. Mechanical Engineering — Robotic Systems</h3>
+      <div class="tl-org">Carnegie Mellon University · Pittsburgh, PA</div>
+      <p>Focus on robotic systems, control, and AI. Research Assistant in AI/ML-based human intent prediction. Assistant Housefellow for first-year residential community.</p>
+    </div>
+  </div>
+  <div class="tl-row">
+    <div class="tl-date">2020 – 2024</div>
+    <div class="tl-content">
+      <h3>B.S. Biomedical Engineering</h3>
+      <div class="tl-org">Rowan University · Glassboro, NJ</div>
+      <p>Undergraduate research in surgical robotics, exoskeleton design, and medical AI. Co-authored IFAC 2025 publication; submitted work to IEEE IROS. Presented at Rowan BME conference.</p>
+    </div>
+  </div>
+</div>
+
+<h2>Relevant Coursework</h2>
+<div class="course-list">
+  <div class="course-item"><strong>Intro to Deep Learning</strong> <span>— MLPs, CNNs, LSTMs, optimization, regularization</span></div>
+  <div class="course-item"><strong>Optimal Control &amp; RL</strong> <span>— Trajectory opt., policy gradient, LQR vs RL</span></div>
+  <div class="course-item"><strong>Modern Control Theory</strong> <span>— LQR, MPC, PID, Kalman filtering</span></div>
+  <div class="course-item"><strong>Robot Dynamics &amp; Analysis</strong> <span>— Kinematics, dynamics, manipulation</span></div>
+  <div class="course-item"><strong>Machine Learning for Engineering</strong> <span>— Regression, classification, SVMs, PyTorch</span></div>
+  <div class="course-item"><strong>Introduction to Robotics</strong> <span>— MATLAB Peter Corke Toolbox</span></div>
+  <div class="course-item"><strong>Biomechanics</strong> <span>— Human motion analysis, musculoskeletal modeling</span></div>
+  <div class="course-item"><strong>Finite Element Analysis</strong> <span>— Stress/strain, mechanical deformation</span></div>
+</div>
+
+<div class="doc-footer">
+  Fawaz Mallick &nbsp;·&nbsp; fawazmallick9@gmail.com &nbsp;·&nbsp; fawazmallick.github.io/portfolio &nbsp;·&nbsp; 2025
+</div>
+
+</body>
+</html>

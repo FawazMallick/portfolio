@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>OC&amp;RL HW1 — TWIP NN Policy — Fawaz Mallick</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #e0e0e0; color: #333; }
+    header { text-align: center; background: #000; color: white; padding: 20px 0; }
+    header h1 { margin: 0; font-size: 2rem; }
+    header p { margin: 6px 0 0; color: #aaa; font-size: 0.9rem; }
+    .back { display: inline-block; margin: 18px 0 0 24px; color: #00509e; text-decoration: none; font-size: 0.9rem; }
+    .back:hover { text-decoration: underline; }
+    .container { max-width: 1000px; margin: 20px auto 60px; padding: 30px 36px; background: white; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    h2 { color: #00509e; margin-top: 36px; margin-bottom: 10px; font-size: 1.3rem; }
+    h3 { color: #333; margin-top: 24px; margin-bottom: 8px; font-size: 1.05rem; }
+    p { margin-bottom: 14px; line-height: 1.65; }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+    .tag { background: #eaf4ff; color: #00509e; border: 1px solid #b3d4f0; border-radius: 4px; padding: 3px 10px; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 0.9rem; }
+    th { background: #00509e; color: white; padding: 9px 14px; text-align: left; }
+    td { padding: 8px 14px; border-bottom: 1px solid #ddd; }
+    tr:last-child td { border-bottom: none; }
+    tr:nth-child(even) td { background: #f5f9ff; }
+    .note { background: #f0f7ff; border-left: 4px solid #00509e; padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; font-size: 0.88rem; color: #444; }
+    .result-box { background: #f5f9ff; border: 1px solid #cce0f5; border-radius: 8px; padding: 14px 20px; margin: 10px 0 20px; font-size: 0.9rem; color: #333; line-height: 1.7; }
+    .part-badge { display: inline-block; background: #00509e; color: white; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 9px; border-radius: 3px; margin-bottom: 8px; }
+    code { background: #f0f4f8; padding: 1px 5px; border-radius: 3px; font-size: 0.88em; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>OC &amp; RL — Assignment 1</h1>
+  <p>TWIP Control, Neural Network Policy &amp; Surrogate Optimization · CMU 16-745</p>
+</header>
+
+<a class="back" href="index.html">← Back to Portfolio</a>
+
+<div class="container">
+
+  <div class="tag-row">
+    <span class="tag">Python</span>
+    <span class="tag">NumPy</span>
+    <span class="tag">SciPy</span>
+    <span class="tag">scikit-learn</span>
+    <span class="tag">Neural Networks</span>
+    <span class="tag">Imitation Learning</span>
+    <span class="tag">Optimization</span>
+    <span class="tag">TWIP</span>
+  </div>
+
+  <h2>Overview</h2>
+  <p>
+    This assignment is a Python port of a MATLAB TWIP (two-wheeled inverted pendulum) codebase
+    (<code>twip3.m</code>, <code>main.m</code>, <code>computer_lqr_gains.m</code>,
+    <code>nn_policy.m</code>, <code>nn_cost.m</code>, <code>optimization_script.m</code>,
+    <code>optimize_twip.m</code>). It covers three independent tasks: optimizing linear control
+    gains, learning a neural network policy via imitation learning, and surrogate-based optimization
+    of a 4D benchmark function.
+  </p>
+
+  <!-- PART 1: Linear Gain Optimization -->
+  <h2><span class="part-badge">Part 1</span> Linear Gain Optimization</h2>
+  <p>
+    The TWIP forward dynamics were ported faithfully from <code>twip3.m</code>, a trapezoidal
+    integrator loop matching <code>main.m</code>. A cost function returns the negative survival
+    time when running the linear policy <em>u = −K·x</em> from a small body tilt
+    (x₀ = [0, 0, 0.1, 0]) — minimizing this is equivalent to maximizing how long the robot stays
+    balanced.
+  </p>
+  <div class="result-box">
+    Initial gains K = [10, 1, 100, 10]: survival time ≈ 0.006 s (robot falls almost immediately).<br>
+    After Nelder-Mead optimization (83 function evaluations): gains unchanged, survival time = 0.006 s.<br>
+    The optimizer confirmed these gains are a local optimum of this cost function for this initial condition.
+  </div>
+
+  <!-- PART 2: Neural Network Policy -->
+  <h2><span class="part-badge">Part 2</span> Neural Network Policy via Imitation Learning</h2>
+  <p>
+    A small neural network (4 inputs → 2 hidden tanh units → 1 output, 13 parameters total) was
+    trained to replace the linear controller. Training followed two stages:
+  </p>
+  <p>
+    <strong>Stage 1 — Imitation pre-training:</strong> 1,000 random states in [−1, 1]⁴ were
+    generated and labeled with the linear policy's torques. The network was trained to mimic these
+    outputs using L-BFGS-B (MSE loss), achieving a final mimic loss of 0.0002.
+  </p>
+  <p>
+    <strong>Stage 2 — Fine-tuning on survival time:</strong> The pre-trained weights were
+    fine-tuned by directly minimizing negative survival time (L-BFGS-B with weight bounds [−10, 10]).
+    The optimized NN policy achieved a survival time of 0.042 s — an improvement over the initial
+    pre-training survival of 0.009 s, but still falling short of robust balancing.
+  </p>
+  <div class="result-box">
+    Post-imitation survival: 0.009 s → Post-fine-tuning survival: 0.042 s.<br>
+    The 13-parameter network is highly constrained, and the survival-time objective is non-smooth
+    and discontinuous, making further improvement difficult with gradient-based methods.
+  </div>
+
+  <!-- PART 3: Banana Function -->
+  <h2><span class="part-badge">Part 3</span> Surrogate-Based Optimization — 4D Rosenbrock</h2>
+  <p>
+    The 4D Rosenbrock ("banana") function has a global minimum of 0 at (1,1,1,1). A neural network
+    surrogate (MLP, 10 hidden units) was trained on random samples from the function, then minimized
+    in place of the true function using both constrained (L-BFGS-B, bounds [−2, 2]⁴) and
+    unconstrained (Nelder-Mead) optimization. The experiment was repeated at 100, 500, and 1,000
+    training samples.
+  </p>
+  <table>
+    <tr><th>Training Samples</th><th>Method</th><th>True Cost at Found Minimum</th></tr>
+    <tr><td>100</td><td>Constrained (L-BFGS-B)</td><td>433.9</td></tr>
+    <tr><td>100</td><td>Unconstrained (Nelder-Mead)</td><td>656.5</td></tr>
+    <tr><td>500</td><td>Constrained</td><td>1211.0</td></tr>
+    <tr><td>500</td><td>Unconstrained</td><td>21.3</td></tr>
+    <tr><td>1,000</td><td>Constrained</td><td>4.6</td></tr>
+    <tr><td>1,000</td><td>Unconstrained</td><td>4.0</td></tr>
+  </table>
+  <div class="note">
+    Surrogate quality varies substantially with training set size. The 100-sample surrogates fit the
+    function poorly (true cost at supposed minimum is very high). With 1,000 samples, the surrogate
+    is accurate enough to guide the optimizer close to the true minimum (true cost ≈ 4.0 vs. global
+    minimum of 0). This illustrates the sensitivity of surrogate-based optimization to the quality
+    of the approximating model.
+  </div>
+
+  <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:16px;">
+    <a href="OC&RL HW1.pdf" target="_blank" style="display:inline-block; background:#00509e; color:white; padding:9px 20px; border-radius:5px; text-decoration:none; font-size:0.9rem;">View HW1 Report (PDF)</a>
+    <a href="Optimal_Control (1).pdf" target="_blank" style="display:inline-block; background:#444; color:white; padding:9px 20px; border-radius:5px; text-decoration:none; font-size:0.9rem;">Course Report (PDF)</a>
+  </div>
+
+</div>
+</body>
+</html>

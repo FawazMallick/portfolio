@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GRU vs Embed-RUL — Fawaz Mallick</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #e0e0e0; color: #333; }
+    header { text-align: center; background: #000; color: white; padding: 20px 0; }
+    header h1 { margin: 0; font-size: 2rem; }
+    header p { margin: 6px 0 0; color: #aaa; font-size: 0.9rem; }
+    .back { display: inline-block; margin: 18px 0 0 24px; color: #00509e; text-decoration: none; font-size: 0.9rem; }
+    .back:hover { text-decoration: underline; }
+    .container { max-width: 1000px; margin: 20px auto 60px; padding: 30px 36px; background: white; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    h2 { color: #00509e; margin-top: 36px; margin-bottom: 10px; font-size: 1.3rem; }
+    h3 { color: #333; margin-top: 24px; margin-bottom: 8px; font-size: 1.05rem; }
+    p { margin-bottom: 14px; line-height: 1.65; }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+    .tag { background: #eaf4ff; color: #00509e; border: 1px solid #b3d4f0; border-radius: 4px; padding: 3px 10px; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 0.9rem; }
+    th { background: #00509e; color: white; padding: 9px 14px; text-align: left; }
+    td { padding: 8px 14px; border-bottom: 1px solid #ddd; }
+    tr:last-child td { border-bottom: none; }
+    tr:nth-child(even) td { background: #f5f9ff; }
+    .note { background: #f0f7ff; border-left: 4px solid #00509e; padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; font-size: 0.88rem; color: #444; }
+    .warn { background: #fff8e1; border-left: 4px solid #f9a825; padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; font-size: 0.88rem; color: #555; }
+    .arch-box { background: #f5f9ff; border: 1px solid #cce0f5; border-radius: 8px; padding: 16px 20px; margin: 12px 0 20px; }
+    .arch-box h4 { margin: 0 0 8px; color: #00509e; font-size: 0.95rem; }
+    .arch-box ul { margin: 0; padding-left: 20px; font-size: 0.88rem; line-height: 1.7; color: #444; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>GRU Baseline vs Embed-RUL</h1>
+  <p>Intro to Deep Learning — Carnegie Mellon University</p>
+</header>
+
+<a class="back" href="index.html">← Back to Portfolio</a>
+
+<div class="container">
+
+  <div class="tag-row">
+    <span class="tag">PyTorch</span>
+    <span class="tag">GRU</span>
+    <span class="tag">Deep Learning</span>
+    <span class="tag">RUL Prediction</span>
+    <span class="tag">C-MAPSS</span>
+    <span class="tag">PCA</span>
+    <span class="tag">t-SNE</span>
+    <span class="tag">Kaggle GPU</span>
+  </div>
+
+  <h2>Overview</h2>
+  <p>
+    This project implements and compares two architectures for Remaining Useful Life (RUL) prediction
+    on the NASA C-MAPSS turbofan engine degradation dataset. A GRU-based baseline is compared against
+    Embed-RUL, a similarity-based method using an encoder-decoder architecture and a learned health
+    index. Both models were trained on the FD001 subset and then evaluated on all four C-MAPSS
+    subsets (FD001–FD004) to assess cross-condition generalization.
+  </p>
+
+  <h2>Dataset</h2>
+  <p>
+    The NASA C-MAPSS dataset contains run-to-failure trajectories for turbofan engines across four
+    operating conditions and fault modes. Each engine's sensor readings are recorded from initial
+    deployment until failure. FD001 (single operating condition, single fault mode) was used for
+    training and as the primary evaluation benchmark; FD002–FD004 introduce additional operating
+    conditions and fault modes.
+  </p>
+  <table>
+    <tr><th>Subset</th><th>Training Engines</th><th>Training Rows</th><th>Operating Conditions</th><th>Fault Modes</th></tr>
+    <tr><td>FD001</td><td>100</td><td>20,631</td><td>1</td><td>1</td></tr>
+    <tr><td>FD002</td><td>260</td><td>—</td><td>6</td><td>1</td></tr>
+    <tr><td>FD003</td><td>100</td><td>—</td><td>1</td><td>2</td></tr>
+    <tr><td>FD004</td><td>248</td><td>—</td><td>6</td><td>2</td></tr>
+  </table>
+  <p>
+    Preprocessing used PCA (15 components, retaining 100% of variance on FD001) and MinMaxScaler
+    normalization. Delta features (cycle-to-cycle differences) were also included for the Embed-RUL
+    model.
+  </p>
+
+  <h2>Architectures</h2>
+
+  <div class="arch-box">
+    <h4>RUL_GRU — GRU Baseline</h4>
+    <ul>
+      <li>GRU layers followed by a fully connected regression head</li>
+      <li>Trained with an asymmetric scoring loss that penalizes late predictions more heavily than early ones</li>
+      <li>Straightforward sequence-to-scalar prediction</li>
+    </ul>
+  </div>
+
+  <div class="arch-box">
+    <h4>Embed-RUL — Encoder-Decoder with Health Index</h4>
+    <ul>
+      <li>Encoder (GRUCell) maps engine trajectory to an embedding</li>
+      <li>Decoder reconstructs the trajectory from the embedding</li>
+      <li>A health index (HI) curve is learned that maps RUL onto a [0,1] degradation signal</li>
+      <li>RUL estimation uses similarity between the test engine embedding and training engine embeddings at matching health index values</li>
+      <li>Masking and delta features used to handle variable-length sequences</li>
+    </ul>
+  </div>
+
+  <h2>Results</h2>
+  <p>
+    Both models were trained on FD001 only and evaluated on all four subsets. GRU RMSE is reported
+    for all engines; Embed-RUL reports RMSE only over engines for which a valid prediction could be
+    made (sufficient embedding similarity found).
+  </p>
+
+  <h3>GRU Baseline</h3>
+  <table>
+    <tr><th>Subset</th><th>RMSE</th><th>Notes</th></tr>
+    <tr><td>FD001 (in-distribution)</td><td>13.17</td><td>Strong in-distribution performance</td></tr>
+    <tr><td>FD002</td><td>118.54</td><td>Large distribution shift (6 operating conditions)</td></tr>
+    <tr><td>FD003</td><td>42.06</td><td>Moderate shift (2 fault modes)</td></tr>
+    <tr><td>FD004</td><td>124.53</td><td>Large distribution shift</td></tr>
+  </table>
+
+  <h3>Embed-RUL</h3>
+  <table>
+    <tr><th>Subset</th><th>RMSE</th><th>Valid Predictions</th></tr>
+    <tr><td>FD001</td><td>64.02</td><td>100 / 100</td></tr>
+    <tr><td>FD002</td><td>—</td><td>0 / 260 (no valid matches)</td></tr>
+    <tr><td>FD003</td><td>70.25</td><td>65 / 100</td></tr>
+    <tr><td>FD004</td><td>—</td><td>0 / 248 (no valid matches)</td></tr>
+  </table>
+
+  <div class="warn">
+    Embed-RUL produced no valid predictions on FD002 and FD004. The similarity-based retrieval step
+    requires embedding matches within a threshold; when the test set distribution diverges
+    significantly from FD001 training data, no matches are found.
+  </div>
+
+  <h3>Statistical Comparison (FD001 &amp; FD003)</h3>
+  <p>
+    A paired t-test comparing GRU vs Embed-RUL on FD001 (100 valid engines) and FD003 (65 valid
+    engines) showed that GRU significantly outperforms Embed-RUL on both subsets
+    (p &lt; 0.000001 in both cases).
+  </p>
+
+  <h2>Visualizations</h2>
+  <p>
+    The project included t-SNE visualizations of encoder embeddings across training and test
+    engines, and health index (HI) curve plots showing the learned degradation signal over engine
+    life. Both help illustrate why the similarity-based approach breaks down under distribution shift.
+  </p>
+
+  <h2>Environment</h2>
+  <table>
+    <tr><th>Detail</th><th>Value</th></tr>
+    <tr><td>Framework</td><td>PyTorch</td></tr>
+    <tr><td>Platform</td><td>Kaggle (2× GPU, CUDA)</td></tr>
+    <tr><td>Preprocessing</td><td>PCA (15 components), MinMaxScaler, delta features</td></tr>
+    <tr><td>Loss</td><td>Asymmetric scoring loss (GRU); reconstruction + HI loss (Embed-RUL)</td></tr>
+  </table>
+
+  <a href="Deep_Learning_Class (1).pdf" target="_blank" style="display:inline-block; margin-top:10px; background:#00509e; color:white; padding:9px 20px; border-radius:5px; text-decoration:none; font-size:0.9rem;">View Full Report (PDF)</a>
+
+</div>
+</body>
+</html>

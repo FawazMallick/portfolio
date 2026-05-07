@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fawaz Mallick — Robotics & AI Engineer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:       #080810;
+      --bg2:      #0f0f1a;
+      --bg3:      #161628;
+      --accent:   #4A9EFF;
+      --accent2:  #00d4aa;
+      --accent3:  #ff7849;
+      --text:     #eaeaf4;
+      --muted:    #7878a0;
+      --border:   rgba(74,158,255,0.12);
+      --card:     rgba(255,255,255,0.03);
+      --radius:   14px;
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── Ambient orbs ─────────────────────────────── */
+    .orb {
+      position: fixed; border-radius: 50%;
+      filter: blur(120px); pointer-events: none;
+      z-index: 0; opacity: 0.12;
+    }
+    .orb-1 { width:700px; height:700px; background: radial-gradient(#4A9EFF,transparent); top:-250px; right:-200px; }
+    .orb-2 { width:500px; height:500px; background: radial-gradient(#00d4aa,transparent); bottom:10%; left:-180px; }
+    .orb-3 { width:300px; height:300px; background: radial-gradient(#ff7849,transparent); top:45%; right:5%; }
+
+    /* ── Nav ──────────────────────────────────────── */
+    nav {
+      position: fixed; top:0; left:0; right:0; z-index:200;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.9rem 2.5rem;
+      background: rgba(8,8,16,0.82);
+      backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-weight: 800; font-size: 1.05rem; letter-spacing: -0.02em;
+      color: var(--accent); text-decoration: none;
+    }
+    .nav-links { display:flex; gap:2rem; list-style:none; }
+    .nav-links a {
+      color: var(--muted); text-decoration:none; font-size:0.88rem;
+      font-weight: 500; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--accent); color:#000; font-size:0.82rem; font-weight:600;
+      padding: 0.45rem 1.1rem; border-radius:8px; text-decoration:none;
+      transition: all 0.2s;
+    }
+    .nav-cta:hover { background:#6ab4ff; transform:translateY(-1px); }
+
+    /* ── Layout ───────────────────────────────────── */
+    section {
+      position: relative; z-index:1;
+      max-width: 920px; margin: 0 auto; padding: 5.5rem 2rem;
+    }
+    .divider { max-width:920px; margin:0 auto; border:none; border-top:1px solid var(--border); position:relative; z-index:1; }
+
+    /* ── Labels & titles ──────────────────────────── */
+    .label {
+      display:inline-block; font-size:0.7rem; font-weight:700;
+      text-transform:uppercase; letter-spacing:0.18em;
+      color: var(--accent); margin-bottom:0.9rem;
+    }
+    .section-title {
+      font-size: clamp(1.7rem,3.5vw,2.3rem); font-weight:800;
+      letter-spacing:-0.03em; margin-bottom:2.8rem; color:var(--text);
+    }
+
+    /* ── Buttons ──────────────────────────────────── */
+    .btn {
+      display:inline-flex; align-items:center; gap:0.4rem;
+      padding:0.72rem 1.45rem; border-radius:9px;
+      font-size:0.88rem; font-weight:600; text-decoration:none;
+      transition: all 0.2s; cursor:pointer; border:none;
+    }
+    .btn-primary { background:var(--accent); color:#000; }
+    .btn-primary:hover { background:#6ab4ff; transform:translateY(-2px); box-shadow:0 6px 20px rgba(74,158,255,0.3); }
+    .btn-ghost  { background:transparent; color:var(--text); border:1px solid var(--border); }
+    .btn-ghost:hover { border-color:var(--accent); color:var(--accent); transform:translateY(-2px); }
+
+    /* HERO */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction:column; justify-content:center;
+      padding-top: 100px;
+    }
+    .hero-eyebrow {
+      display:inline-flex; align-items:center; gap:0.55rem;
+      background: rgba(74,158,255,0.09); border:1px solid rgba(74,158,255,0.25);
+      color:var(--accent); padding:0.38rem 1rem; border-radius:100px;
+      font-size:0.78rem; font-weight:600; margin-bottom:1.6rem;
+      width:fit-content;
+    }
+    .hero-eyebrow span { font-size:1rem; }
+    h1.hero-name {
+      font-size: clamp(2.8rem,6vw,4.4rem);
+      font-weight: 800; letter-spacing:-0.04em; line-height:1.1;
+      background: linear-gradient(130deg, #ffffff 35%, var(--accent) 100%);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text; margin-bottom:0.6rem;
+    }
+    .hero-sub {
+      font-size: clamp(1rem,2vw,1.2rem); color:var(--muted);
+      max-width:640px; margin-bottom:2.2rem; line-height:1.7;
+    }
+    .hero-actions { display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:3.5rem; }
+    .hero-stats { display:flex; gap:3rem; flex-wrap:wrap; }
+    .stat { border-left:2px solid var(--accent); padding-left:1.1rem; }
+    .stat-n { font-size:1.6rem; font-weight:800; color:var(--text); line-height:1; margin-bottom:0.2rem; }
+    .stat-l { font-size:0.75rem; color:var(--muted); line-height:1.35; }
+
+    /* ABOUT */
+    .about-grid { display:grid; grid-template-columns:1.1fr 0.9fr; gap:3.5rem; align-items:start; }
+    .about-body p { color:#b0b0cc; font-size:0.95rem; margin-bottom:1rem; }
+    .info-cards { display:flex; flex-direction:column; gap:1rem; }
+    .info-card {
+      background:var(--card); border:1px solid var(--border);
+      border-radius:var(--radius); padding:1.2rem 1.4rem;
+    }
+    .info-card h4 {
+      font-size:0.68rem; text-transform:uppercase; letter-spacing:0.14em;
+      color:var(--accent); margin-bottom:0.45rem; font-weight:700;
+    }
+    .info-card p { font-size:0.88rem; color:var(--text); margin:0; }
+    .info-card .sub { color:var(--accent); }
+
+    /* SKILLS */
+    .skills-wrap { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:1.4rem; }
+    .skill-box {
+      background:var(--card); border:1px solid var(--border);
+      border-radius:var(--radius); padding:1.4rem;
+    }
+    .skill-box h4 {
+      font-size:0.72rem; text-transform:uppercase; letter-spacing:0.14em;
+      color:var(--accent2); font-weight:700; margin-bottom:1rem;
+    }
+    .pills { display:flex; flex-wrap:wrap; gap:0.5rem; }
+    .pill {
+      background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1);
+      color:var(--text); padding:0.28rem 0.7rem; border-radius:100px;
+      font-size:0.76rem; font-weight:500;
+    }
+
+    /* PROJECTS */
+    .proj-grid { display:grid; gap:1.4rem; }
+    .proj-card {
+      background:var(--card); border:1px solid var(--border);
+      border-radius:var(--radius); padding:2rem;
+      transition: all 0.28s; position:relative; overflow:hidden;
+    }
+    .proj-card::after {
+      content:''; position:absolute; inset:0; border-radius:inherit;
+      background:linear-gradient(135deg,rgba(74,158,255,0.04),transparent);
+      opacity:0; transition:opacity 0.28s; pointer-events:none;
+    }
+    .proj-card:hover { border-color:rgba(74,158,255,0.35); transform:translateY(-4px); box-shadow:0 12px 40px rgba(74,158,255,0.1); }
+    .proj-card:hover::after { opacity:1; }
+    .proj-top { display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; margin-bottom:0.8rem; }
+    .proj-card h3 { font-size:1.08rem; font-weight:700; color:var(--text); flex:1; line-height:1.4; }
+
+    .badge {
+      display:inline-block; padding:0.22rem 0.75rem; border-radius:100px;
+      font-size:0.68rem; font-weight:700; text-transform:uppercase;
+      letter-spacing:0.08em; white-space:nowrap;
+    }
+    .b-pub   { background:rgba(255,180,50,0.12);  color:#ffb432; border:1px solid rgba(255,180,50,0.3); }
+    .b-res   { background:rgba(74,158,255,0.12);  color:var(--accent); border:1px solid rgba(74,158,255,0.3); }
+    .b-acad  { background:rgba(0,212,170,0.1);    color:var(--accent2); border:1px solid rgba(0,212,170,0.25); }
+
+    .proj-desc { font-size:0.9rem; color:#a0a0c0; margin-bottom:1.1rem; line-height:1.65; }
+    .proj-result {
+      background:rgba(74,158,255,0.06); border:1px solid rgba(74,158,255,0.15);
+      border-radius:9px; padding:0.75rem 1rem; margin-bottom:1.1rem;
+      font-size:0.84rem; color:#b0c8ff; line-height:1.55;
+    }
+    .proj-result strong { color:var(--accent); }
+    .tags { display:flex; flex-wrap:wrap; gap:0.45rem; margin-bottom:1.2rem; }
+    .tag {
+      background:rgba(255,255,255,0.05); color:var(--muted);
+      padding:0.22rem 0.6rem; border-radius:6px; font-size:0.74rem; font-weight:500;
+    }
+    .proj-link {
+      display:inline-flex; align-items:center; gap:0.3rem;
+      color:var(--accent); text-decoration:none; font-size:0.84rem; font-weight:600;
+      transition: gap 0.2s;
+    }
+    .proj-link:hover { gap:0.55rem; }
+    .proj-card.pub-card {
+      background: linear-gradient(135deg,rgba(255,180,50,0.06) 0%, rgba(74,158,255,0.05) 100%);
+      border-color: rgba(255,180,50,0.25);
+    }
+
+    /* TIMELINE */
+    .timeline { display:flex; flex-direction:column; }
+    .tl-item { display:grid; grid-template-columns:110px 1fr; gap:2rem; padding-bottom:2.2rem; position:relative; }
+    .tl-item:not(:last-child)::after {
+      content:''; position:absolute; left:109px; top:0.5rem; bottom:0;
+      width:1px; background:var(--border);
+    }
+    .tl-date { font-size:0.78rem; color:var(--muted); text-align:right; padding-top:0.2rem; line-height:1.4; }
+    .tl-body { padding-left:1.5rem; border-left:2px solid var(--border); position:relative; }
+    .tl-body::before {
+      content:''; position:absolute; left:-5px; top:0.45rem;
+      width:8px; height:8px; background:var(--accent); border-radius:50%;
+      box-shadow:0 0 0 3px rgba(74,158,255,0.15);
+    }
+    .tl-body h3 { font-size:1rem; color:var(--text); margin-bottom:0.2rem; }
+    .tl-org { font-size:0.84rem; color:var(--accent); font-weight:600; margin-bottom:0.5rem; }
+    .tl-body p { font-size:0.86rem; color:#a0a0c0; }
+
+    /* COURSEWORK */
+    .course-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:1rem; margin-top:2.5rem; }
+    .course {
+      background:var(--card); border:1px solid var(--border);
+      border-radius:11px; padding:1rem 1.2rem;
+    }
+    .course h4 { font-size:0.88rem; color:var(--text); margin-bottom:0.3rem; }
+    .course p  { font-size:0.76rem; color:var(--muted); line-height:1.5; }
+
+    /* CONTACT */
+    #contact { text-align:center; }
+    #contact p { color:var(--muted); max-width:500px; margin:0 auto 2.5rem; }
+    .contact-actions { display:flex; justify-content:center; gap:1rem; flex-wrap:wrap; }
+
+    /* FOOTER */
+    footer {
+      position:relative; z-index:1; text-align:center;
+      padding:2rem; color:var(--muted); font-size:0.82rem;
+      border-top:1px solid var(--border);
+    }
+
+    /* RESPONSIVE */
+    @media(max-width:720px){
+      .about-grid { grid-template-columns:1fr; gap:2rem; }
+      .tl-item    { grid-template-columns:1fr; gap:0.4rem; }
+      .tl-date    { text-align:left; }
+      .tl-item:not(:last-child)::after { display:none; }
+      nav         { padding:0.9rem 1.2rem; }
+      .nav-links  { display:none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<nav>
+  <a href="#hero" class="nav-logo">FM</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="mailto:fawazmallick9@gmail.com" class="nav-cta">Hire Me</a>
+</nav>
+
+<section id="hero">
+  <div class="hero-eyebrow">
+    <span>🤖</span> Robotics &amp; AI Engineer · CMU M.S. Mechanical Engineering
+  </div>
+  <h1 class="hero-name">Fawaz Mallick</h1>
+  <p class="hero-sub">
+    Building intelligent robotic systems at the intersection of control theory, machine learning, and physical hardware —
+    from a published exoskeleton sensing system to a 6-DOF surgical robot with custom pathfinding algorithms.
+  </p>
+  <div class="hero-actions">
+    <a href="#projects" class="btn btn-primary">View Projects ↓</a>
+    <a href="#contact"  class="btn btn-ghost">Get In Touch</a>
+    <a href="portfolio_print.html" target="_blank" class="btn btn-ghost">Download PDF Version</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-n">1</div>
+      <div class="stat-l">Published Paper<br>IFAC 2025</div>
+    </div>
+    <div class="stat">
+      <div class="stat-n">6-DOF</div>
+      <div class="stat-l">Surgical Robot<br>System</div>
+    </div>
+    <div class="stat">
+      <div class="stat-n">5+</div>
+      <div class="stat-l">Engineering<br>Projects</div>
+    </div>
+    <div class="stat">
+      <div class="stat-n">CMU</div>
+      <div class="stat-l">M.S. ME<br>Robotic Systems</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="about">
+  <span class="label">Background</span>
+  <h2 class="section-title">About Me</h2>
+  <div class="about-grid">
+    <div class="about-body">
+      <p>I'm a Biomedical Engineering graduate from Rowan University, currently pursuing an M.S. in Mechanical Engineering at Carnegie Mellon University with a concentration in robotic systems.</p>
+      <p>My work spans mechanical, electrical, and biomedical domains. I've built a 6-DOF surgical robot with a custom A* motion planner, designed and fabricated a lower-limb exoskeleton, modeled human–exoskeleton dynamics in OpenSim, and trained CNNs for medical image analysis. I move fluently between algorithm design and physical prototyping.</p>
+      <p>My first publication appeared in IFAC PapersOnLine (2025), measuring interaction forces between humans and wearable exoskeletons using instrumented FSR sensors and OpenSim simulation — research directly relevant to safe, comfortable assistive robotics.</p>
+      <p>At CMU I balance full-time graduate study, a Research Assistant position in AI/ML-based human intent prediction, and leadership as an Assistant Housefellow in a first-year residential community.</p>
+    </div>
+    <div class="info-cards">
+      <div class="info-card">
+        <h4>Current</h4>
+        <p>M.S. ME &amp; Research Assistant<br><span class="sub">Carnegie Mellon University</span></p>
+      </div>
+      <div class="info-card">
+        <h4>Undergraduate</h4>
+        <p>B.S. Biomedical Engineering<br><span class="sub">Rowan University</span></p>
+      </div>
+      <div class="info-card">
+        <h4>Research Focus</h4>
+        <p>Surgical Robotics · Wearable Exoskeletons · AI/ML Human Intent · Biomechanical Simulation</p>
+      </div>
+      <div class="info-card">
+        <h4>Location</h4>
+        <p>Pittsburgh, PA</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="skills">
+  <span class="label">Technical Capabilities</span>
+  <h2 class="section-title">Skills &amp; Tools</h2>
+  <div class="skills-wrap">
+    <div class="skill-box">
+      <h4>🤖 Robotics</h4>
+      <div class="pills">
+        <span class="pill">Forward / Inverse Kinematics</span>
+        <span class="pill">Robot Dynamics</span>
+        <span class="pill">Trajectory Optimization</span>
+        <span class="pill">Motion Planning (A*)</span>
+        <span class="pill">Haptic Feedback</span>
+        <span class="pill">MATLAB Robotics Toolbox</span>
+      </div>
+    </div>
+    <div class="skill-box">
+      <h4>🧠 AI / Machine Learning</h4>
+      <div class="pills">
+        <span class="pill">PyTorch</span>
+        <span class="pill">Deep Learning</span>
+        <span class="pill">CNN · MLP · LSTM</span>
+        <span class="pill">ResNet-50</span>
+        <span class="pill">Backpropagation</span>
+        <span class="pill">Adam / AdamW</span>
+        <span class="pill">Scikit-learn</span>
+      </div>
+    </div>
+    <div class="skill-box">
+      <h4>⚙️ Control Systems</h4>
+      <div class="pills">
+        <span class="pill">LQR</span>
+        <span class="pill">MPC</span>
+        <span class="pill">PID</span>
+        <span class="pill">Kalman Filter</span>
+        <span class="pill">State-Space Modeling</span>
+        <span class="pill">Policy Optimization</span>
+        <span class="pill">Reinforcement Learning</span>
+      </div>
+    </div>
+    <div class="skill-box">
+      <h4>🛠️ Engineering Tools</h4>
+      <div class="pills">
+        <span class="pill">SolidWorks</span>
+        <span class="pill">OpenSim</span>
+        <span class="pill">MATLAB / Simulink</span>
+        <span class="pill">Arduino</span>
+        <span class="pill">3D Printing</span>
+        <span class="pill">Laser Cutting</span>
+        <span class="pill">FEA</span>
+      </div>
+    </div>
+    <div class="skill-box">
+      <h4>💻 Programming</h4>
+      <div class="pills">
+        <span class="pill">Python</span>
+        <span class="pill">MATLAB</span>
+        <span class="pill">NumPy</span>
+        <span class="pill">Pandas</span>
+        <span class="pill">Matplotlib / Seaborn</span>
+        <span class="pill">Git</span>
+      </div>
+    </div>
+    <div class="skill-box">
+      <h4>📐 Sensing &amp; Hardware</h4>
+      <div class="pills">
+        <span class="pill">IMU Sensors</span>
+        <span class="pill">Force-Sensitive Resistors</span>
+        <span class="pill">Load Frame Calibration</span>
+        <span class="pill">Sensor Fusion</span>
+        <span class="pill">Wearable Electronics</span>
+        <span class="pill">ISO / ASTM Testing</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="projects">
+  <span class="label">Work &amp; Research</span>
+  <h2 class="section-title">Projects</h2>
+  <div class="proj-grid">
+
+    <div class="proj-card pub-card">
+      <div class="proj-top">
+        <h3>Estimating Human–Exoskeleton Interaction Forces Using an Instrumented Thigh Brace &amp; OpenSim</h3>
+        <span class="badge b-pub">Published · IFAC 2025</span>
+      </div>
+      <p class="proj-desc">Developed a wearable instrumented thigh brace with embedded FSRs to directly measure human–exoskeleton contact forces. Designed custom 3D-printed sensor housings, calibrated against a load frame, and ran dynamic walking trials with three subjects. Combined experimental measurements with an OpenSim contact simulation to estimate interaction forces during gait.</p>
+      <div class="proj-result"><strong>Outcomes:</strong> Captured measurable walking interface forces, revealed hip-motion correlations, and validated OpenSim simulation trends against FSR ground-truth data. Published in <strong>IFAC PapersOnLine (2025)</strong>.</div>
+      <div class="tags">
+        <span class="tag">Exoskeleton</span><span class="tag">OpenSim</span><span class="tag">FSR Sensors</span>
+        <span class="tag">Wearable Sensing</span><span class="tag">Biomechanics</span>
+        <span class="tag">Human-Robot Interaction</span><span class="tag">IFAC 2025</span>
+      </div>
+      <a href="publication.html" class="proj-link">Read Publication →</a>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-top">
+        <h3>Robossis — 6-DOF Surgical Robot for Femur Fracture Realignment</h3>
+        <span class="badge b-res">Research</span>
+      </div>
+      <p class="proj-desc">Designed and implemented a 6-DOF robotic surgical assistant (3 translational + 3 rotational axes). Developed a novel modified A* search algorithm in MATLAB operating over a 6D configuration space, integrated Bezier-curve smoothing for continuous trajectories, and modeled a spring-mass-damper haptic feedback system. Submitted to IEEE IROS.</p>
+      <div class="proj-result"><strong>Results:</strong> Simulated femur realignment achieved ≤3.0 mm translational deviation and ≤1.5° rotational deviation.</div>
+      <div class="tags">
+        <span class="tag">6-DOF</span><span class="tag">MATLAB</span><span class="tag">A* Algorithm</span>
+        <span class="tag">Haptic Feedback</span><span class="tag">Bezier Curves</span>
+        <span class="tag">Surgical Robotics</span><span class="tag">IEEE IROS</span>
+      </div>
+      <a href="6dof.html" class="proj-link">View Project →</a>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-top">
+        <h3>Lower-Limb Exoskeleton for Gait Perturbation Stabilization</h3>
+        <span class="badge b-res">Research</span>
+      </div>
+      <p class="proj-desc">Led a multidisciplinary team through the full design cycle: SolidWorks CAD, fabrication (3D printing, laser cutting, drill press), iterative ISO/ASTM-aligned risk analysis, and benchtop/human-subject ergonomics testing for a lower-limb assistive exoskeleton aimed at preventing falls.</p>
+      <div class="proj-result"><strong>Outcome:</strong> Functional prototype with improved ergonomics and safety margins; risk documentation met regulatory compliance targets.</div>
+      <div class="tags">
+        <span class="tag">SolidWorks</span><span class="tag">3D Printing</span><span class="tag">Laser Cutting</span>
+        <span class="tag">ISO / ASTM</span><span class="tag">Risk Analysis</span>
+        <span class="tag">Human Testing</span><span class="tag">Wearable Robotics</span>
+      </div>
+      <a href="exoskeleton.html" class="proj-link">View Project →</a>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-top">
+        <h3>OpenSim Biomechanical Gait Simulation with Real-Time IMU Integration</h3>
+        <span class="badge b-res">Research</span>
+      </div>
+      <p class="proj-desc">Built a full biomechanical simulation in OpenSim coupling a standard musculoskeletal model with a custom SolidWorks exoskeleton. Modeled contact via elastic foundation force elements, drove the simulation with live Arduino IMU gait data, and validated simulated forces against FSR ground-truth across four motion types.</p>
+      <div class="proj-result"><strong>Results:</strong> Simulation force profiles closely matched experimental FSR data for walking, squatting, side-stepping, and stair-stepping.</div>
+      <div class="tags">
+        <span class="tag">OpenSim</span><span class="tag">IMU</span><span class="tag">Arduino</span>
+        <span class="tag">FSR</span><span class="tag">SolidWorks</span>
+        <span class="tag">Sensor Fusion</span><span class="tag">Biomechanics</span>
+      </div>
+      <a href="opensim.html" class="proj-link">View Project →</a>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-top">
+        <h3>AI-Based Fracture Detection &amp; Surgical Planning — ResNet-50 CNN</h3>
+        <span class="badge b-acad">Academic</span>
+      </div>
+      <p class="proj-desc">Built an end-to-end deep learning pipeline to identify fractures in X-ray images and recommend optimal surgical entry points. Manually annotated an X-ray fracture dataset, fine-tuned a ResNet-50 CNN in MATLAB, and benchmarked predictions against expert surgeon annotations.</p>
+      <div class="proj-result"><strong>Results:</strong> High visual agreement with expert annotations in both position and spatial extent — demonstrating AI viability for pre-operative surgical planning.</div>
+      <div class="tags">
+        <span class="tag">ResNet-50</span><span class="tag">CNN</span><span class="tag">MATLAB</span>
+        <span class="tag">Computer Vision</span><span class="tag">Medical AI</span><span class="tag">X-ray</span>
+      </div>
+      <a href="ai.html" class="proj-link">View Project →</a>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-top">
+        <h3>Deep Learning Projects — CMU Introduction to Deep Learning</h3>
+        <span class="badge b-acad">Academic</span>
+      </div>
+      <p class="proj-desc">Hands-on implementation assignments covering MLP, CNN, and LSTM architectures built from scratch in PyTorch, with full implementation of forward/backward passes, optimization algorithms (Adam, AdamW, RMSProp, momentum SGD, L-BFGS), and regularization strategies.</p>
+      <div class="tags">
+        <span class="tag">PyTorch</span><span class="tag">MLP</span><span class="tag">CNN</span>
+        <span class="tag">LSTM</span><span class="tag">Backpropagation</span>
+        <span class="tag">Adam / AdamW</span><span class="tag">Regularization</span>
+      </div>
+      <a href="Deep_Learning_Class (1).pdf" target="_blank" class="proj-link">View Report →</a>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-top">
+        <h3>Optimal Control &amp; Reinforcement Learning Projects — CMU</h3>
+        <span class="badge b-acad">Academic</span>
+      </div>
+      <p class="proj-desc">Applied numerical optimization and RL methods to dynamical control problems. Projects cover gradient-based trajectory optimization, line search, global methods (random restarts, simulated annealing), and direct comparisons between LQR and policy-gradient RL on continuous systems.</p>
+      <div class="tags">
+        <span class="tag">Optimal Control</span><span class="tag">Reinforcement Learning</span>
+        <span class="tag">LQR</span><span class="tag">Gradient Descent</span>
+        <span class="tag">Policy Optimization</span><span class="tag">Simulated Annealing</span>
+      </div>
+      <a href="Optimal_Control (1).pdf" target="_blank" class="proj-link">View Report →</a>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="education">
+  <span class="label">Background</span>
+  <h2 class="section-title">Education &amp; Experience</h2>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-date">2024 – Present</div>
+      <div class="tl-body">
+        <h3>M.S. Mechanical Engineering — Robotic Systems</h3>
+        <div class="tl-org">Carnegie Mellon University · Pittsburgh, PA</div>
+        <p>Concentration in robotic systems and control. Coursework in Deep Learning, Optimal Control &amp; RL, Robot Dynamics, Modern Control Theory, ML for Engineering, Biomechanics, and FEA.</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2024 – Present</div>
+      <div class="tl-body">
+        <h3>Research Assistant — AI/ML Human Intent Prediction</h3>
+        <div class="tl-org">Carnegie Mellon University</div>
+        <p>Contributing to research on ML models for predicting human intent, with applications to robotic and assistive systems that must respond safely to user motion.</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2024 – Present</div>
+      <div class="tl-body">
+        <h3>Assistant Housefellow — Maggie Mo First-Year Houses</h3>
+        <div class="tl-org">Carnegie Mellon University Housing</div>
+        <p>Lead a team of Resident Advisors, manage conflict and crisis response, coordinate with campus departments, oversee house budgeting and community programming.</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2020 – 2024</div>
+      <div class="tl-body">
+        <h3>B.S. Biomedical Engineering</h3>
+        <div class="tl-org">Rowan University · Glassboro, NJ</div>
+        <p>Undergraduate research on surgical robotics, exoskeleton design, and medical AI. Co-authored IFAC 2025 publication; submitted work to IEEE IROS. Presented at Rowan BME conference.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--muted);margin-top:3rem;margin-bottom:0;">Relevant Coursework</h3>
+  <div class="course-grid">
+    <div class="course"><h4>Intro to Deep Learning</h4><p>MLPs · CNNs · LSTMs · Adam/AdamW · RMSProp · L-BFGS · L1/L2 regularization</p></div>
+    <div class="course"><h4>Optimal Control &amp; Reinforcement Learning</h4><p>Policy optimization · gradient descent · simulated annealing · LQR vs RL</p></div>
+    <div class="course"><h4>Modern Control Theory</h4><p>State-space · LQR · MPC · PID · Kalman filtering</p></div>
+    <div class="course"><h4>Robot Dynamics &amp; Analysis</h4><p>Forward kinematics · dynamics · manipulation · trajectory optimization</p></div>
+    <div class="course"><h4>Machine Learning for Engineering</h4><p>Regression · classification · SVMs · PyTorch · NumPy · Pandas</p></div>
+    <div class="course"><h4>Introduction to Robotics</h4><p>Kinematics &amp; dynamics · MATLAB Peter Corke Robotics Toolbox</p></div>
+    <div class="course"><h4>Biomechanics</h4><p>Human motion analysis · musculoskeletal force modeling</p></div>
+    <div class="course"><h4>Finite Element Analysis</h4><p>Stress/strain analysis · mechanical deformation simulation</p></div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="contact">
+  <span class="label">Get In Touch</span>
+  <h2 class="section-title">Let's Connect</h2>
+  <p>I'm actively looking for full-time roles and internships in robotics, AI, and engineering. Open to research collaborations in surgical robotics, assistive systems, or applied ML for physical systems.</p>
+  <div class="contact-actions">
+    <a href="mailto:fawazmallick9@gmail.com" class="btn btn-primary">✉ fawazmallick9@gmail.com</a>
+    <a href="https://github.com/fawazmallick" target="_blank" class="btn btn-ghost">GitHub</a>
+    <a href="index.html" class="btn btn-ghost">Original Portfolio</a>
+  </div>
+</section>
+
+<footer>
+  <p>&copy; 2025 Fawaz Mallick &nbsp;·&nbsp; Robotics &amp; AI Engineer &nbsp;·&nbsp; Carnegie Mellon University</p>
+</footer>
+
+</body>
+</html>

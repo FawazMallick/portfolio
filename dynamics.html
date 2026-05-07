@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LQR / Kalman / iLQR — TWIP — Fawaz Mallick</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #e0e0e0; color: #333; }
+    header { text-align: center; background: #000; color: white; padding: 20px 0; }
+    header h1 { margin: 0; font-size: 2rem; }
+    header p { margin: 6px 0 0; color: #aaa; font-size: 0.9rem; }
+    .back { display: inline-block; margin: 18px 0 0 24px; color: #00509e; text-decoration: none; font-size: 0.9rem; }
+    .back:hover { text-decoration: underline; }
+    .container { max-width: 1000px; margin: 20px auto 60px; padding: 30px 36px; background: white; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    h2 { color: #00509e; margin-top: 36px; margin-bottom: 10px; font-size: 1.3rem; }
+    h3 { color: #333; margin-top: 24px; margin-bottom: 8px; font-size: 1.05rem; }
+    p { margin-bottom: 14px; line-height: 1.65; }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+    .tag { background: #eaf4ff; color: #00509e; border: 1px solid #b3d4f0; border-radius: 4px; padding: 3px 10px; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 0.9rem; }
+    th { background: #00509e; color: white; padding: 9px 14px; text-align: left; }
+    td { padding: 8px 14px; border-bottom: 1px solid #ddd; }
+    tr:last-child td { border-bottom: none; }
+    tr:nth-child(even) td { background: #f5f9ff; }
+    .note { background: #f0f7ff; border-left: 4px solid #00509e; padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; font-size: 0.88rem; color: #444; }
+    .result-box { background: #f5f9ff; border: 1px solid #cce0f5; border-radius: 8px; padding: 14px 20px; margin: 10px 0 20px; font-size: 0.9rem; color: #333; line-height: 1.7; }
+    code { background: #f0f4f8; padding: 1px 5px; border-radius: 3px; font-size: 0.88em; }
+    .part-badge { display: inline-block; background: #00509e; color: white; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 9px; border-radius: 3px; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>LQR / Kalman Filter / iLQR</h1>
+  <p>Two-Wheeled Inverted Pendulum Control · Optimal Control &amp; RL — CMU</p>
+</header>
+
+<a class="back" href="index.html">← Back to Portfolio</a>
+
+<div class="container">
+
+  <div class="tag-row">
+    <span class="tag">Python</span>
+    <span class="tag">SymPy</span>
+    <span class="tag">SciPy</span>
+    <span class="tag">NumPy</span>
+    <span class="tag">LQR</span>
+    <span class="tag">Kalman Filter</span>
+    <span class="tag">iLQR</span>
+    <span class="tag">Nonlinear Control</span>
+  </div>
+
+  <h2>System: Two-Wheeled Inverted Pendulum (TWIP)</h2>
+  <p>
+    This project models and controls a two-wheeled inverted pendulum — a wheel-mounted body that must
+    be actively balanced. The system has four states: wheel angle (φ), wheel angular velocity (φ̇),
+    body tilt angle (θ), and body tilt rate (θ̇), with motor torque τ as the single control input.
+  </p>
+  <p>
+    The equations of motion were derived symbolically using SymPy from the Lagrangian of the
+    two-body system (wheel mass m₁ = 0.173 kg, body mass m₂ = 0.653 kg), then linearized around the
+    upright equilibrium for LQR and Kalman filter design. For iLQR, the full nonlinear dynamics were
+    used with numerically computed Jacobians.
+  </p>
+
+  <h3>Linearization Results</h3>
+  <div class="result-box">
+    System A matrix (at upright equilibrium) has unstable eigenvalue at θ — confirming the pendulum
+    is open-loop unstable. Controllability rank: 4/4. Observability rank: 4/4 (with outputs φ, θ, θ̇).
+  </div>
+
+  <!-- PART 1: LQR -->
+  <h2><span class="part-badge">Part 1</span> LQR Balance Control</h2>
+  <p>
+    An LQR controller was designed by solving the continuous algebraic Riccati equation (CARE). Cost
+    matrices Q and R were set by normalizing state and input deviations against physical limits
+    (φ<sub>max</sub> = 2π, θ<sub>max</sub> = 0.2 rad, τ<sub>max</sub> = 5 Nm).
+  </p>
+  <div class="result-box">
+    Optimal gain: K = [−0.796, −0.714, −51.79, −4.63]<br>
+    Closed-loop response from x₀ = [0, 0, 0.1, 0] converges to upright equilibrium within ~3 seconds.
+  </div>
+
+  <!-- PART 2: Kalman Filter -->
+  <h2><span class="part-badge">Part 2</span> Kalman Filter (LQE)</h2>
+  <p>
+    Because the body angle velocity θ̇ is not directly measurable in the sensor configuration (outputs:
+    φ, θ, θ̇ measured with noise), a discrete Kalman filter was designed alongside the LQR controller
+    to estimate the full state from noisy measurements. The system was discretized using zero-order
+    hold (ZOH) at dt = 0.01 s, and the discrete algebraic Riccati equation was solved for the
+    estimator gain.
+  </p>
+  <div class="result-box">
+    Kalman gain K<sub>kf</sub> computed. Simulation with additive process and measurement noise
+    shows the estimated state (red dashed) tracking the true state (blue) closely over 10 seconds
+    from x₀ = [0, 0, 0.1, 0].
+  </div>
+
+  <!-- PART 3: iLQR Stabilization -->
+  <h2><span class="part-badge">Part 3</span> iLQR — Nonlinear Stabilization</h2>
+  <p>
+    For larger initial tilts where the linearized LQR is less reliable, iterative LQR (iLQR) was
+    applied to the full nonlinear dynamics. iLQR alternates between a backward pass (computing
+    locally optimal gain and feedforward terms) and a forward pass (rolling out the updated policy),
+    converging when cost improvement falls below a threshold.
+  </p>
+  <div class="result-box">
+    Starting from x₀ = [0, 0, 0.8, 0] with u<sub>max</sub> = 1 Nm:<br>
+    iLQR converged in 7 iterations. Final cost: 127,883.<br>
+    LQR (linearized) diverges from this initial condition; iLQR successfully stabilizes it.
+  </div>
+
+  <!-- PART 4: iLQR Trajectory Following -->
+  <h2><span class="part-badge">Part 4</span> iLQR — Trajectory Following ("Drag Race")</h2>
+  <p>
+    iLQR was extended to trajectory following: driving the wheel to a target position of
+    φ* = 2π radians (one full wheel revolution) while keeping the body balanced. The cost function
+    penalizes deviation from the target state <em>x*</em> = [2π, 0, 0, 0] over a 10-second horizon
+    (T = 10,000 steps at dt = 0.001 s).
+  </p>
+  <div class="result-box">
+    Final φ: 6.2832 rad (target: 2π = 6.2832 rad) — essentially exact.<br>
+    Final θ: ~−7.7 × 10⁻⁹ rad — upright maintained throughout.<br>
+    Converged in 1 iteration from the LQR warm start.
+  </div>
+
+  <h2>Tools &amp; Libraries</h2>
+  <table>
+    <tr><th>Library</th><th>Use</th></tr>
+    <tr><td>SymPy</td><td>Symbolic derivation of equations of motion and linearization</td></tr>
+    <tr><td>NumPy</td><td>Numerical matrix operations, rollout simulations</td></tr>
+    <tr><td>SciPy (CARE / DARE)</td><td>Solving Riccati equations for LQR and Kalman filter gains</td></tr>
+    <tr><td>SciPy (cont2discrete)</td><td>ZOH discretization for the Kalman filter</td></tr>
+    <tr><td>Matplotlib + FuncAnimation</td><td>State plots and animated TWIP visualizations</td></tr>
+  </table>
+
+  <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:10px;">
+    <a href="Optimal_Control (1).pdf" target="_blank" style="display:inline-block; background:#00509e; color:white; padding:9px 20px; border-radius:5px; text-decoration:none; font-size:0.9rem;">View Report (PDF)</a>
+    <a href="OC&RL HW1.pdf" target="_blank" style="display:inline-block; background:#444; color:white; padding:9px 20px; border-radius:5px; text-decoration:none; font-size:0.9rem;">HW1 Report (PDF)</a>
+  </div>
+
+</div>
+</body>
+</html>

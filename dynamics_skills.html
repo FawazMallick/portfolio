@@ -1,0 +1,352 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Robot Dynamics & Control | Fawaz Mallick</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --accent: #00d4ff; --accent-dim: #0099cc; --accent-light: rgba(0,212,255,0.12);
+      --bg: #0a0e27; --card: #0f1429; --card-hover: #151d3a; --border: #1a2240;
+      --text: #e8ecf1; --text-dim: #a8b2c1; --muted: #6b7684; --nav-h: 64px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+    nav {
+      position: sticky; top: 0; z-index: 100; height: var(--nav-h);
+      background: rgba(10,14,39,0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; padding: 0 40px;
+    }
+    nav a.logo { color: var(--text); text-decoration: none; font-weight: 600; }
+    nav a.back { color: var(--accent); text-decoration: none; font-size: .85rem; font-weight: 500; transition: opacity .25s; }
+    nav a.back:hover { opacity: .7; }
+    .container { max-width: 960px; margin: 0 auto; padding: 60px 24px; }
+    .page-header { margin-bottom: 60px; }
+    .page-header h1 { font-size: clamp(2rem,5vw,3rem); font-weight: 700; color: #fff; margin-bottom: 16px; letter-spacing: -.02em; }
+    .page-header .subtitle { font-size: 1.1rem; color: var(--accent); font-weight: 500; margin-bottom: 20px; }
+    .page-header .intro { font-size: 1.05rem; color: var(--text-dim); line-height: 1.8; max-width: 720px; }
+    section { margin-bottom: 70px; }
+    h2 { font-size: 1.7rem; font-weight: 700; color: #fff; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 2px solid var(--border); }
+    h3 { font-size: 1.15rem; font-weight: 600; color: var(--accent); margin-top: 32px; margin-bottom: 12px; }
+    h4 { font-size: 1rem; font-weight: 600; color: #fff; margin-bottom: 8px; margin-top: 20px; }
+    p { font-size: 1rem; color: var(--text-dim); line-height: 1.8; margin-bottom: 16px; }
+    p strong { color: var(--text); }
+    p em { color: var(--accent); font-style: normal; }
+    a { color: var(--accent); text-decoration: none; transition: opacity .25s; }
+    a:hover { opacity: .8; }
+    ul { list-style: none; padding: 0; margin: 12px 0; }
+    ul li { margin-bottom: 8px; padding-left: 22px; position: relative; font-size: .97rem; color: var(--text-dim); }
+    ul li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-weight: 600; }
+    /* CODE */
+    .code-block {
+      background: #070b1a; border: 1px solid var(--border); border-radius: 8px;
+      padding: 24px; margin: 24px 0; overflow-x: auto;
+      font-family: 'JetBrains Mono', 'Courier New', monospace; font-size: .88rem;
+      color: #c9d1d9; line-height: 1.7;
+    }
+    .code-block .comment { color: #8b949e; }
+    .code-block .keyword { color: #ff7b72; }
+    .code-block .func { color: #d2a8ff; }
+    .code-block .num { color: #79c0ff; }
+    .code-block .str { color: #a5d6ff; }
+    .code-label { font-size: .75rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+    /* PROGRESSION */
+    .progression { display: flex; gap: 0; margin: 28px 0; position: relative; }
+    .progression::before { content:''; position: absolute; left: 20px; top: 0; bottom: 0; width: 2px; background: var(--border); z-index: 0; }
+    .prog-step { display: flex; gap: 20px; align-items: flex-start; margin-bottom: 28px; position: relative; z-index: 1; }
+    .prog-step .step-num {
+      width: 40px; height: 40px; border-radius: 50%; background: var(--accent); color: #000;
+      display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .9rem;
+      flex-shrink: 0;
+    }
+    .prog-step .step-body { flex: 1; }
+    .prog-step .step-body h4 { color: #fff; margin-top: 8px; }
+    /* IMAGES */
+    .image-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap: 20px; margin: 28px 0; }
+    .image-solo { max-width: 640px; margin: 24px auto; display: block; }
+    img { max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border); transition: border-color .25s; }
+    img:hover { border-color: var(--accent); }
+    /* COURSE CARDS */
+    .course-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap: 16px; margin: 24px 0; }
+    .course-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; transition: border-color .25s; }
+    .course-card:hover { border-color: var(--accent); }
+    .course-card .tag { font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+    .course-card h4 { color: #fff; margin-bottom: 6px; margin-top: 0; }
+    .course-card p { font-size: .88rem; color: var(--muted); margin: 0; }
+    /* WEBOTS */
+    .webots-grid { display: grid; gap: 16px; margin: 24px 0; }
+    .webots-item { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: start; transition: border-color .25s; }
+    .webots-item:hover { border-color: var(--accent); }
+    .webots-num { font-size: 1.4rem; font-weight: 700; color: var(--accent); line-height: 1; }
+    .webots-body h4 { color: #fff; margin-bottom: 4px; margin-top: 0; }
+    .webots-body p { font-size: .9rem; color: var(--muted); margin: 0; }
+    footer { border-top: 1px solid var(--border); text-align: center; padding: 40px 20px; color: var(--muted); font-size: .85rem; margin-top: 60px; }
+    footer a { color: var(--accent); }
+    @media (max-width: 768px) { nav { padding: 0 20px; } .container { padding: 40px 16px; } .progression::before { display: none; } }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">Fawaz Mallick</a>
+  <a href="index.html" class="back">← Back to portfolio</a>
+</nav>
+
+<div class="container">
+
+<div class="page-header">
+  <h1>Robot Dynamics & Control Theory</h1>
+  <p class="subtitle">From kinematics → classical control → optimal control → learning-based policies</p>
+  <p class="intro">
+    This is the core of what I do. Understanding how robots move, how to make them move correctly, and how to make them move <em>optimally</em>. The learning arc runs from foundational kinematics and dynamics through classical state-space control, into trajectory optimization, and finally into learning-based approaches. Every step builds on the last.
+  </p>
+</div>
+
+<!-- LEARNING ARC -->
+<section>
+  <h2>Learning Arc: The Curriculum</h2>
+
+  <div class="course-grid">
+    <div class="course-card">
+      <div class="tag">Foundations</div>
+      <h4>Robot Dynamics & Analysis (RDA)</h4>
+      <p>Forward kinematics, Denavit-Hartenberg parameters, screw theory, transformation matrices, rigid body dynamics. The mathematical language of robotics.</p>
+    </div>
+    <div class="course-card">
+      <div class="tag">Classical Control</div>
+      <h4>Modern Control Theory (MCT)</h4>
+      <p>State-space modeling, controllability & observability, LQR design, PID control, Kalman filtering, stability analysis. How to make a system do what you want.</p>
+    </div>
+    <div class="course-card">
+      <div class="tag">Advanced</div>
+      <h4>Optimal Control & RL (OCRL)</h4>
+      <p>Trajectory optimization, iLQR, policy gradient methods, imitation learning, neural network policies. How to make a system do what you want — optimally.</p>
+    </div>
+    <div class="course-card">
+      <div class="tag">Applied</div>
+      <h4>Introduction to Robotics</h4>
+      <p>Robot manipulation, workspace analysis, MATLAB Robotics Toolbox (Peter Corke). Hands-on application of kinematics to robot arm control.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED: TWIP -->
+<section>
+  <h2>Featured Project: TWIP Control System</h2>
+  <p>
+    <strong>The two-wheeled inverted pendulum (TWIP)</strong> — essentially a Segway — is a canonical problem in control theory. It's open-loop unstable, nonlinear, and requires active control to stay upright. I used it as a unified testbed across the full control theory curriculum: building three different controllers on the same physical system, comparing their performance.
+  </p>
+
+  <h3>System Model</h3>
+  <p>
+    Physical parameters of the simulated TWIP:
+  </p>
+  <ul>
+    <li><strong>Wheel mass (m_w):</strong> 173 g</li>
+    <li><strong>Pendulum mass (m_p):</strong> 653 g (826g total – wheel)</li>
+    <li><strong>Wheel radius (r_w):</strong> 32.3 mm</li>
+    <li><strong>Pendulum half-length (l_p):</strong> 43 mm</li>
+    <li><strong>State vector:</strong> [wheel angle, wheel angular velocity, body angle, body angular velocity]</li>
+    <li><strong>Simulation rate:</strong> 333 Hz</li>
+  </ul>
+
+  <div class="code-label">MATLAB — TWIP Forward Dynamics (twip3.m)</div>
+  <div class="code-block"><span class="keyword">function</span> [whdd, thdd] = <span class="func">twip3</span>(wh, whd, th, thd, trq, m_w, r_w, I_w, m_p, l_p, I_p, g, f)
+<span class="comment">% Two-wheeled inverted pendulum forward dynamics</span>
+<span class="comment">% State: [wheel_angle, wheel_vel, body_angle, body_vel]</span>
+
+<span class="comment">% Inertial parameters</span>
+p1 = I_w + (m_p + m_w) * r_w^<span class="num">2</span>;
+p2 = m_p * l_p;
+p3 = I_p + m_p * l_p^<span class="num">2</span>;
+
+<span class="comment">% Mass matrix (nonlinear — depends on body angle th)</span>
+m12 = p1 + p2 * r_w * <span class="func">cos</span>(th);
+M = [p1,  m12;
+     m12, (p1 + <span class="num">2</span>*p2*r_w*<span class="func">cos</span>(th) + p3)];
+
+<span class="comment">% Right-hand side (gravity + centripetal + torque)</span>
+v_exp = p2 * r_w * thd^<span class="num">2</span> * <span class="func">sin</span>(th);
+v = [(-trq - f*whd + v_exp);
+     (v_exp + p2*g*<span class="func">sin</span>(th))];
+
+<span class="comment">% Solve: M * [whdd; thdd] = v</span>
+result = <span class="func">inv</span>(M) * v;
+whdd = result(<span class="num">1</span>);
+thdd = result(<span class="num">2</span>);
+<span class="keyword">end</span></div>
+
+  <h3>Controller Progression</h3>
+
+  <div class="progression">
+    <div style="display:flex;flex-direction:column;gap:28px;margin-left:60px;">
+
+      <div class="prog-step" style="margin-left:-60px;">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>LQR — Linear Quadratic Regulator</h4>
+          <p>Linearize the nonlinear dynamics around the upright equilibrium. Compute optimal gain matrix K via LQR (minimizing a weighted cost on states and control effort). Simple, elegant, and effective for small perturbations.</p>
+          <p><strong>Key insight:</strong> The control law is just <code style="background:#070b1a;padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:.88em;">u = -K*x</code> — a single matrix multiply at each timestep. Computationally trivial. Remarkably effective near equilibrium.</p>
+        </div>
+      </div>
+
+      <div class="prog-step" style="margin-left:-60px;">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Kalman Filter — State Estimation Under Noise</h4>
+          <p>Real sensors are noisy. A Kalman filter estimates the true system state from noisy measurements, providing the LQR controller with clean state estimates. Combines a process model (propagation) with measurement updates (correction).</p>
+          <p><strong>Key insight:</strong> Optimal estimation for linear Gaussian systems. The duality between LQR and Kalman filtering (both solve Riccati equations) is one of the most elegant results in control theory.</p>
+        </div>
+      </div>
+
+      <div class="prog-step" style="margin-left:-60px;">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>iLQR — Iterative LQR for Nonlinear Trajectories</h4>
+          <p>LQR only works well near equilibrium — large angles break the linear assumption. iLQR iteratively linearizes the nonlinear dynamics along a trajectory and solves the LQR problem at each step. Handles large swings, figure-8 paths, and aggressive maneuvers.</p>
+          <p><strong>Key insight:</strong> The computational graph is: simulate forward → compute cost → backward pass (solve Riccati) → update gains → repeat until convergence. Line search ensures stability.</p>
+        </div>
+      </div>
+
+      <div class="prog-step" style="margin-left:-60px;">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>Neural Network Policy — Imitation Learning</h4>
+          <p>Train a small neural network to mimic the LQR controller on simulated data. The NN takes the 4D state as input and outputs the control torque. After imitation, fine-tuned directly against the survival objective.</p>
+          <p><strong>Key insight:</strong> The NN matches LQR performance on seen conditions, but generalizes differently. Interesting failure modes appear when the NN is pushed beyond its training distribution — exactly the challenge in real-world deployment.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="code-label">MATLAB — Gain-Optimized Control Loop (from computer_lqr_gains.m)</div>
+  <div class="code-block"><span class="keyword">function</span> cost = <span class="func">twip_cost_unconstrained</span>(Kc)
+<span class="comment">% Kc = [K1, K2, K3, K4] gains — returns negative time survived</span>
+
+x0 = [<span class="num">0</span>; <span class="num">0</span>; <span class="num">0.1</span>; <span class="num">0</span>];  <span class="comment">% small initial tilt (0.1 rad)</span>
+xx = x0;
+dt = <span class="num">1</span> / <span class="num">333</span>;  <span class="comment">% 333 Hz simulation</span>
+
+<span class="keyword">for</span> i = <span class="num">1</span>:<span class="num">2000</span>
+    uu = -Kc * xx;  <span class="comment">% linear control law</span>
+
+    <span class="comment">% Integrate nonlinear dynamics</span>
+    [wdd, thdd] = <span class="func">twip3</span>(xx(<span class="num">1</span>), xx(<span class="num">2</span>), xx(<span class="num">3</span>), xx(<span class="num">4</span>), uu, ...
+                         m_w, r_w, I_w, m_p, l_p, I_p, g, <span class="num">0</span>);
+    xx = <span class="func">integrate_step</span>(xx, wdd, thdd, dt);
+
+    <span class="keyword">if</span> <span class="func">abs</span>(xx(<span class="num">3</span>)) > <span class="num">1.5</span>  <span class="comment">% fallen if |body_angle| > 1.5 rad</span>
+        cost = -i * dt;  <span class="comment">% cost = negative survival time</span>
+        <span class="keyword">return</span>;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+cost = -<span class="num">6</span>;  <span class="comment">% survived full 6 seconds</span>
+<span class="keyword">end</span></div>
+
+  <h3>Simulation Results</h3>
+  <div class="image-grid">
+    <img src="images/lqr_states.png" alt="LQR Controller — State Trajectories">
+    <img src="images/lqr_animation.png" alt="LQR Controller — Animation">
+  </div>
+  <div class="image-grid">
+    <img src="images/kalman_states.png" alt="Kalman Filter — State Estimation">
+    <img src="images/ilqr_compare.png" alt="iLQR — Trajectory Comparison">
+  </div>
+  <div class="image-grid">
+    <img src="images/part2a_linear.png" alt="Linear Policy Results">
+    <img src="images/part2b_nn.png" alt="Neural Network Policy Results">
+  </div>
+  <div class="image-grid">
+    <img src="images/part1a_banana.png" alt="Rosenbrock Optimization — Banana Function">
+    <img src="images/part1b_learned.png" alt="Learned Policy on Optimization Landscape">
+  </div>
+  <p><a href="dynamics.html">→ Full TWIP dynamics & iLQR project</a> &nbsp;|&nbsp; <a href="ocrl.html">→ OCRL homework — NN policy & optimization</a></p>
+</section>
+
+<!-- WEBOTS PROJECTS -->
+<section>
+  <h2>Webots Robotics Projects: P1 → P5</h2>
+  <p>
+    Five progressive simulation projects in the Webots robotics environment, each adding a layer of complexity. The arc mirrors the theoretical curriculum — from basic vehicle control to autonomous mapping.
+  </p>
+
+  <div class="webots-grid">
+    <div class="webots-item">
+      <div class="webots-num">P1</div>
+      <div class="webots-body">
+        <h4>Vehicle Dynamics & Path Following</h4>
+        <p>Basic vehicle control in a Tesla Model 3 simulation. Implementing a controller to follow waypoints at speed. Introduction to the Webots Python API and sensor integration.</p>
+      </div>
+    </div>
+    <div class="webots-item">
+      <div class="webots-num">P2</div>
+      <div class="webots-body">
+        <h4>Advanced Path Planning</h4>
+        <p>Higher-level path planning with obstacle avoidance. Building on P1's control foundation, now planning <em>where</em> to go rather than just <em>how</em> to follow.</p>
+      </div>
+    </div>
+    <div class="webots-item">
+      <div class="webots-num">P3</div>
+      <div class="webots-body">
+        <h4>A* Search + LQR Controller</h4>
+        <p>Integration of A* path planning (from the surgical robot project) with an LQR tracking controller. The planner outputs waypoints; the controller executes them. Planning and control working together.</p>
+      </div>
+    </div>
+    <div class="webots-item">
+      <div class="webots-num">P4</div>
+      <div class="webots-body">
+        <h4>EKF SLAM — The Flagship Project</h4>
+        <p>Extended Kalman Filter for Simultaneous Localization and Mapping. The robot builds a map of its environment while simultaneously figuring out where it is within that map. Requires sensor fusion, nonlinear state estimation, and careful covariance management. SLAM is one of the core unsolved challenges in autonomous robotics.</p>
+      </div>
+    </div>
+    <div class="webots-item">
+      <div class="webots-num">P5</div>
+      <div class="webots-body">
+        <h4>Advanced Integration</h4>
+        <p>Advanced robotics project combining concepts from P1–P4. Full autonomous navigation pipeline with map, plan, and execute capability.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COURSEWORK HIGHLIGHTS -->
+<section>
+  <h2>Coursework Highlights</h2>
+  <p>Selected standout assignments from the dynamics and control curriculum:</p>
+
+  <h3>Optimal Control — Dragrace Problem</h3>
+  <p>
+    Trajectory optimization for a dragrace vehicle: find the optimal throttle and braking profile to cross the finish line as fast as possible, subject to vehicle dynamics constraints. Uses direct collocation with equality constraints.
+  </p>
+  <div class="image-grid">
+    <img src="images/dragrace_states.png" alt="Dragrace Optimal States">
+    <img src="images/dragrace_animation.png" alt="Dragrace Animation">
+  </div>
+
+  <h3>Optimal Control & RL — TWIP Torque Analysis</h3>
+  <p>
+    Comparing linear vs. nonlinear controller torque demands across different initial conditions. Shows how LQR breaks down as conditions move away from linearization point.
+  </p>
+  <div class="image-grid">
+    <img src="images/part2_torques.png" alt="Control Torque Comparison — Linear vs NN">
+    <img src="images/part2a_states.png" alt="State Trajectories Comparison">
+  </div>
+
+  <h3>Kalman Filter — State Reconstruction Under Noise</h3>
+  <p>
+    Given noisy measurements of a TWIP system, reconstruct the true state using a Kalman filter. Then feed the estimated state into the LQR controller. Demonstrates the separation principle: estimation and control can be designed independently and combined optimally.
+  </p>
+  <img src="images/kalman_animation.png" alt="Kalman Filter Convergence" class="image-solo">
+
+  <p style="margin-top: 24px;"><a href="Optimal_Control (1).pdf" target="_blank">→ Full Optimal Control Report (PDF)</a> &nbsp;|&nbsp; <a href="OC&RL HW1.pdf" target="_blank">→ OC&RL HW1 Report (PDF)</a></p>
+</section>
+
+</div>
+<footer>
+  <p>&copy; 2026 Fawaz Mallick. All rights reserved.</p>
+  <p style="margin-top:12px;"><a href="index.html">← Back to portfolio</a></p>
+</footer>
+</body>
+</html>

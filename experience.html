@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Experience | Fawaz Mallick</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --accent: #00d4ff; --accent-dim: #0099cc; --accent-light: rgba(0,212,255,0.12);
+      --bg: #0a0e27; --card: #0f1429; --border: #1a2240;
+      --text: #e8ecf1; --text-dim: #a8b2c1; --muted: #6b7684; --nav-h: 64px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100; height: var(--nav-h);
+      background: rgba(10,14,39,0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; padding: 0 40px;
+    }
+    nav a.logo { color: var(--text); text-decoration: none; font-weight: 600; }
+    nav a.back { color: var(--accent); text-decoration: none; font-size: .85rem; font-weight: 500; transition: opacity .25s; }
+    nav a.back:hover { opacity: .7; }
+
+    .container { max-width: 920px; margin: 0 auto; padding: 60px 24px; }
+    .page-header { margin-bottom: 60px; }
+    .page-header h1 { font-size: clamp(2rem,5vw,3rem); font-weight: 700; color: #fff; margin-bottom: 16px; letter-spacing: -.02em; }
+    .page-header .subtitle { font-size: 1.1rem; color: var(--accent); font-weight: 500; margin-bottom: 20px; }
+    .page-header .intro { font-size: 1.05rem; color: var(--text-dim); line-height: 1.8; max-width: 700px; }
+
+    section { margin-bottom: 60px; }
+    h2 { font-size: 1.7rem; font-weight: 700; color: #fff; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 2px solid var(--border); }
+    h3 { font-size: 1.15rem; font-weight: 600; color: var(--accent); margin-top: 28px; margin-bottom: 12px; }
+    p { font-size: 1rem; color: var(--text-dim); line-height: 1.8; margin-bottom: 16px; }
+    p strong { color: var(--text); }
+    a { color: var(--accent); text-decoration: none; transition: opacity .25s; }
+    a:hover { opacity: .8; }
+
+    ul { list-style: none; padding: 0; margin: 12px 0; }
+    ul li { margin-bottom: 8px; padding-left: 22px; position: relative; font-size: .97rem; color: var(--text-dim); }
+    ul li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-weight: 600; }
+
+    /* TIMELINE */
+    .timeline { position: relative; margin: 28px 0; }
+    .timeline::before { content:''; position: absolute; left: 0; top: 10px; bottom: 10px; width: 2px; background: var(--border); }
+    .tl-entry { display: flex; gap: 28px; margin-bottom: 48px; position: relative; padding-left: 32px; }
+    .tl-entry::before { content:''; position: absolute; left: -5px; top: 8px; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); border: 2px solid var(--bg); }
+    .tl-content { flex: 1; }
+    .tl-content .tl-meta { display: flex; flex-wrap: wrap; gap: 12px; align-items: baseline; margin-bottom: 10px; }
+    .tl-content .tl-title { font-size: 1.15rem; font-weight: 700; color: #fff; }
+    .tl-content .tl-org { font-size: .95rem; color: var(--accent); font-weight: 500; }
+    .tl-content .tl-date { font-size: .82rem; color: var(--muted); background: var(--card); border: 1px solid var(--border); padding: 2px 10px; border-radius: 20px; }
+    .tl-content p { font-size: .97rem; color: var(--text-dim); margin-bottom: 10px; }
+    .tl-content ul li { font-size: .93rem; }
+
+    /* HIGHLIGHT */
+    .highlight-box { background: var(--card); border-left: 4px solid var(--accent); padding: 20px 24px; margin: 20px 0; border-radius: 6px; }
+    .highlight-box p { margin: 0; font-size: .95rem; }
+
+    /* STAT INLINE */
+    .stat-inline { display: inline-flex; gap: 24px; flex-wrap: wrap; margin: 12px 0; }
+    .stat-item { text-align: center; }
+    .stat-item .n { font-size: 1.5rem; font-weight: 700; color: var(--accent); line-height: 1; }
+    .stat-item .l { font-size: .75rem; color: var(--muted); margin-top: 2px; }
+
+    footer { border-top: 1px solid var(--border); text-align: center; padding: 40px 20px; color: var(--muted); font-size: .85rem; margin-top: 60px; }
+    footer a { color: var(--accent); }
+
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .container { padding: 40px 16px; }
+      .tl-entry { gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">Fawaz Mallick</a>
+  <a href="index.html" class="back">← Back to portfolio</a>
+</nav>
+
+<div class="container">
+
+<div class="page-header">
+  <h1>Experience</h1>
+  <p class="subtitle">Beyond Research — Leadership, Teaching, and Community</p>
+  <p class="intro">
+    My engineering work doesn't happen in isolation. Alongside research and coursework, I've spent years in roles that required a different kind of skill: explaining complex ideas simply, managing communities under pressure, and building organizations from scratch. These experiences shaped how I think, communicate, and lead.
+  </p>
+</div>
+
+<!-- TIMELINE -->
+<section>
+  <h2>Timeline</h2>
+  <div class="timeline">
+
+    <!-- COMMUNITY ASSISTANT -->
+    <div class="tl-entry">
+      <div class="tl-content">
+        <div class="tl-meta">
+          <span class="tl-title">Community Assistant (RA)</span>
+          <span class="tl-org">Rowan University Housing</span>
+          <span class="tl-date">Aug 2022 – May 2024 · 2 years</span>
+        </div>
+        <div class="stat-inline">
+          <div class="stat-item"><div class="n">300+</div><div class="l">Students served</div></div>
+          <div class="stat-item"><div class="n">2</div><div class="l">Years</div></div>
+        </div>
+        <p>
+          As a Community Assistant at Rowan, I was responsible for a residential floor of 300+ students — handling community programming, conflict resolution, and crisis response. This was my first sustained leadership experience, and it predated the CMU role by two years.
+        </p>
+        <p>
+          The CA role at Rowan is more hands-on at the resident level than the AF role at CMU — I was running programs, doing rounds, and handling direct student issues rather than managing staff. I learned the fundamentals of residential life work here.
+        </p>
+        <ul>
+          <li>Community programming: planned and executed floor events, floor community-building activities</li>
+          <li>First responder to student conflict, mental health concerns, and policy violations</li>
+          <li>Coordinated with Housing, Counseling Services, and Dean of Students on complex cases</li>
+          <li>Completed mandatory Title IX, mental health first aid, and crisis response training</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- PEER TUTOR -->
+    <div class="tl-entry">
+      <div class="tl-content">
+        <div class="tl-meta">
+          <span class="tl-title">Peer Tutor — Physics, Chemistry, Math</span>
+          <span class="tl-org">Rowan University</span>
+          <span class="tl-date">Aug 2023 – May 2025 · ~2 years</span>
+        </div>
+        <p>
+          Tutored undergraduate students in introductory physics, chemistry, and mathematics. Subjects ranged from calculus-based mechanics to general chemistry problem sets to differential equations.
+        </p>
+        <p>
+          Tutoring forced a discipline I didn't expect: <em>if you can't explain something clearly to someone who's struggling, you don't actually understand it</em>. Every confused question revealed a gap in my own conceptual model. I got better at identifying which step in a chain of reasoning was failing, not just flagging that the answer was wrong.
+        </p>
+        <ul>
+          <li>Physics: kinematics, dynamics, energy methods, electrostatics, waves</li>
+          <li>Chemistry: stoichiometry, thermodynamics, electrochemistry, organic reactions</li>
+          <li>Math: calculus (single and multi-variable), linear algebra, differential equations</li>
+          <li>Adapted explanations to different learning styles — visual, algebraic, intuitive</li>
+        </ul>
+        <div class="highlight-box">
+          <p>The communication skills I built tutoring show up directly in my research work — in paper writing, poster presentations, and explaining Bayesian gait prediction to an audience that doesn't know what a prior distribution is.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PLANETARIUM PRESENTER -->
+    <div class="tl-entry">
+      <div class="tl-content">
+        <div class="tl-meta">
+          <span class="tl-title">Planetarium Presenter</span>
+          <span class="tl-org">Rowan University Planetarium</span>
+          <span class="tl-date">Aug 2021 – Feb 2023 · ~1.5 years</span>
+        </div>
+        <p>
+          Operated and presented live planetarium shows to public audiences, school groups, and university visitors. Covered topics from basic astronomy (constellations, lunar cycles) to solar system mechanics, cosmology, and space exploration history.
+        </p>
+        <p>
+          The Rowan Planetarium hosts public shows, educational programs for K–12 students, and special events. As a presenter, I had to adapt content on the fly — a show for third graders is very different from a show for community adults or university faculty. This was my earliest experience with scientific communication to a non-technical audience.
+        </p>
+        <ul>
+          <li>Delivered live narrated shows under the dome for groups of 10–80 people</li>
+          <li>Operated Digistar projection system and dome controls during live presentations</li>
+          <li>Adapted content depth and vocabulary on the fly to audience age and background</li>
+          <li>Answered live Q&amp;A — including the unexpected ones that required thinking fast</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- COO MOCK COMPANY -->
+    <div class="tl-entry">
+      <div class="tl-content">
+        <div class="tl-meta">
+          <span class="tl-title">Chief Operating Officer — Mock Medical Device Company</span>
+          <span class="tl-org">Rowan University — Senior Capstone</span>
+          <span class="tl-date">2023–2024</span>
+        </div>
+        <p>
+          In Rowan's biomedical engineering senior capstone, students form a mock medical device company and operate it through the full product development lifecycle — from concept to regulatory submission. I served as COO, responsible for coordinating all technical and operational workstreams.
+        </p>
+        <p>
+          This meant owning project timelines, cross-team dependencies, design documentation, and regulatory deliverables (FDA submission format, ISO standard compliance). It was the first time I had to hold a team accountable to a schedule that wasn't mine — a fundamentally different experience from doing the technical work myself.
+        </p>
+        <ul>
+          <li>Coordinated between engineering, clinical, and regulatory workstreams</li>
+          <li>Managed project timeline and milestone deliverables across a multi-person team</li>
+          <li>Oversaw regulatory documentation: design history file, risk management per ISO 14971</li>
+          <li>Synthesized technical work from multiple team members into cohesive documentation</li>
+        </ul>
+        <div class="highlight-box">
+          <p>The regulatory thinking from this capstone directly carried into the exoskeleton project — the ISO 14971 risk analysis methodology I applied to the wearable device came from first learning it in this context.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- THREAD -->
+<section>
+  <h2>The Thread</h2>
+  <p>
+    Looking at these roles together, a pattern emerges: I consistently sought out positions where I was responsible for other people — residents, students, team members — not just deliverables. That's not accidental. I believe the best engineers understand human systems as well as technical ones, and the only way to learn that is to actually be responsible for people.
+  </p>
+  <p>
+    The Planetarium taught me scientific communication. The tutoring taught me pedagogy. The CA/AF roles taught me leadership and crisis management. The COO role taught me operations. All of it feeds into how I approach research: explain clearly, work reliably, build systems that other people can use and trust.
+  </p>
+</section>
+
+</div>
+
+<footer>
+  <p>&copy; 2026 Fawaz Mallick. All rights reserved.</p>
+  <p style="margin-top:12px;"><a href="index.html">← Back to portfolio</a></p>
+</footer>
+
+</body>
+</html>

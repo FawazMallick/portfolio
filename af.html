@@ -3,167 +3,225 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Assistant Housefellow - Fawaz Mallick</title>
-
+  <title>Assistant Housefellow | Fawaz Mallick</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #ccc;
-      color: #333;
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --accent: #00d4ff; --accent-dim: #0099cc; --accent-light: rgba(0,212,255,0.12);
+      --bg: #0a0e27; --card: #0f1429; --border: #1a2240;
+      --text: #e8ecf1; --text-dim: #a8b2c1; --muted: #6b7684; --nav-h: 64px;
     }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
 
-    header {
-      text-align: center;
-      background: #000;
-      color: white;
-      padding: 20px 0;
+    nav {
+      position: sticky; top: 0; z-index: 100; height: var(--nav-h);
+      background: rgba(10,14,39,0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; padding: 0 40px;
     }
+    nav a.logo { color: var(--text); text-decoration: none; font-weight: 600; }
+    nav a.back { color: var(--accent); text-decoration: none; font-size: .85rem; font-weight: 500; transition: opacity .25s; }
+    nav a.back:hover { opacity: .7; }
 
-    header h1 {
-      margin: 0;
-      font-size: 2.5rem;
-    }
+    .container { max-width: 920px; margin: 0 auto; padding: 60px 24px; }
 
-    .container {
-      max-width: 1000px;
-      margin: 30px auto;
-      padding: 30px;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
+    .page-header { margin-bottom: 60px; }
+    .page-header h1 { font-size: clamp(2rem,5vw,3rem); font-weight: 700; color: #fff; margin-bottom: 16px; letter-spacing: -.02em; }
+    .page-header .subtitle { font-size: 1.1rem; color: var(--accent); font-weight: 500; margin-bottom: 20px; }
+    .page-header .intro { font-size: 1.05rem; color: var(--text-dim); line-height: 1.8; max-width: 700px; }
 
-    h2 {
-      color: #00509e;
-      margin-top: 30px;
-    }
+    section { margin-bottom: 60px; }
+    h2 { font-size: 1.7rem; font-weight: 700; color: #fff; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 2px solid var(--border); }
+    h3 { font-size: 1.15rem; font-weight: 600; color: var(--accent); margin-top: 28px; margin-bottom: 12px; }
+    p { font-size: 1rem; color: var(--text-dim); line-height: 1.8; margin-bottom: 16px; }
+    p strong { color: var(--text); }
+    a { color: var(--accent); text-decoration: none; transition: opacity .25s; }
+    a:hover { opacity: .8; }
 
-    p {
-      line-height: 1.6;
-    }
+    ul { list-style: none; padding: 0; margin: 12px 0; }
+    ul li { margin-bottom: 10px; padding-left: 22px; position: relative; font-size: .97rem; color: var(--text-dim); }
+    ul li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-weight: 600; }
 
-    ul {
-      margin-top: 10px;
-    }
+    /* STAT CARDS */
+    .stat-row { display: grid; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); gap: 16px; margin: 32px 0; }
+    .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 24px 20px; text-align: center; }
+    .stat-card .num { font-size: 2.6rem; font-weight: 700; color: var(--accent); line-height: 1; margin-bottom: 8px; }
+    .stat-card .label { font-size: .85rem; color: var(--muted); font-weight: 500; letter-spacing: .02em; }
 
-    a {
-      text-decoration: none;
-      color: #00509e;
-      font-weight: bold;
-    }
+    /* RESPONSIBILITY CARDS */
+    .resp-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap: 18px; margin: 24px 0; }
+    .resp-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 22px; transition: border-color .25s; }
+    .resp-card:hover { border-color: var(--accent); }
+    .resp-card h4 { color: #fff; font-size: 1rem; margin-bottom: 8px; }
+    .resp-card p { font-size: .9rem; color: var(--muted); margin: 0; }
 
-    a:hover {
-      text-decoration: underline;
-    }
+    /* HIGHLIGHT BOX */
+    .highlight-box { background: var(--card); border-left: 4px solid var(--accent); padding: 24px; margin: 28px 0; border-radius: 6px; }
+    .highlight-box p:last-child { margin-bottom: 0; }
 
-    .links-top {
-      background: #f4f4f4;
-      padding: 14px;
-      border-radius: 8px;
-      border: 1px solid #e3e3e3;
-      margin-bottom: 20px;
-    }
+    /* PHILOSOPHY CARDS */
+    .phil-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 16px; margin: 24px 0; }
+    .phil-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; }
+    .phil-card .tag { font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+    .phil-card p { font-size: .9rem; color: var(--text-dim); margin: 0; }
 
-    .links-top ul {
-      margin: 8px 0 0 18px;
-    }
+    footer { border-top: 1px solid var(--border); text-align: center; padding: 40px 20px; color: var(--muted); font-size: .85rem; margin-top: 60px; }
+    footer a { color: var(--accent); }
 
-    .callout {
-      background: #f6f6f6;
-      border-left: 6px solid #00509e;
-      padding: 12px 14px;
-      border-radius: 6px;
-      margin: 14px 0;
-    }
+    @media (max-width: 768px) { nav { padding: 0 20px; } .container { padding: 40px 16px; } }
   </style>
 </head>
-
 <body>
-  <header>
-    <h1>Assistant Housefellow</h1>
-  </header>
 
-  <div class="container">
+<nav>
+  <a href="index.html" class="logo">Fawaz Mallick</a>
+  <a href="index.html" class="back">← Back to portfolio</a>
+</nav>
 
-    <!-- Links at the top -->
-    <div class="links-top">
-      <strong>Official CMU Pages</strong>
-      <ul>
-        <li>
-          <a href="https://www.cmu.edu/housing/about-us/who-we-are/residential-education.html" target="_blank" rel="noopener noreferrer">
-            Residential Education
-          </a>
-        </li>
-        <li>
-          <a href="https://www.cmu.edu/housing/our-communities/residences/mma.html" target="_blank" rel="noopener noreferrer">
-            Maggie Mo First-Year Houses
-          </a>
-        </li>
-      </ul>
+<div class="container">
+
+<div class="page-header">
+  <h1>Assistant Housefellow</h1>
+  <p class="subtitle">Carnegie Mellon University · Maggie Mo First-Year Residential Community · 2024–Present</p>
+  <p class="intro">
+    I took this role because I wanted to lead something that wasn't a project — something with people. While carrying a full graduate course load and RA research, I became the operational backbone of a 101-person first-year residential community. This is what I learned about managing people, not managing code.
+  </p>
+</div>
+
+<!-- SCOPE -->
+<section>
+  <h2>Scope & Scale</h2>
+  <div class="stat-row">
+    <div class="stat-card">
+      <div class="num">101</div>
+      <div class="label">First-year residents</div>
     </div>
-
-    <h2>Overview</h2>
-    <p>
-      As an Assistant Housefellow at Carnegie Mellon, I support a first-year residential community and work closely with
-      student staff and Housing leadership to keep the day-to-day operations running smoothly while also making sure
-      students feel supported and staff feel set up to succeed.
-    </p>
-
-    <div class="callout">
-      <p style="margin:0;">
-        This role is a mix of leadership, operations, and people support, it’s not just one thing.
-      </p>
+    <div class="stat-card">
+      <div class="num">8</div>
+      <div class="label">Student staff</div>
     </div>
-
-    <h2>What I’ve done</h2>
-<ul>
-
-<li>
-<strong>Staff leadership & development:</strong> supported and guided a team of student staff, maintaining open communication
-and holding regular feedback conversations during scheduled 1:1's, guide staff strategic intitiatives with Community Advisor, such as programming goals for the upcoming semester, guide staff on spending and budget decisions, and ofcourse staff outing to bond and build team morale and rapport!
-</li>
-
-<li>
-<strong>Conflict and crisis management:</strong> responded to situations involving interpersonal conflict, student wellbeing,
-and community disruptions, helping de-escalate issues and connecting students with appropriate campus resources when needed.
-</li>
-
-<li>
-<strong>Coordination with campus departments:</strong> worked closely with Residential Education leadership and coordinated
-with other university offices when situations required broader support or follow-up.
-</li>
-
-<li>
-<strong>Confidential information management:</strong> handled sensitive student information responsibly while maintaining
-professional boundaries and trust within the residential community.
-</li>
-
-<li>
-<strong>Building and preparing staff teams:</strong> supported staffing processes including communicating with incoming RAs,
-confirming placements, and helping ensure the next year's team was organized and ready.
-</li>
-
-<li>
-<strong>Operational and administrative support:</strong> helped manage house administrative processes including budgeting,
-staff coordination, and communication with Housing operations to keep the residential community running smoothly.
-</li>
-
-</ul>
-
-    <h2>How I approach the role</h2>
-    <ul>
-      <li><strong>Clear communication:</strong> set expectations early, follow up, and reduce confusion before it becomes a problem.</li>
-      <li><strong>Operational reliability:</strong> handle details and deadlines so the team can focus on supporting students.</li>
-      <li><strong>Iterative Approach & Flexibility:</strong> Things don't always work out the way you want it to, being flexible and being able to adapt my approach, is a skill I have devloped within this job</li>
-      <li><strong>People-first leadership:</strong> keep things professional, calm, and respectful especially when issues are stressful.</li>
-    </ul>
-
-    <p style="margin-top:30px;">
-      <a href="index.html">← Back to Portfolio</a>
-    </p>
-
+    <div class="stat-card">
+      <div class="num">1</div>
+      <div class="label">Professional HF above</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">2+</div>
+      <div class="label">Campus depts. coordinated</div>
+    </div>
   </div>
+
+  <p>
+    The Assistant Housefellow (AF) role sits between the Housefellow (a full-time professional staff member) and the Community Advisor (CA) team — the student RAs who run programs and do direct resident engagement. I support both layers: upward to housing leadership, downward to a team of 8 student staff, and horizontally to residents who need intervention or support.
+  </p>
+  <p>
+    The <strong>Maggie Mo First-Year Houses</strong> are Carnegie Mellon's primary first-year residential experience — the community where students arrive, adjust to university life, and begin to find their people. Getting that right matters.
+  </p>
+</section>
+
+<!-- RESPONSIBILITIES -->
+<section>
+  <h2>What the Role Actually Involves</h2>
+
+  <div class="resp-grid">
+    <div class="resp-card">
+      <h4>Staff Leadership & Development</h4>
+      <p>Weekly 1:1s with student CAs. Set expectations, give feedback, build accountability. Guided programming goals and budget decisions alongside the CA team.</p>
+    </div>
+    <div class="resp-card">
+      <h4>Conflict & Crisis Response</h4>
+      <p>First responder to interpersonal conflicts, wellbeing concerns, and community disruptions. De-escalated incidents, connected students with counseling and campus resources.</p>
+    </div>
+    <div class="resp-card">
+      <h4>Cross-Functional Coordination</h4>
+      <p>Coordinated with Residential Education leadership, Academic Affairs, and student services when situations required broader university response.</p>
+    </div>
+    <div class="resp-card">
+      <h4>Operational & Administrative</h4>
+      <p>Managed house budget allocation, staff scheduling, and administrative processes. Kept operational details clean so the student team could focus on residents.</p>
+    </div>
+    <div class="resp-card">
+      <h4>Confidential Case Management</h4>
+      <p>Handled sensitive student information with discretion — maintaining professional boundaries while ensuring residents got appropriate support and follow-up.</p>
+    </div>
+    <div class="resp-card">
+      <h4>Staff Recruitment & Onboarding</h4>
+      <p>Supported the RA hiring cycle: communicating with incoming staff, confirming placements, organizing pre-semester training logistics so new CAs were ready from day one.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT'S HARD -->
+<section>
+  <h2>What's Actually Hard About This</h2>
+
+  <h3>You're a Peer Who Has Authority</h3>
+  <p>
+    The student staff are peers — graduate students, some the same year as me. Having authority over people who are your intellectual equals, while still being accountable to the professional staff above you, is a particular kind of leadership challenge. You can't just assert authority; you have to build trust and then use it carefully.
+  </p>
+
+  <h3>The Problems Don't Come at Convenient Times</h3>
+  <p>
+    A roommate conflict at 11pm doesn't wait until office hours. A student in crisis doesn't schedule their breakdown for a free slot in your calendar. This role taught me what it means to be actually responsible for people — not just responsible for a deliverable that can be handed off or delayed.
+  </p>
+
+  <h3>Everything Is Contextual</h3>
+  <p>
+    No two situations are the same. A conflict that looks identical on the surface can require completely different responses depending on the history, the personalities, and what each person actually needs. I got better at listening before categorizing — at slowing down the "what do I do?" reflex long enough to actually understand the situation.
+  </p>
+
+  <div class="highlight-box">
+    <p>
+      <strong>The engineering parallel:</strong> My research requires understanding a system before designing a controller. The same thing applies here — understand the person before designing the intervention. Jumping to solutions before diagnosing the problem produces bad output in both domains.
+    </p>
+  </div>
+</section>
+
+<!-- LEADERSHIP PHILOSOPHY -->
+<section>
+  <h2>How I Approach the Role</h2>
+
+  <div class="phil-grid">
+    <div class="phil-card">
+      <div class="tag">Principle 1</div>
+      <p><strong>Clear expectations up front</strong> — set them early, document them, revisit them. Confusion about expectations is the root cause of most avoidable friction.</p>
+    </div>
+    <div class="phil-card">
+      <div class="tag">Principle 2</div>
+      <p><strong>Operational reliability</strong> — handle the details and deadlines so the team doesn't have to. If I drop the administrative ball, my student staff pay the price.</p>
+    </div>
+    <div class="phil-card">
+      <div class="tag">Principle 3</div>
+      <p><strong>Adaptive approach</strong> — things rarely go as planned. Flexibility is not a weakness; it's the ability to get a good outcome on a path that wasn't the original one.</p>
+    </div>
+    <div class="phil-card">
+      <div class="tag">Principle 4</div>
+      <p><strong>People-first under pressure</strong> — keep it professional, calm, and respectful especially when the situation is stressful. Emotional stability in a leader is a resource for the team.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WHY THIS MATTERS -->
+<section>
+  <h2>Why This Matters for Engineering</h2>
+  <p>
+    Good engineering happens in teams. The technical skills — control theory, ML, kinematics — are table stakes. What actually determines whether a project ships, whether research gets published, whether a team stays aligned through difficulty, is the human infrastructure around the technical work.
+  </p>
+  <p>
+    This role gave me practice with that infrastructure: building trust, having hard conversations, managing competing priorities, and keeping people motivated when things are difficult. Those aren't soft skills — they're the skills that make technical skills useful.
+  </p>
+  <p>
+    <a href="https://www.cmu.edu/housing/our-communities/residences/mma.html" target="_blank" rel="noopener noreferrer">→ Maggie Mo First-Year Houses at CMU</a>
+  </p>
+</section>
+
+</div>
+
+<footer>
+  <p>&copy; 2026 Fawaz Mallick. All rights reserved.</p>
+  <p style="margin-top:12px;"><a href="index.html">← Back to portfolio</a></p>
+</footer>
+
 </body>
 </html>

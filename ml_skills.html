@@ -1,0 +1,499 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI & Machine Learning | Fawaz Mallick</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --accent: #00d4ff; --accent-dim: #0099cc; --accent-light: rgba(0,212,255,0.12);
+      --bg: #0a0e27; --card: #0f1429; --card-hover: #151d3a; --border: #1a2240;
+      --text: #e8ecf1; --text-dim: #a8b2c1; --muted: #6b7684; --nav-h: 64px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 100; height: var(--nav-h);
+      background: rgba(10,14,39,0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; padding: 0 40px;
+    }
+    nav a.logo { color: var(--text); text-decoration: none; font-weight: 600; }
+    nav a.back { color: var(--accent); text-decoration: none; font-size: .85rem; font-weight: 500; transition: opacity .25s; }
+    nav a.back:hover { opacity: .7; }
+
+    /* LAYOUT */
+    .container { max-width: 960px; margin: 0 auto; padding: 60px 24px; }
+    .page-header { margin-bottom: 60px; }
+    .page-header h1 { font-size: clamp(2rem,5vw,3rem); font-weight: 700; color: #fff; margin-bottom: 16px; letter-spacing: -.02em; }
+    .page-header .subtitle { font-size: 1.1rem; color: var(--accent); font-weight: 500; margin-bottom: 20px; }
+    .page-header .intro { font-size: 1.05rem; color: var(--text-dim); line-height: 1.8; max-width: 720px; }
+    section { margin-bottom: 70px; }
+    h2 { font-size: 1.7rem; font-weight: 700; color: #fff; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 2px solid var(--border); }
+    h3 { font-size: 1.15rem; font-weight: 600; color: var(--accent); margin-top: 32px; margin-bottom: 12px; }
+    h4 { font-size: 1rem; font-weight: 600; color: #fff; margin-bottom: 8px; margin-top: 20px; }
+    p { font-size: 1rem; color: var(--text-dim); line-height: 1.8; margin-bottom: 16px; }
+    p strong { color: var(--text); }
+    p em { color: var(--accent); font-style: normal; }
+    a { color: var(--accent); text-decoration: none; transition: opacity .25s; }
+    a:hover { opacity: .8; }
+    ul { list-style: none; padding: 0; margin: 12px 0; }
+    ul li { margin-bottom: 8px; padding-left: 22px; position: relative; font-size: .97rem; color: var(--text-dim); }
+    ul li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-weight: 600; }
+
+    /* CODE */
+    .code-block {
+      background: #070b1a; border: 1px solid var(--border); border-radius: 8px;
+      padding: 24px; margin: 24px 0; overflow-x: auto;
+      font-family: 'JetBrains Mono', 'Courier New', monospace; font-size: .88rem;
+      color: #c9d1d9; line-height: 1.7;
+    }
+    .code-block .comment { color: #8b949e; }
+    .code-block .keyword { color: #ff7b72; }
+    .code-block .func { color: #d2a8ff; }
+    .code-block .num { color: #79c0ff; }
+    .code-block .str { color: #a5d6ff; }
+    .code-block .cls { color: #ffa657; }
+    .code-label { font-size: .75rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+
+    /* COURSE CARDS */
+    .course-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 16px; margin: 24px 0; }
+    .course-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; transition: border-color .25s; }
+    .course-card:hover { border-color: var(--accent); }
+    .course-card .tag { font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+    .course-card h4 { color: #fff; margin-bottom: 6px; margin-top: 0; }
+    .course-card p { font-size: .88rem; color: var(--muted); margin: 0; }
+
+    /* HIGHLIGHT BOX */
+    .highlight-box { background: var(--card); border-left: 4px solid var(--accent); padding: 24px; margin: 28px 0; border-radius: 6px; }
+    .highlight-box p:last-child { margin-bottom: 0; }
+
+    /* RESULTS TABLE */
+    .results-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: .9rem; }
+    .results-table th { background: var(--card); color: var(--accent); font-weight: 600; padding: 12px 16px; text-align: left; border-bottom: 2px solid var(--border); }
+    .results-table td { padding: 10px 16px; border-bottom: 1px solid var(--border); color: var(--text-dim); }
+    .results-table tr:hover td { background: var(--card); }
+    .results-table .good { color: #3fb950; font-weight: 600; }
+    .results-table .warn { color: #ffa657; }
+
+    /* IMAGES */
+    .image-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap: 20px; margin: 28px 0; }
+    .image-solo { max-width: 680px; margin: 24px auto; display: block; }
+    img { max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border); transition: border-color .25s; }
+    img:hover { border-color: var(--accent); }
+
+    /* HW CARDS */
+    .hw-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); gap: 20px; margin: 24px 0; }
+    .hw-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 24px; transition: border-color .25s; }
+    .hw-card:hover { border-color: var(--accent); }
+    .hw-card .hw-tag { font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+    .hw-card h4 { color: #fff; margin-bottom: 10px; margin-top: 0; font-size: 1rem; }
+    .hw-card p { font-size: .9rem; color: var(--text-dim); margin-bottom: 10px; }
+    .hw-card p:last-child { margin-bottom: 0; }
+    .hw-card .metric { font-size: .85rem; color: var(--accent); font-weight: 600; margin-top: 6px; }
+
+    /* MODEL ARCH DIAGRAM */
+    .arch-flow { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 24px 0; }
+    .arch-block { background: var(--card); border: 1px solid var(--accent); border-radius: 6px; padding: 12px 18px; text-align: center; font-size: .88rem; color: var(--text); }
+    .arch-block .arch-sub { font-size: .75rem; color: var(--muted); margin-top: 4px; }
+    .arch-arrow { color: var(--accent); font-size: 1.2rem; font-weight: 700; }
+
+    /* APPLIED SECTION */
+    .applied-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); gap: 20px; margin: 24px 0; }
+    .applied-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; transition: border-color .25s; }
+    .applied-card:hover { border-color: var(--accent); }
+    .applied-card img { border-radius: 0; border: none; border-bottom: 1px solid var(--border); width: 100%; max-height: 200px; object-fit: cover; }
+    .applied-card .applied-body { padding: 20px; }
+    .applied-card h4 { color: #fff; margin: 0 0 8px; }
+    .applied-card p { font-size: .9rem; color: var(--muted); margin: 0; }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); text-align: center; padding: 40px 20px; color: var(--muted); font-size: .85rem; margin-top: 60px; }
+    footer a { color: var(--accent); }
+
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .container { padding: 40px 16px; }
+      h2 { font-size: 1.4rem; }
+      .arch-flow { gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">Fawaz Mallick</a>
+  <a href="index.html" class="back">← Back to portfolio</a>
+</nav>
+
+<div class="container">
+
+<!-- HEADER -->
+<div class="page-header">
+  <h1>AI & Machine Learning</h1>
+  <p class="subtitle">From Classical Models → Deep Learning → Real-World Engineering Applications</p>
+  <p class="intro">
+    I didn't start with neural networks. I started with understanding <em>why</em> models work — gradient descent on a logistic regression, the geometry of support vectors, the math behind decision trees. That foundation made everything that came after stick. This page traces that arc: from implementing ML from scratch in coursework, to training dual-GPU deep learning models on NASA jet engine datasets, to applying probabilistic ML to human gait in my current research.
+  </p>
+</div>
+
+<!-- LEARNING ARC -->
+<section>
+  <h2>The Learning Arc</h2>
+  <p>
+    The course ran 13 modules, each building on the last. No black boxes — every algorithm was implemented from scratch before we were allowed to use a library.
+  </p>
+  <div class="course-grid">
+    <div class="course-card">
+      <div class="tag">M1–M2</div>
+      <h4>Foundations</h4>
+      <p>Linear regression, gradient descent, bias-variance tradeoff, cross-validation. Implemented everything from numpy arrays up.</p>
+    </div>
+    <div class="course-card">
+      <div class="tag">M3</div>
+      <h4>Classification</h4>
+      <p>Logistic regression, polynomial feature mapping, nonlinear decision boundaries. Built gradient descent optimizer by hand.</p>
+    </div>
+    <div class="course-card">
+      <div class="tag">M4–M5</div>
+      <h4>Kernel Methods & Trees</h4>
+      <p>Soft-margin SVM via quadratic programming, decision trees, random forests, ensemble methods.</p>
+    </div>
+    <div class="course-card">
+      <div class="tag">M6–M8</div>
+      <h4>Neural Networks</h4>
+      <p>MLP backpropagation from scratch, CNNs for image tasks, regularization, batch normalization.</p>
+    </div>
+    <div class="course-card">
+      <div class="tag">M9–M11</div>
+      <h4>Sequence Models</h4>
+      <p>RNNs, LSTMs, GRUs for time-series. Attention mechanisms, transformers, positional encoding.</p>
+    </div>
+    <div class="course-card">
+      <div class="tag">M12–M13</div>
+      <h4>Generative & Advanced</h4>
+      <p>VAEs, GANs, reinforcement learning foundations, policy gradients. Final project synthesis.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED PROJECT: RUL -->
+<section>
+  <h2>Featured Project: Turbofan Engine RUL Prediction</h2>
+
+  <div class="highlight-box">
+    <p><strong>The Question:</strong> Can we predict when a jet engine will fail — before it does? Given multivariate sensor data from hundreds of engines across thousands of flight cycles, predict each engine's <em>Remaining Useful Life (RUL)</em> with enough accuracy to act on.</p>
+  </div>
+
+  <h3>The Problem: Why RUL Matters</h3>
+  <p>
+    Turbofan engines degrade gradually. If you wait for failure, you get a catastrophic event. If you replace parts too early, you waste money. The goal is to predict — precisely — how many flight cycles remain before an engine needs maintenance. This is a safety-critical regression problem on noisy, multivariate time-series data.
+  </p>
+  <p>
+    I worked with the <strong>NASA C-MAPSS dataset</strong> — a benchmark for RUL prediction research. It simulates four fleets of 100–259 engines per fleet, with 21 sensor channels per time step, under varying operating conditions (one vs. multiple flight regimes and fault modes). Training was done on FD001 (single condition, 100 engines); generalization was tested on FD002–FD004 (multi-condition).
+  </p>
+
+  <h3>Dataset at a Glance</h3>
+  <ul>
+    <li><strong>Training data (FD001):</strong> 20,631 time steps across 100 engines, 21 sensor channels</li>
+    <li><strong>Test sets:</strong> FD001–FD004, ranging from 100 to 259 engines, single and multi-condition</li>
+    <li><strong>Target:</strong> Cycles-to-failure for each engine at last observed time step</li>
+    <li><strong>Challenge:</strong> FD002 and FD004 have six operating conditions — true generalization test</li>
+    <li><strong>Infrastructure:</strong> Trained on Kaggle (2× NVIDIA GPU), ~100 epochs each model</li>
+  </ul>
+
+  <img src="images/fig_fd001.png" alt="FD001 Actual vs Predicted RUL — GRU Baseline vs Embed-RUL" class="image-solo">
+
+  <h3>Two Approaches: Baseline GRU vs Embed-RUL</h3>
+  <p>
+    Rather than just training one model, I implemented and compared two architecturally distinct approaches: a straightforward sequence-to-scalar GRU, and a paper-based encoder-decoder system with a custom health index formulation.
+  </p>
+
+  <div class="arch-flow">
+    <div class="arch-block">Raw Sensor Data<div class="arch-sub">21 channels × T steps</div></div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-block">MinMax Scaling<div class="arch-sub">per-sensor normalization</div></div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-block">Sliding Window<div class="arch-sub">seq_len = 25 (GRU) / 30 (AE)</div></div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-block"><strong>Model</strong><div class="arch-sub">GRU or Embed-RUL</div></div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-block">RUL Estimate<div class="arch-sub">cycles remaining</div></div>
+  </div>
+
+  <h4>Approach 1: Baseline GRU</h4>
+  <p>
+    A clean two-layer GRU that reads a sliding window of sensor observations and outputs a single RUL prediction. Trained end-to-end with a custom <strong>asymmetric scoring loss</strong> — the standard in RUL literature, which penalizes late predictions (missing imminent failure) more heavily than early ones.
+  </p>
+
+  <div class="code-label">GRU Architecture + Asymmetric Loss</div>
+  <div class="code-block"><span class="keyword">class</span> <span class="cls">RUL_GRU</span>(nn.Module):
+    <span class="keyword">def</span> <span class="func">__init__</span>(<span class="keyword">self</span>, input_size=<span class="num">21</span>, hidden_size=<span class="num">64</span>, num_layers=<span class="num">2</span>):
+        <span class="keyword">super</span>().__init__()
+        <span class="keyword">self</span>.gru = nn.<span class="func">GRU</span>(input_size, hidden_size, num_layers, batch_first=<span class="keyword">True</span>)
+        <span class="keyword">self</span>.fc  = nn.<span class="func">Linear</span>(hidden_size, <span class="num">1</span>)
+
+    <span class="keyword">def</span> <span class="func">forward</span>(<span class="keyword">self</span>, x):
+        out, _ = <span class="keyword">self</span>.<span class="func">gru</span>(x)
+        <span class="keyword">return</span> <span class="keyword">self</span>.<span class="func">fc</span>(out[:, <span class="num">-1</span>, :])  <span class="comment"># last time step → RUL scalar</span>
+
+
+<span class="keyword">class</span> <span class="cls">AsymmetricScoringLoss</span>(nn.Module):
+    <span class="comment">"""Penalises late predictions (missed failures) harder than early ones."""</span>
+    <span class="keyword">def</span> <span class="func">forward</span>(<span class="keyword">self</span>, y_pred, y_true):
+        d = y_pred - y_true
+        <span class="keyword">return</span> torch.<span class="func">where</span>(
+            d &lt; <span class="num">0</span>,
+            torch.<span class="func">exp</span>(-d / <span class="num">13</span>) - <span class="num">1</span>,   <span class="comment"># under-prediction: steeper penalty</span>
+            torch.<span class="func">exp</span>( d / <span class="num">10</span>) - <span class="num">1</span>    <span class="comment"># over-prediction: milder penalty</span>
+        ).<span class="func">mean</span>()</div>
+
+  <h4>Approach 2: Embed-RUL (Encoder-Decoder Autoencoder)</h4>
+  <p>
+    A more complex, paper-inspired architecture. An encoder compresses each sensor window into a learned embedding space. A decoder reconstructs the window from that embedding — the autoencoder bottleneck forces the encoder to capture health-relevant structure. The embedding is then used to compute a <strong>Health Index (HI)</strong> curve per engine, which drives RUL estimation via a similarity-based matching algorithm across the training fleet.
+  </p>
+  <p>
+    The key insight: normal operating embeddings cluster together (near the learned <em>Z_norm</em> reference), while degraded embeddings drift away. Distance from Z_norm becomes a continuous degradation signal.
+  </p>
+
+  <div class="code-label">Encoder / Decoder Architecture</div>
+  <div class="code-block"><span class="keyword">class</span> <span class="cls">Encoder</span>(nn.Module):
+    <span class="comment">"""Reads masked sensor windows → fixed-size health embedding."""</span>
+    <span class="keyword">def</span> <span class="func">__init__</span>(<span class="keyword">self</span>, input_size=<span class="num">45</span>, hidden_size=<span class="num">55</span>, dropout=<span class="num">0.2</span>):
+        <span class="keyword">super</span>().__init__()
+        <span class="keyword">self</span>.cell = nn.<span class="func">GRUCell</span>(input_size, hidden_size)
+        <span class="keyword">self</span>.drop = nn.<span class="func">Dropout</span>(p=dropout)
+
+    <span class="keyword">def</span> <span class="func">forward</span>(<span class="keyword">self</span>, x):  <span class="comment"># x = [batch, seq, features+mask+delta]</span>
+        h = torch.<span class="func">zeros</span>(x.size(<span class="num">0</span>), <span class="keyword">self</span>.hidden_size, device=x.device)
+        <span class="keyword">for</span> t <span class="keyword">in</span> <span class="func">range</span>(x.size(<span class="num">1</span>)):
+            h = <span class="keyword">self</span>.<span class="func">cell</span>(<span class="keyword">self</span>.drop(x[:, t, :]), h)
+        <span class="keyword">return</span> h  <span class="comment"># final hidden = compact health embedding</span>
+
+
+<span class="keyword">class</span> <span class="cls">Decoder</span>(nn.Module):
+    <span class="comment">"""Reconstructs sensor sequence from embedding (autoencoder objective)."""</span>
+    <span class="keyword">def</span> <span class="func">forward</span>(<span class="keyword">self</span>, embedding, seq_len):
+        h, outs = embedding, []
+        <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="func">range</span>(seq_len):
+            h = <span class="keyword">self</span>.<span class="func">cell</span>(<span class="keyword">self</span>.drop(h), h)
+            outs.<span class="func">append</span>(<span class="keyword">self</span>.<span class="func">fc</span>(h).<span class="func">unsqueeze</span>(<span class="num">1</span>))
+        <span class="keyword">return</span> torch.<span class="func">cat</span>(outs, dim=<span class="num">1</span>)</div>
+
+  <h3>Visualization: Learned Embedding Space</h3>
+  <p>
+    The t-SNE plot below validates the encoder's core claim: <strong>embeddings from healthy engines cluster separately from degraded ones</strong> — the encoder has learned a meaningful health representation purely from reconstruction loss, with no RUL labels used during autoencoder training.
+  </p>
+
+  <div class="image-grid">
+    <img src="images/fig_tsne.png" alt="t-SNE of Encoder Embeddings — Normal vs Degraded">
+    <img src="images/fig_hi_curves.png" alt="Health Index Curves — Sample Training Engines">
+  </div>
+
+  <h3>Results</h3>
+  <p>
+    Both models were trained on FD001 and evaluated across all four test sets. Key findings:
+  </p>
+
+  <table class="results-table">
+    <thead>
+      <tr>
+        <th>Dataset</th>
+        <th>Condition</th>
+        <th>GRU RMSE</th>
+        <th>GRU A(%)</th>
+        <th>Embed-RUL RMSE</th>
+        <th>Note</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>FD001</td>
+        <td>Single</td>
+        <td class="good">13.17</td>
+        <td class="good">60%</td>
+        <td class="warn">64.02</td>
+        <td>GRU wins; Embed shows degradation signal</td>
+      </tr>
+      <tr>
+        <td>FD002</td>
+        <td>Multi (6)</td>
+        <td class="warn">118.5</td>
+        <td>6.6%</td>
+        <td>—</td>
+        <td>Both struggle; distribution shift</td>
+      </tr>
+      <tr>
+        <td>FD003</td>
+        <td>Single</td>
+        <td class="good">42.06</td>
+        <td>34%</td>
+        <td class="warn">70.25</td>
+        <td>GRU generalizes; Embed HI curves diverge</td>
+      </tr>
+      <tr>
+        <td>FD004</td>
+        <td>Multi (6)</td>
+        <td class="warn">124.5</td>
+        <td>6.6%</td>
+        <td>—</td>
+        <td>Multi-condition unseen at train time</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="highlight-box">
+    <p><strong>Key Insight:</strong> The GRU baseline dominates on accuracy (RMSE 13.17 on FD001, paired t-test p &lt; 0.0001). But its failure on multi-condition datasets reveals a fundamental limitation: a discriminative model trained end-to-end on one condition can't generalize without retraining. The Embed-RUL approach, while less accurate when it works, offers <em>interpretability</em> — the Health Index curves and t-SNE embeddings make it possible to see <em>why</em> the model predicts what it predicts, which matters in safety-critical deployment.</p>
+  </div>
+
+  <img src="images/fig_rul_estimation.png" alt="RUL Estimation Results — Predicted vs Actual" class="image-solo">
+
+  <p>
+    <strong>Takeaway:</strong> This project taught me that choosing a model architecture is an engineering decision, not just a performance optimization. Accuracy and interpretability trade off. Multi-condition generalization requires either domain adaptation or richer training data — not a bigger model.
+  </p>
+</section>
+
+<!-- COURSEWORK HIGHLIGHTS -->
+<section>
+  <h2>Coursework Highlights</h2>
+  <p>
+    Across 13 modules, some assignments stood out for their depth. Each required implementing the algorithm from first principles — no sklearn wrappers until after proving you understood the math.
+  </p>
+
+  <div class="hw-grid">
+    <div class="hw-card">
+      <div class="hw-tag">Module 3 · HW1</div>
+      <h4>Logistic Regression + Polynomial Feature Mapping</h4>
+      <p>
+        Projectile hit/miss classification with a <strong>nonlinear decision boundary</strong>. Built a feature map that expands 2D inputs to 45 features through all 8th-order polynomial terms, then trained a logistic regression classifier with gradient descent.
+      </p>
+      <p>
+        The challenge: the raw input space has no linear separator. The feature mapping creates a rich enough function class that gradient descent finds a clean boundary. Implemented sigmoid, cross-entropy loss, its gradient, and the full training loop from scratch.
+      </p>
+      <p class="metric">Result: &gt;95% classification accuracy on held-out test set</p>
+    </div>
+
+    <div class="hw-card">
+      <div class="hw-tag">Module 4 · HW1</div>
+      <h4>Soft Margin SVM via Quadratic Programming</h4>
+      <p>
+        Implemented a soft-margin SVM classifier by directly solving the quadratic programming dual problem using <strong>cvxopt</strong>. Manually constructed the P, q, G, h constraint matrices from scratch.
+      </p>
+      <p>
+        The interesting part: sweeping over the regularization parameter C to watch how the margin and misclassification rate trade off. As C → 0, the classifier becomes increasingly tolerant of margin violations; as C → ∞, it approaches the hard-margin solution.
+      </p>
+      <p class="metric">Solved QP directly — no sklearn SVC wrapper</p>
+    </div>
+
+    <div class="hw-card">
+      <div class="hw-tag">Module 5 · HW1</div>
+      <h4>Decision Tree vs Random Forest</h4>
+      <p>
+        Trained and compared a depth-10 decision tree against a 100-estimator random forest on the <strong>UCI Cylinder Bands dataset</strong> — 39 features, binary classification for rotogravure printer defects.
+      </p>
+      <p>
+        The decision tree achieved near-perfect training accuracy but lower test accuracy — classic overfitting. The random forest's ensemble averaging reduced variance and generalized substantially better. Wrote a clear analysis of why bootstrap aggregation works: decorrelated trees average out individual biases.
+      </p>
+      <p class="metric">Random Forest: measurably higher test accuracy vs. single tree</p>
+    </div>
+
+    <div class="hw-card">
+      <div class="hw-tag">Module 9–11</div>
+      <h4>Sequence Models: RNNs, LSTMs, Attention</h4>
+      <p>
+        Implemented vanilla RNN backpropagation through time (BPTT), then LSTM with all four gate equations from scratch. Studied vanishing gradient problem experimentally — recorded gradient norms across time steps to see exactly where training signal collapses.
+      </p>
+      <p>
+        Attention mechanism implementation: scaled dot-product attention, then multi-head attention. This sequence directly prepared me for the GRU architectures in the RUL project and the encoder design in Embed-RUL.
+      </p>
+      <p class="metric">Gradient norms visualized across sequence depths 10, 50, 100</p>
+    </div>
+
+    <div class="hw-card">
+      <div class="hw-tag">Module 6–8</div>
+      <h4>Backpropagation from Scratch</h4>
+      <p>
+        Implemented a fully-connected neural network with forward pass and manual backpropagation — computing weight gradients by hand via the chain rule, with no autograd. Then added batch normalization and dropout, verified numerically with gradient checking.
+      </p>
+      <p>
+        This exercise was harder than it sounds. Every matrix dimension mismatch is a bug in your math, not a bug in your code. Getting it right meant I actually understood what PyTorch's <code>.backward()</code> does under the hood.
+      </p>
+      <p class="metric">Gradient check: numerical ≈ analytical to within 1e-7</p>
+    </div>
+
+    <div class="hw-card">
+      <div class="hw-tag">Module 12–13</div>
+      <h4>VAEs and Generative Models</h4>
+      <p>
+        Implemented a Variational Autoencoder (VAE) with the reparameterization trick. Minimized the ELBO loss combining reconstruction error with KL divergence. Generated new samples by sampling from the learned latent distribution.
+      </p>
+      <p>
+        This module connected directly to my research: the Embed-RUL encoder-decoder architecture is essentially a non-variational autoencoder applied to time-series. Understanding VAEs first made the Embed-RUL paper's design choices much clearer.
+      </p>
+      <p class="metric">Generated interpolations in learned latent space</p>
+    </div>
+  </div>
+</section>
+
+<!-- APPLIED TO REAL PROBLEMS -->
+<section>
+  <h2>Applied to Real Problems</h2>
+  <p>
+    Beyond coursework, I've applied ML methods to two engineering domains that I care about — medical imaging and human gait. Both are harder than clean benchmark datasets: real-world noise, small data, and stakes that matter.
+  </p>
+
+  <h3>Fracture Detection with ResNet-50</h3>
+  <p>
+    For a biomedical engineering project, I applied a <strong>ResNet-50 convolutional neural network</strong> (transfer learning from ImageNet) to detect and localize fractures in X-ray images. The goal was to replicate surgical annotation — identifying fracture sites to support pre-operative planning.
+  </p>
+  <p>
+    We manually annotated a dataset of fracture X-rays, then fine-tuned ResNet-50 in MATLAB. The model was evaluated by comparing its predicted fracture regions against expert surgeon annotations. The side-by-side comparison showed high visual agreement — a promising proof of concept for AI-assisted surgical planning.
+  </p>
+
+  <div class="image-grid">
+    <img src="images/AI (1).png" alt="Fracture Detection — X-ray Input">
+    <img src="images/AI (2).png" alt="Fracture Detection — Model Architecture">
+    <img src="images/AI (3).png" alt="Fracture Detection — Prediction vs Ground Truth">
+  </div>
+
+  <h3>Bayesian Gait Prediction (Current RA Research)</h3>
+  <p>
+    My current research at CMU applies probabilistic ML — specifically Bayesian inference — to predict where a prosthetic leg user will place their foot next. Unlike the turbofan problem (clean, single-domain data), gait data is messy: sensor drift, inter-subject variability, latency constraints.
+  </p>
+  <p>
+    Why Bayesian? Because uncertainty quantification matters. In a safety-critical prosthetic control system, knowing "I'm 95% confident" is fundamentally different from "I'm 60% confident." A discriminative regression model gives a point estimate; a Bayesian model gives a distribution.
+  </p>
+
+  <div class="highlight-box">
+    <p><strong>Current results:</strong> Offline evaluation on motion capture + IMU data shows RMSE &lt; 50mm for foot placement prediction across multiple subjects and walking speeds. Feature importance analysis reveals that mid-swing angular velocity is the strongest predictor — consistent with biomechanical intuition about the swing-to-stance transition.</p>
+  </div>
+
+  <p>
+    <a href="prosthetics.html">→ Read the full prosthetics research page</a> for the complete pipeline, dataset description, and future multi-modal sensing directions.
+  </p>
+</section>
+
+<!-- WHAT THIS BUILDS TOWARD -->
+<section>
+  <h2>What This Builds Toward</h2>
+  <p>
+    The thread across all of this work is the same: <em>building models that are right for their domain</em>, not just models that score well on a benchmark. A GRU that achieves RMSE 13 on FD001 is impressive — until you realize it fails completely on FD002. A Bayesian model that gives uncertain predictions on a hard case is more useful than a neural network that confidently outputs the wrong answer.
+  </p>
+  <p>
+    I want to keep working at the intersection of ML and physical systems — where models have to interact with sensors, bodies, and environments that don't cooperate. The engineering constraints make the problems harder and the solutions more meaningful.
+  </p>
+</section>
+
+</div>
+
+<footer>
+  <p>&copy; 2026 Fawaz Mallick. All rights reserved.</p>
+  <p style="margin-top:12px;"><a href="index.html">← Back to portfolio</a></p>
+</footer>
+
+</body>
+</html>

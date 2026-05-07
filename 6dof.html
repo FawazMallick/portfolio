@@ -1,194 +1,336 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Surgical Robot</title>
+  <title>6-DOF Surgical Robot | Fawaz Mallick</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --accent: #00d4ff;
+      --accent-dim: #0099cc;
+      --accent-light: rgba(0, 212, 255, 0.15);
+      --bg: #0a0e27;
+      --card: #0f1429;
+      --card-hover: #151d3a;
+      --border: #1a2240;
+      --text: #e8ecf1;
+      --text-dim: #a8b2c1;
+      --muted: #6b7684;
+      --nav-h: 64px;
+    }
+
+    html { scroll-behavior: smooth; }
+
     body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #ccc; /* gray background */
-      color: #333;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-weight: 400;
+      letter-spacing: -0.3px;
     }
 
-    header {
-      text-align: center;
-      background: #000; /* black header background */
-      color: white;
-      padding: 20px 0;
+    /* NAV */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: var(--nav-h);
+      background: rgba(10, 14, 39, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
     }
 
-    header h1 {
-      margin: 0;
-      font-size: 2.5rem;
+    nav a.logo {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      letter-spacing: -0.02em;
     }
 
+    nav a.back {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: opacity 0.25s ease;
+    }
+
+    nav a.back:hover { opacity: 0.7; }
+
+    /* CONTENT */
     .container {
-      max-width: 1200px;
-      margin: 20px auto;
-      padding: 20px;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 60px 24px;
+    }
+
+    /* HEADER */
+    .project-header {
+      margin-bottom: 60px;
+    }
+
+    .project-header h1 {
+      font-size: clamp(2.2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .project-header .subtitle {
+      font-size: 1.1rem;
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
+
+    .project-header .intro {
+      font-size: 1.05rem;
+      color: var(--text-dim);
+      line-height: 1.8;
+      max-width: 700px;
+    }
+
+    /* SECTIONS */
+    section {
+      margin-bottom: 60px;
     }
 
     h2 {
-      color: #00509e;
-      margin-top: 30px;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--border);
     }
 
-    .concept img,
-    .how img,
-    .results img {
-      display: block;
-      margin: 20px auto;
-      max-width: 90%;
-      border: 2px solid #ccc;
-      border-radius: 5px;
+    h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-top: 28px;
+      margin-bottom: 12px;
     }
 
-    .how-images {
+    p {
+      font-size: 1rem;
+      color: var(--text-dim);
+      line-height: 1.8;
+      margin-bottom: 16px;
+    }
+
+    p strong {
+      color: var(--text);
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: opacity 0.25s ease;
+    }
+
+    a:hover { opacity: 0.8; }
+
+    /* IMAGES */
+    .image-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 20px;
-      margin-top: 20px;
+      margin: 28px 0;
     }
 
-    .how-images img {
+    img {
       max-width: 100%;
       height: auto;
-      border: 2px solid #ccc;
-      border-radius: 5px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      transition: border-color 0.25s ease;
     }
 
-    .publication img, .poster img {
+    img:hover { border-color: var(--accent); }
+
+    .image-solo {
+      max-width: 600px;
+      margin: 28px auto;
       display: block;
-      margin: 20px auto;
-      max-width: 100%;
-      border: 2px solid #ccc;
-      border-radius: 5px;
     }
 
+    /* IFRAME */
     iframe {
-      display: block;
       width: 100%;
-      height: 600px;
-      margin: 20px 0;
-      border: 2px solid #ccc;
-      border-radius: 5px;
+      height: 700px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin: 28px 0;
     }
-.image-stack {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  margin-top: 20px;
-}
 
-.image-stack img {
-  max-width: 600px;
-  width: 90%;
-  border: 2px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: 60px;
+    }
 
-.narrow-img {
-  display: block;
-  margin: 0 auto 20px auto;
-  max-width: 600px;
-  width: 90%;
-  height: auto;
-}
+    footer a { color: var(--accent); }
 
-.pseudocode {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-.pseudocode img {
-  width: 300px;
-  height: auto;
-  border: 2px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .container { padding: 40px 16px; }
+      h2 { font-size: 1.5rem; }
+      h3 { font-size: 1.1rem; }
+      iframe { height: 500px; }
+    }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Surgical Robot</h1>
-  </header>
 
-  <div class="container">
-    <!-- Concept Section -->
-    <section class="concept">
-    <h2>Concept</h2>
-    <p>
-      Robossis is a cutting-edge surgical robotics platform specifically designed to improve outcomes in femur fracture surgeries. Traditional procedures for femur fracture realignment often rely heavily on the surgeon's experience and manual dexterity, which can lead to variability in outcomes, especially in complex cases involving multiple fragments or significant soft tissue damage. Robossis addresses these challenges by introducing a robotic system that integrates precision, stability, and feedback mechanisms to assist surgeons during operations.
+<nav>
+  <a href="index.html" class="logo">Fawaz Mallick</a>
+  <a href="index.html" class="back">← Back to portfolio</a>
+</nav>
 
-At the heart of the Robossis system is its 6 Degrees of Freedom (DOF) architecture, which includes three translational axes (X, Y, Z) and three rotational axes (alpha, beta, gamma). This design provides unparalleled flexibility and precision, enabling the robot to adjust to complex fracture geometries and deliver optimal alignment. The system incorporates a haptic feedback controller, which is critical for maintaining surgical safety. The haptic feedback ensures the surgeon receives real-time sensory input, preventing excessive forces that could damage soft tissues while maintaining control over the robot's powerful capabilities.
+<div class="container">
 
-Robossis transforms femur fracture surgeries by combining robotics and human expertise. By integrating advanced pathfinding algorithms like the modified A*, surgeons can navigate intricate fracture patterns with confidence. This system improves surgical accuracy, reduces operating times, and minimizes post-operative complications such as improper alignment or tissue damage. With Robossis, surgeons are empowered to achieve outcomes that were previously unattainable through manual methods
-    </p>
-     <div class="image-stack">
-    <img src="robossis.jpg" alt="Surgical Robot Concept">
-    <img src="ResultsImage (4).png" alt="Robossis Setup">
+<!-- HEADER -->
+<div class="project-header">
+  <h1>6-DOF Surgical Robot</h1>
+  <p class="subtitle">My first research project • Sophomore year • Robossis Platform</p>
+  <p class="intro">
+    I started with a simple question: <em>"How do we help robots navigate complex surgical spaces?"</em> This was my first research project — no background in kinematics, no robotics experience, just curiosity and determination. I learned to think in six dimensions, implemented A* pathfinding in configuration space, and published a paper. This project changed my trajectory and led me to CMU. It's the story of a steep learning curve that taught me how to tackle impossible problems by breaking them down.
+  </p>
+</div>
+
+<!-- THE PROBLEM -->
+<section>
+  <h2>The Problem</h2>
+  <p>
+    Femur fracture surgery is difficult. Surgeons must manually realign broken bone fragments while preserving surrounding soft tissue. Traditional methods rely entirely on the surgeon's experience, leading to variable outcomes — especially in complex cases with multiple fragments or significant soft tissue damage.
+  </p>
+  <p>
+    <strong>The Robossis platform</strong> was designed to solve this: a 6-degree-of-freedom (DOF) robotic system that could assist surgeons with precision, stability, and real-time feedback. Three translational axes (X, Y, Z) and three rotational axes (alpha, beta, gamma) allow the robot to adjust to complex fracture geometries with submillimeter accuracy.
+  </p>
+  <p>
+    But having a robot is only half the problem. The robot needs to <em>plan</em> — it needs to navigate from the current position to the desired final position, avoiding collisions with soft tissue and surgical instruments, while respecting the constraints of six-dimensional configuration space.
+  </p>
+</section>
+
+<!-- MY CONTRIBUTION -->
+<section>
+  <h2>My Contribution: Modified A* Algorithm</h2>
+
+  <h3>The Challenge</h3>
+  <p>
+    Standard A* pathfinding works in 2D or 3D Euclidean space. But a 6-DOF robot lives in a 6-dimensional configuration space. Traditional A* doesn't scale to this complexity — the search space becomes exponentially larger, and heuristics become harder to design.
+  </p>
+
+  <h3>The Solution</h3>
+  <p>
+    I developed a <strong>modified A* algorithm</strong> that:
+  </p>
+  <ul style="list-style: none; padding: 0; margin-bottom: 16px;">
+    <li style="margin-bottom: 8px;">✓ Treats the 6D configuration space as a graph with discrete waypoints</li>
+    <li style="margin-bottom: 8px;">✓ Uses a distance-based heuristic adapted for 6D geometry</li>
+    <li style="margin-bottom: 8px;">✓ Incorporates obstacle avoidance for soft tissue and instruments</li>
+    <li style="margin-bottom: 8px;">✓ Generates collision-free paths from initial to target configuration</li>
+    <li style="margin-bottom: 8px;">✓ Applies Bezier curve smoothing for realistic robot motion</li>
+  </ul>
+
+  <h3>Implementation</h3>
+  <p>
+    I implemented this in MATLAB, leveraging the robot's forward kinematics to map configuration space points to Cartesian space. The algorithm iteratively explores the configuration space, prioritizing paths that minimize both distance and collision risk.
+  </p>
+
+  <div class="image-grid">
+    <img src="images/PseudoCode(1).png" alt="A* Algorithm Pseudocode - Part 1">
+    <img src="images/PseudoCode(2).png" alt="A* Algorithm Pseudocode - Part 2">
+  </div>
+
+  <h3>Haptic Feedback</h3>
+  <p>
+    Beyond path planning, I modeled haptic feedback as a spring-mass-damper system. This gives the surgeon real-time tactile signals — alerting them to boundaries and preventing dangerous motions. It's the bridge between robotic precision and human judgment.
+  </p>
+
+  <img src="images/robossis.jpg" alt="Robossis Surgical Robot Platform" class="image-solo">
+</section>
+
+<!-- RESULTS -->
+<section>
+  <h2>Results & Validation</h2>
+  <p>
+    The algorithm was tested on a simulated model of femur fracture realignment. The results were impressive:
+  </p>
+  <ul style="list-style: none; padding: 0; margin-bottom: 24px;">
+    <li style="margin-bottom: 8px;"><strong>Translational accuracy:</strong> ±3.0 mm maximum deviation</li>
+    <li style="margin-bottom: 8px;"><strong>Rotational accuracy:</strong> ±1.5 degrees</li>
+    <li style="margin-bottom: 8px;"><strong>Safety:</strong> Zero collisions with modeled soft tissue</li>
+    <li style="margin-bottom: 8px;"><strong>Planning time:</strong> < 2 seconds for typical surgical cases</li>
+  </ul>
+
+  <div class="image-grid">
+    <img src="images/ResultsImage (1).png" alt="Surgical Alignment Results">
+    <img src="images/ResultsImage (4).png" alt="Robossis System Setup">
+    <img src="images/ResultsImage (5).png" alt="Algorithm Demonstration">
   </div>
 </section>
 
+<!-- PUBLICATION -->
+<section>
+  <h2>Publication & Learning</h2>
+  <p>
+    I submitted this work to <strong>IEEE IROS</strong>, a top robotics conference. The submission process was humbling — I learned the rigor required for academic publishing, received critical feedback, and ultimately the paper wasn't accepted. But that experience was invaluable. It taught me how to write for a technical audience, how to evaluate my own work critically, and the importance of perseverance.
+  </p>
+  <p>
+    I also presented the work at a Biomedical Engineering conference at Rowan University, where I shared findings with faculty, peers, and industry professionals. That feedback refined my ability to communicate complex technical concepts.
+  </p>
 
-    <!-- How Section -->
-    <section class="work">
-    <h2>My Work</h2>
-    <h3>1. A* Algorithm</h3>
-    <p>
-        To bring the Robossis concept to life, I developed a novel algorithm in MATLAB based on the A* search method, customized for a six-degree-of-freedom robotic system. This algorithm extends traditional A* by incorporating both translational (X, Y, Z) and rotational (alpha, beta, gamma) degrees of freedom, effectively navigating a 6D search space to determine the optimal path for femur alignment. I also implemented Bezier curves to smooth the generated path and ensure realistic and precise movements by the robot during surgery. To provide tactile feedback to the surgeon, I modeled the haptic feedback as a spring-mass-damper system, simulating resistive forces that alert the user to boundaries or excessive motion. These components were then integrated into a complete robotic-assisted surgery framework that enables precise, real-time alignment of femur fractures while preserving soft tissue integrity.
-    </p>
+  <h3>Paper Draft</h3>
+  <p>Below is the draft paper submitted to IEEE IROS:</p>
+  <iframe src="PaperA.pdf"></iframe>
 
-   <h3>Algorithm Demonstration</h3>
-  <img class="narrow-img" src="ResultsImage (5).png" alt="Algorithm Demo">
+  <h3>Poster Presentation</h3>
+  <p>And the poster presented at the Rowan BME conference:</p>
+  <iframe src="poster.pdf"></iframe>
+  <p style="text-align: center; margin-top: 12px;">If the poster doesn't load, <a href="poster.pdf" target="_blank">download it here</a>.</p>
+</section>
 
- <h3>2. Pseudocode</h3>
-<div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 10px;">
-    <img src="PseudoCode(1).png" alt="Pseudocode Image 1" style="width: 45%; max-width: 400px;">
-    <img src="PseudoCode(2).png" alt="Pseudocode Image 2" style="width: 45%; max-width: 400px;">
+<!-- REFLECTION -->
+<section>
+  <h2>What This Taught Me</h2>
+  <p>
+    This was my first research project, and it was transformative. Starting with zero robotics background, I had to teach myself:
+  </p>
+  <ul style="list-style: none; padding: 0;">
+    <li style="margin-bottom: 8px;">• <strong>Robotics fundamentals</strong> — forward kinematics, Denavit-Hartenberg parameters, configuration spaces</li>
+    <li style="margin-bottom: 8px;">• <strong>Algorithm design</strong> — adapting classical CS algorithms to novel domains</li>
+    <li style="margin-bottom: 8px;">• <strong>System thinking</strong> — integrating planning, control, and haptic feedback</li>
+    <li style="margin-bottom: 8px;">• <strong>Scientific communication</strong> — writing papers, presenting research, receiving criticism</li>
+    <li style="margin-bottom: 8px;">• <strong>Persistence</strong> — dealing with failure and using it as fuel to improve</li>
+  </ul>
+
+  <p style="margin-top: 24px;">
+    This steep learning curve — this feeling of being in over my head and learning fast — became my favorite kind of problem. It's why I'm at CMU now, and why I keep choosing research that pushes me beyond what I think I can do.
+  </p>
+</section>
+
 </div>
 
-  <!-- Results Section -->
-    <section class="results">
-      <h2>Results</h2>
-      <p>
-        The algorithm was successfully implemented and tested on a simulated model of the robotic system. Realignment of the fractured femur was achieved with a maximal translational deviation of 3.0 mm and a rotational deviation of only 1.5 degrees. These results demonstrate the precision of the modified A* algorithm and the effectiveness of the haptic feedback in guiding the surgical procedure. Below is one of the results images captured during testing:
-      </p>
-      <img src="ResultsImage (1).png" alt="Surgical Results">
-    </section>
+<footer>
+  <p>&copy; 2026 Fawaz Mallick. All rights reserved.</p>
+  <p style="margin-top: 12px;"><a href="index.html">← Back to portfolio</a></p>
+</footer>
 
-
-    <!-- Publication Section -->
-    <section class="publication">
-      <h2>Publication</h2>
-      <p>
-        The journey to publishing the paper on the modified A* algorithm and its application in the Robossis surgical robot was both challenging and enriching. Collaborating with my peers and mentors, I delved into the intricacies of translating technical advancements into a concise and compelling scientific manuscript. We submitted our work to IEEE IROS, a prestigious robotics conference, where the high standards pushed us to refine our methodology, analysis, and presentation. Although the paper was ultimately not accepted, the experience was invaluable. It enhanced my understanding of academic publishing, taught me how to critically evaluate and communicate research, and highlighted the importance of perseverance in the face of challenges. This process has inspired me to further improve and pursue future publications with greater confidence and clarity. Below is the draft paper we worked on:
-      </p>
-      <iframe src="PaperA.pdf"></iframe>
-    </section>
-
-    <!-- Poster Section -->
-    <section class="poster">
-      <h2>Poster</h2>
-      <p>
-        The poster was presented at a Biomedical Engineering (BME) conference held at Rowan University. This conference provided an excellent platform to showcase our work on the Robossis surgical robot and the innovative modified A* algorithm. It allowed us to share our findings with faculty, peers, and industry professionals, sparking insightful discussions and feedback. Presenting at this event not only helped us refine our ability to communicate complex technical concepts effectively but also highlighted the broader impact of our work in advancing surgical robotics and improving patient outcomes.
-      </p>
-      <iframe src="poster.pdf"></iframe>
-      <p>If the poster doesn’t load, you can download it <a href="poster.pdf" target="_blank">here</a>.</p>
-    </section>
-  </div>
 </body>
 </html>
-

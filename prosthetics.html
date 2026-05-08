@@ -338,45 +338,147 @@
     As my entry point into this problem space, I implemented a Bayesian foot placement prediction model based on published work in the field. This wasn't original research — it was a deliberate learning exercise: reproduce an existing method, understand why it works, identify its limitations, and use that foundation to build toward original contributions. This is how you enter a research field when you don't start there. The baseline gives you a benchmark and a footing.
   </p>
 
-  <h3>The Dataset</h3>
+  <h3>The Dataset & Problem Definition</h3>
   <p>
-    I work with motion capture and IMU data collected from subjects walking on a treadmill under various conditions:
+    The gait prediction problem is framed as <strong>foot placement classification on a discrete grid</strong>. Instead of predicting exact coordinates (continuous), we divide the reachable foot placement region into a 3×3 grid and compute the posterior probability distribution across grid cells using measured gait features.
   </p>
   <ul>
-    <li><strong>Subjects:</strong> Multiple participants across different walking speeds and patterns</li>
-    <li><strong>Sensors:</strong> Inertial Measurement Units (IMU) on both legs, plus motion capture markers</li>
-    <li><strong>Ground truth:</strong> Precise foot placement coordinates from motion capture system</li>
-    <li><strong>Conditions:</strong> Normal walking, variable speeds, controlled perturbations</li>
+    <li><strong>Data Source:</strong> Georgia Tech motion capture database (8 subjects, AB06–AB13)</li>
+    <li><strong>Measurements:</strong> 85 motion capture markers during walking trials</li>
+    <li><strong>Trial Conditions:</strong> 3 speeds (slow, normal, fast) × 2 directions (CW, CCW) × 2 legs per subject</li>
+    <li><strong>Training Set:</strong> 7 subjects (AB06–AB12) = <strong>503 steps</strong></li>
+    <li><strong>Test Set:</strong> 1 subject held-out (AB13) = <strong>74 steps</strong></li>
+    <li><strong>Grid Coverage:</strong> AP range [0.0, 1.2m] × ML range [−0.6, 0.6m] in 9 cells (3×3)</li>
   </ul>
 
-  <h3>The Method: Bayesian Inference</h3>
+  <h3>The Method: Bayesian Grid-Based Foot Placement</h3>
   <p>
-    Why Bayesian? Because we want to quantify uncertainty. In medical/safety-critical applications, knowing "I'm 70% confident" is different from "I'm 95% confident." Bayesian methods give us that.
+    The core idea is to model foot placement probability as a <strong>grid cell classification problem with uncertainty</strong>. Each cell C has an associated location (x, y), and we predict P(C | features measured during swing phase).
   </p>
 
   <div class="highlight-box">
     <p>
-      <strong>The Pipeline:</strong>
-      <br/>1. <em>Feature extraction</em> from IMU data (acceleration, angular velocity, orientation)
-      <br/>2. <em>Gait phase identification</em> (when is the user in swing vs stance phase?)
-      <br/>3. <em>Bayesian model</em> that predicts foot placement given current state
-      <br/>4. <em>Uncertainty quantification</em> (confidence in the prediction)
+      <strong>Algorithm: Sequential Bayesian Update</strong>
+      <br/>1. <em>Feature Extraction:</em> During swing phase, extract 6 biomechanical features (fA, fB, fC, fD, fE, fF) capturing heel velocity peaks, vertical height, anteroposterior & mediolateral position
+      <br/>2. <em>Likelihood Models:</em> Train quadratic Ridge regression models for each feature conditioned on grid location (fj,e = E[fj | cell C])
+      <br/>3. <em>Gaussian Likelihood:</em> For measured feature fj,m, compute likelihood at each grid cell: P(fj,m | C) = N(fj,m; μ=fj,e(C), σ=γj)
+      <br/>4. <em>Sequential Update:</em> Initialize uniform prior P(C)=1/9, then multiply by likelihoods for each feature sequentially, normalizing after each step
+      <br/>5. <em>Posterior:</em> Final posterior P(C | all features) = argmax over 9 cells gives predicted foot placement
     </p>
   </div>
 
-  <h3>Offline Evaluation Results</h3>
+  <h3>Feature Engineering & Model Training</h3>
   <p>
-    Current results on offline validation (Bayes_Test_Offline.ipynb):
+    Six swing-phase features were engineered from heel marker trajectories:
   </p>
   <ul>
-    <li><strong>Prediction accuracy:</strong> Root Mean Squared Error (RMSE) < 50mm across test subjects</li>
-    <li><strong>Consistency:</strong> High accuracy maintained across different walking speeds</li>
-    <li><strong>Feature importance:</strong> Identified which IMU features drive predictions</li>
-    <li><strong>Robustness:</strong> Validation on held-out test data shows good generalization</li>
+    <li><strong>fA:</strong> First extremum in anteroposterior velocity</li>
+    <li><strong>fB:</strong> First positive extremum in mediolateral velocity</li>
+    <li><strong>fC:</strong> First positive extremum in vertical velocity</li>
+    <li><strong>fD:</strong> Peak vertical position (height at swing peak)</li>
+    <li><strong>fE:</strong> Anteroposterior position at peak height</li>
+    <li><strong>fF:</strong> Mediolateral position at peak height</li>
   </ul>
 
   <p>
-    <em>Note: These are offline, post-hoc evaluations on recorded data. Real-time deployment is the next frontier.</em>
+    For each feature j, a quadratic Ridge regression model was trained to predict fj as a function of foot placement endpoint (xg, yg):
+  </p>
+  <ul>
+    <li><strong>Training:</strong> Ridge regression (α=0.1) with 2nd-order polynomial features on 503 training steps</li>
+    <li><strong>Normalization:</strong> Each feature normalized to [0, 1] based on training data range, allowing per-feature uncertainty bounds (γj)</li>
+  </ul>
+
+  <h3>Model Performance & Validation Results</h3>
+
+  <table style="width: 100%; border-collapse: collapse; margin: 28px 0;">
+    <tr style="background: var(--card); border-bottom: 1px solid var(--border);">
+      <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--accent);">Feature</th>
+      <th style="padding: 12px; text-align: center; font-weight: 600; color: var(--accent);">Train R²</th>
+      <th style="padding: 12px; text-align: center; font-weight: 600; color: var(--accent);">Test R²</th>
+      <th style="padding: 12px; text-align: center; font-weight: 600; color: var(--accent);">γ (std dev)</th>
+      <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--accent);">Remarks</th>
+    </tr>
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 12px;">fA (velocity)</td>
+      <td style="padding: 12px; text-align: center;">0.537</td>
+      <td style="padding: 12px; text-align: center;">−0.532</td>
+      <td style="padding: 12px; text-align: center;">0.1520</td>
+      <td style="padding: 12px; color: var(--text-dim);">High variability; poor generalization</td>
+    </tr>
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 12px;">fB (velocity)</td>
+      <td style="padding: 12px; text-align: center;">0.796</td>
+      <td style="padding: 12px; text-align: center;">0.752</td>
+      <td style="padding: 12px; text-align: center;">0.1037</td>
+      <td style="padding: 12px; color: var(--text-dim);">Strong predictor; good generalization</td>
+    </tr>
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 12px;">fC (velocity)</td>
+      <td style="padding: 12px; text-align: center;">0.061</td>
+      <td style="padding: 12px; text-align: center;">−0.054</td>
+      <td style="padding: 12px; text-align: center;">0.0732</td>
+      <td style="padding: 12px; color: var(--text-dim);">Poor fit; weak link to location</td>
+    </tr>
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 12px;">fD (height)</td>
+      <td style="padding: 12px; text-align: center;">0.379</td>
+      <td style="padding: 12px; text-align: center;">0.256</td>
+      <td style="padding: 12px; text-align: center;">0.0818</td>
+      <td style="padding: 12px; color: var(--text-dim);">Moderate; subject-dependent</td>
+    </tr>
+    <tr style="border-bottom: 1px solid var(--border);">
+      <td style="padding: 12px;">fE (AP position)</td>
+      <td style="padding: 12px; text-align: center;">0.794</td>
+      <td style="padding: 12px; text-align: center;">0.636</td>
+      <td style="padding: 12px; text-align: center;">0.0842</td>
+      <td style="padding: 12px; color: var(--text-dim);">Strong predictor; captures AP distance</td>
+    </tr>
+    <tr>
+      <td style="padding: 12px;">fF (ML position)</td>
+      <td style="padding: 12px; text-align: center;">0.811</td>
+      <td style="padding: 12px; text-align: center;">0.797</td>
+      <td style="padding: 12px; text-align: center;">0.0570</td>
+      <td style="padding: 12px; color: var(--text-dim);">Strongest predictor; robust ML placement</td>
+    </tr>
+  </table>
+
+  <p>
+    <strong>Key Findings:</strong> fF (mediolateral position) and fB (mediolateral velocity) are the strongest predictors of foot placement. Test R² values show reasonable generalization to held-out subject AB13, especially for features capturing position (fE, fF) and velocity (fB). Features fA and fC show poor generalization, suggesting they are highly subject-specific.
+  </p>
+
+  <h3>Posterior Probability Inference Example</h3>
+  <p>
+    A concrete example from test subject AB13: starting with a uniform prior (P(C) = 1/9 for each cell), features are measured sequentially during swing phase, and the posterior distribution is updated multiplicatively. Below is the progression:
+  </p>
+
+  <div style="background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 20px; margin: 28px 0;">
+    <p style="margin-bottom: 12px; font-size: 0.95rem;"><strong>Sample Step (AB13):</strong> xg = 1.59 m, yg = 0.07 m (ground truth)</p>
+    <p style="margin: 0; font-size: 0.9rem; color: var(--muted);">Posterior probabilities after sequential feature updates:</p>
+    <ul style="list-style: none; padding: 16px 0 0 0; margin: 0;">
+      <li style="padding: 8px 0; font-size: 0.9rem;"><strong>After fA:</strong> Maximum cell: 0.200 (cell 8, AP=1.2, ML=0.6)</li>
+      <li style="padding: 8px 0; font-size: 0.9rem;"><strong>After fB:</strong> Maximum cell: 0.307 (cell 5, AP=1.2, ML=0.0)</li>
+      <li style="padding: 8px 0; font-size: 0.9rem;"><strong>After fC:</strong> Maximum cell: 0.318 (cell 5, AP=1.2, ML=0.0)</li>
+      <li style="padding: 8px 0; font-size: 0.9rem;"><strong>After fD:</strong> Maximum cell: 0.466 (cell 5, AP=1.2, ML=0.0)</li>
+      <li style="padding: 8px 0; font-size: 0.9rem;"><strong>After fE:</strong> Maximum cell: 0.652 (cell 2, AP=1.2, ML=−0.6) ← <strong>Correct region</strong></li>
+      <li style="padding: 8px 0; font-size: 0.9rem;"><strong>After fF:</strong> Maximum cell: 0.787 (cell 5, AP=1.2, ML=0.0) ← <strong>Final prediction</strong></li>
+    </ul>
+  </div>
+
+  <p style="margin-top: 24px;">
+    <em>Note:</em> The final posterior concentrates most probability mass near the true foot placement region (AP ≈ 1.2m). Cell 5 (AP=1.2, ML=0.0) receives 78.7% posterior probability, vs ground truth at (1.59, 0.07). This demonstrates the Bayesian approach successfully constrains the placement distribution using sequential feature information.
+  </p>
+
+  <h3>Challenges & Current Limitations</h3>
+  <ul>
+    <li><strong>Grid Resolution:</strong> 3×3 grid provides coarse predictions; finer grids require more training data</li>
+    <li><strong>Subject Variability:</strong> Test R² decline for feature fA (−0.532) indicates person-specific gait characteristics not captured by location alone</li>
+    <li><strong>Feature Generalization:</strong> Some features (fA, fC) do not generalize well across subjects; may require adaptive, subject-specific models</li>
+    <li><strong>Offline Only:</strong> Current evaluation is post-hoc analysis on recorded motion capture data; real-time prediction with IMU sensors only is the next step</li>
+    <li><strong>Early Swing Phase Only:</strong> Predictions are made during early swing phase; predictions later in swing phase remain unexplored</li>
+  </ul>
+
+  <p>
+    <em>Note: These results represent baseline implementation and offline validation. Real-time deployment with wearable IMU sensors, online learning to new users, and multi-modal sensing fusion are the focus of ongoing research.</em>
   </p>
 </section>
 

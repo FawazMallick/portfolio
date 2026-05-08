@@ -207,9 +207,9 @@
 <!-- HEADER -->
 <div class="project-header">
   <h1>6-DOF Surgical Robot</h1>
-  <p class="subtitle">My first research project • Sophomore year • Robossis Platform</p>
+  <p class="subtitle">Research assistant • Sophomore year • Robossis Platform</p>
   <p class="intro">
-    I started with a simple question: <em>"How do we help robots navigate complex surgical spaces?"</em> This was my first research project — no background in kinematics, no robotics experience, just curiosity and determination. I learned to think in six dimensions, implemented A* pathfinding in configuration space, and published a paper. This project changed my trajectory and led me to CMU. It's the story of a steep learning curve that taught me how to tackle impossible problems by breaking them down.
+    My first real research experience was assisting a PhD student on the Robossis surgical robot platform. Under their guidance, I focused on configuration space path planning — learning to think in six dimensions, implementing modified A* algorithms, and understanding how robotics systems work in the real world. No background in kinematics, no robotics experience, just determination to understand something I knew nothing about. This project changed my trajectory and led me to CMU. It's the story of learning to contribute to research I didn't invent.
   </p>
 </div>
 
@@ -227,18 +227,18 @@
   </p>
 </section>
 
-<!-- MY CONTRIBUTION -->
+<!-- FOCUS AREA -->
 <section>
-  <h2>My Contribution: Modified A* Algorithm</h2>
+  <h2>Focus Area: Configuration Space Path Planning</h2>
 
   <h3>The Challenge</h3>
   <p>
-    Standard A* pathfinding works in 2D or 3D Euclidean space. But a 6-DOF robot lives in a 6-dimensional configuration space. Traditional A* doesn't scale to this complexity — the search space becomes exponentially larger, and heuristics become harder to design.
+    Standard A* pathfinding works in 2D or 3D Euclidean space. But a 6-DOF robot lives in a 6-dimensional configuration space. Traditional A* doesn't scale to this complexity — the search space becomes exponentially larger, and heuristics become harder to design. Under my advisor's guidance, I worked on adapting A* to this problem space.
   </p>
 
-  <h3>The Solution</h3>
+  <h3>The Approach</h3>
   <p>
-    I developed a <strong>modified A* algorithm</strong> that:
+    Working with the PhD student leading the project, I helped develop a <strong>modified A* algorithm</strong> that:
   </p>
   <ul style="list-style: none; padding: 0; margin-bottom: 16px;">
     <li style="margin-bottom: 8px;">✓ Treats the 6D configuration space as a graph with discrete waypoints</li>
@@ -250,7 +250,7 @@
 
   <h3>Implementation</h3>
   <p>
-    I implemented this in MATLAB, leveraging the robot's forward kinematics to map configuration space points to Cartesian space. The algorithm iteratively explores the configuration space, prioritizing paths that minimize both distance and collision risk.
+    I implemented the algorithm in MATLAB, working with the robot's forward kinematics to map configuration space points to Cartesian space. The algorithm iteratively explores the configuration space, prioritizing paths that minimize both distance and collision risk. This was learning-by-doing — translating theory into code with real-time feedback from the PhD student leading the project.
   </p>
 
   <div class="image-grid">
@@ -286,22 +286,15 @@
   </div>
 </section>
 
-<!-- PUBLICATION -->
+<!-- PRESENTATION & REFLECTION -->
 <section>
-  <h2>Publication & Learning</h2>
+  <h2>Presenting the Work</h2>
   <p>
-    I submitted this work to <strong>IEEE IROS</strong>, a top robotics conference. The submission process was humbling — I learned the rigor required for academic publishing, received critical feedback, and ultimately the paper wasn't accepted. But that experience was invaluable. It taught me how to write for a technical audience, how to evaluate my own work critically, and the importance of perseverance.
+    As part of the project, I helped present the research at a Biomedical Engineering conference at Rowan University. Standing in front of faculty, peers, and industry professionals to explain path planning in configuration space was humbling. The feedback I received was invaluable — it forced me to think critically about the work, understand what was novel versus standard, and learn how to communicate technical concepts clearly.
   </p>
-  <p>
-    I also presented the work at a Biomedical Engineering conference at Rowan University, where I shared findings with faculty, peers, and industry professionals. That feedback refined my ability to communicate complex technical concepts.
-  </p>
-
-  <h3>Paper Draft</h3>
-  <p>Below is the draft paper submitted to IEEE IROS:</p>
-  <iframe src="PaperA.pdf"></iframe>
 
   <h3>Poster Presentation</h3>
-  <p>And the poster presented at the Rowan BME conference:</p>
+  <p>Below is the poster presented at the Rowan BME conference:</p>
   <iframe src="poster.pdf"></iframe>
   <p style="text-align: center; margin-top: 12px;">If the poster doesn't load, <a href="poster.pdf" target="_blank">download it here</a>.</p>
 </section>

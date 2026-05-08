@@ -255,70 +255,21 @@
 <section>
   <h2>Embedded Systems & Sensors</h2>
 
-  <h3>The Hardware Side of Robotics</h3>
+  <h3>Current Experience: Multi-Sensor IMU Integration</h3>
   <p>
-    Algorithms only run on real hardware. For the exoskeleton project, I implemented the embedded sensing layer: reading orientation data from BNO055 IMUs over I²C, multiplexing multiple sensors on a shared bus using a TCA9548A multiplexer, and streaming real-time quaternion data to a PC for processing. This is the physical foundation the control algorithm runs on.
+    For the exoskeleton project, I implemented the embedded sensing layer: reading orientation data from BNO055 IMUs over I²C, multiplexing multiple sensors on a shared bus using a TCA9548A multiplexer, and streaming real-time quaternion data to a PC for processing. This gave me hands-on experience with the physical foundation that control algorithms run on.
   </p>
 
-  <h3>BNO055 IMU — 9-DOF Orientation Sensor</h3>
-  <p>
-    The BNO055 is a 9-axis absolute orientation sensor (accelerometer + gyroscope + magnetometer) with on-chip sensor fusion running at 100 Hz. It outputs calibrated quaternions directly — no need to implement complementary or Kalman filters for orientation estimation. This was critical for real-time gait phase detection in the exoskeleton.
-  </p>
+  <h3>Technical Foundation Built</h3>
+  <ul>
+    <li><strong>BNO055 IMU:</strong> 9-axis absolute orientation sensor (accelerometer + gyroscope + magnetometer) with on-chip sensor fusion. Outputs calibrated quaternions at 100 Hz — no need to implement Kalman filters for orientation estimation. Critical for real-time gait phase detection.</li>
+    <li><strong>I²C Multiplexing:</strong> Multiple sensors on the same microcontroller bus using a TCA9548A multiplexer to switch between channels. Common pattern in multi-sensor embedded systems; understanding this at the register level enables quick adaptation to new sensor combinations.</li>
+    <li><strong>Real-Time Serial Data Logging:</strong> Streaming sensor data at deterministic rates (100 Hz quaternion updates) to a processing PC. Understanding latency budgets and buffer management is critical for control applications.</li>
+  </ul>
 
-  <div class="code-label">Arduino — BNO055 Quaternion Reader (Actual IMU Code from Exoskeleton)</div>
-  <div class="code-block"><span class="comment">// BNO055 over I2C — quaternion output for real-time orientation tracking</span>
-<span class="keyword">#include</span> <span class="str">&lt;Wire.h&gt;</span>
-<span class="keyword">#include</span> <span class="str">&lt;Adafruit_BNO055.h&gt;</span>
-
-Adafruit_BNO055 bno = Adafruit_BNO055(<span class="num">55</span>);
-
-<span class="keyword">void</span> <span class="func">setup</span>() {
-    Serial.<span class="func">begin</span>(<span class="num">115200</span>);
-    Wire.<span class="func">begin</span>();
-    <span class="keyword">if</span> (!bno.<span class="func">begin</span>()) {
-        <span class="comment">// check wiring if BNO055 not detected</span>
-        Serial.<span class="func">print</span>(<span class="str">"BNO055 not detected — check I2C wiring"</span>);
-        <span class="keyword">while</span>(<span class="num">1</span>);
-    }
-    <span class="func">delay</span>(<span class="num">1000</span>);   <span class="comment">// sensor calibration warmup</span>
-}
-
-<span class="keyword">void</span> <span class="func">loop</span>() {
-    imu::Quaternion q = bno.<span class="func">getQuat</span>();
-    q.<span class="func">normalize</span>();
-
-    <span class="comment">// stream w, x, y, z to serial at 10 Hz for gait state detection</span>
-    Serial.<span class="func">print</span>(q.<span class="func">w</span>(), <span class="num">4</span>);  Serial.<span class="func">print</span>(<span class="str">" "</span>);
-    Serial.<span class="func">print</span>(q.<span class="func">x</span>(), <span class="num">4</span>);  Serial.<span class="func">print</span>(<span class="str">" "</span>);
-    Serial.<span class="func">print</span>(q.<span class="func">y</span>(), <span class="num">4</span>);  Serial.<span class="func">print</span>(<span class="str">" "</span>);
-    Serial.<span class="func">println</span>(q.<span class="func">z</span>(), <span class="num">4</span>);
-
-    <span class="func">delay</span>(<span class="num">100</span>);
-}</div>
-
-  <h3>Multi-Sensor I²C with TCA9548A Multiplexer</h3>
-  <p>
-    The exoskeleton required IMUs on both the thigh and shank — two BNO055 sensors that share the same I²C address (0x28). To put both on the same microcontroller bus, I integrated a <strong>TCA9548A I²C multiplexer</strong>, which routes communication to one of eight channels at a time. The <code>tcaselect(channel)</code> function writes to the multiplexer's control register before each sensor read, effectively switching which device is active on the bus.
-  </p>
-  <p>
-    This is a common pattern in multi-sensor embedded systems — one bus line, one address conflict, one multiplexer chip that solves it. Understanding this at the register level means I can adapt it to any I²C sensor combination.
-  </p>
-
-  <div class="code-label">TCA9548A Multiplexer — I²C Channel Select</div>
-  <div class="code-block"><span class="comment">// Select I2C channel on TCA9548A (address 0x70)</span>
-<span class="keyword">void</span> <span class="func">tcaselect</span>(uint8_t channel) {
-    Wire.<span class="func">beginTransmission</span>(<span class="num">0x70</span>);  <span class="comment">// multiplexer I2C address</span>
-    Wire.<span class="func">write</span>(<span class="num">1</span> &lt;&lt; channel);           <span class="comment">// bitmask selects one of 8 channels</span>
-    Wire.<span class="func">endTransmission</span>();
-}
-
-<span class="comment">// Read both IMUs in loop — thigh on ch0, shank on ch1</span>
-<span class="keyword">for</span> (uint8_t ch = <span class="num">0</span>; ch &lt; <span class="num">2</span>; ch++) {
-    <span class="func">tcaselect</span>(ch);
-    imu::Quaternion q = bno.<span class="func">getQuat</span>();
-    q.<span class="func">normalize</span>();
-    <span class="comment">// process orientation per sensor...</span>
-}</div>
+  <div class="highlight-box">
+    <p><strong>Graduate Coursework in Embedded Systems:</strong> As I progress through my graduate studies, I'm planning to deepen embedded systems knowledge significantly — real-time operating systems (RTOS), low-level driver development, mixed-signal circuit design, and state machine implementation on microcontrollers. The exoskeleton project provided a solid applied foundation; formal coursework will extend this into system-level architecture and design.</p>
+  </div>
 
   <div class="skill-tags">
     <span class="skill-tag">Arduino</span>

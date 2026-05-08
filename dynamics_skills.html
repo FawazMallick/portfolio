@@ -219,54 +219,72 @@
 
 <!-- WEBOTS PROJECTS -->
 <section>
-  <h2>Webots Robotics Projects: P1 → P5</h2>
+  <h2>Webots Control Projects: P1 → P5 (CMU 24-677)</h2>
   <p>
-    Five progressive simulation projects in the Webots robotics environment, each adding a layer of complexity. The arc mirrors the theoretical curriculum — from basic vehicle control to autonomous mapping.
+    Five progressive projects in the Webots robotics simulator, spanning Modern Control Theory. Each project layered deeper control concepts — from linear PID through optimal control to adaptive systems. The practical side of the theoretical curriculum.
   </p>
 
   <div class="webots-grid">
     <div class="webots-item">
       <div class="webots-num">P1</div>
       <div class="webots-body">
-        <h4>Vehicle Dynamics & Path Following</h4>
-        <p>Basic vehicle control in a Tesla Model 3 simulation. Implementing a controller to follow waypoints at speed. Introduction to the Webots Python API and sensor integration.</p>
+        <h4>PID Control on Bicycle Model</h4>
+        <p><strong>Oct 31:</strong> Linearize vehicle dynamics (Tesla Model 3 bicycle model). Design lateral and longitudinal PID controllers. Implement in Webots with Python. Foundation: understanding state-space models and basic feedback control.</p>
       </div>
     </div>
     <div class="webots-item">
       <div class="webots-num">P2</div>
       <div class="webots-body">
-        <h4>Advanced Path Planning</h4>
-        <p>Higher-level path planning with obstacle avoidance. Building on P1's control foundation, now planning <em>where</em> to go rather than just <em>how</em> to follow.</p>
+        <h4>Controllability & State Feedback</h4>
+        <p><strong>Nov 7:</strong> Verify controllability and stabilizability of linearized system. Design full-state feedback controller via pole placement. Analyze closed-loop eigenvalues and stability margins.</p>
       </div>
     </div>
     <div class="webots-item">
       <div class="webots-num">P3</div>
       <div class="webots-body">
-        <h4>A* Search + LQR Controller</h4>
-        <p>Integration of A* path planning (from the surgical robot project) with an LQR tracking controller. The planner outputs waypoints; the controller executes them. Planning and control working together.</p>
+        <h4>Optimal Control + Path Planning</h4>
+        <p><strong>Nov 14:</strong> Design optimal lateral controller (LQR). Implement A* path planning for collision-free trajectory generation. Integration: planner generates waypoints → controller executes them with optimal effort.</p>
       </div>
     </div>
     <div class="webots-item">
       <div class="webots-num">P4</div>
       <div class="webots-body">
-        <h4>EKF SLAM — The Flagship Project</h4>
-        <p>Extended Kalman Filter for Simultaneous Localization and Mapping. The robot builds a map of its environment while simultaneously figuring out where it is within that map. Requires sensor fusion, nonlinear state estimation, and careful covariance management. SLAM is one of the core unsolved challenges in autonomous robotics.</p>
+        <h4>EKF SLAM — Sensor Fusion</h4>
+        <p><strong>Nov 28:</strong> Extended Kalman Filter for simultaneous localization and mapping. Vehicle has only range/bearing measurements to landmarks (no GPS). Estimate both vehicle pose and map feature positions. State estimation in the face of uncertainty.</p>
       </div>
     </div>
     <div class="webots-item">
       <div class="webots-num">P5</div>
       <div class="webots-body">
-        <h4>Advanced Integration</h4>
-        <p>Advanced robotics project combining concepts from P1–P4. Full autonomous navigation pipeline with map, plan, and execute capability.</p>
+        <h4>Adaptive Control & Robustness</h4>
+        <p><strong>Dec 6:</strong> Switch to quadrotor UAV dynamics. Design LQR baseline controller. Then implement Model Reference Adaptive Control (MRAC) to handle 50% motor thrust loss. Real-world challenge: systems degrade and change.</p>
       </div>
     </div>
   </div>
+
+  <p style="margin-top: 28px; font-size: 0.95rem; color: var(--text-dim);">
+    <strong>The Arc:</strong> These projects follow classical control theory from start to finish. Linear PID → controllability analysis → optimal control → state estimation → adaptive control. By P5, you're designing controllers for systems that break mid-flight.
+  </p>
 </section>
 
 <!-- COURSEWORK HIGHLIGHTS -->
 <section>
   <h2>Coursework Highlights</h2>
   <p>Selected standout assignments from the dynamics and control curriculum:</p>
+
+  <h3>Robot Dynamics & Analysis (RDA) — Screw Theory Foundations</h3>
+  <p>
+    RDA provided the foundational mathematical language of robotics. The course focused on <strong>screw theory</strong> — representing rigid body motion and velocities as 6-dimensional twists in homogeneous coordinates. These aren't just abstract concepts; they're the representation used in every modern robotics software stack (Peter Corke's Robotics Toolbox, ROS, Drake).
+  </p>
+  <ul>
+    <li><strong>Transformation Matrices & Homogeneous Coordinates:</strong> Representing 3D rigid body poses (position + orientation) as 4×4 matrices. Chaining transformations via matrix multiplication.</li>
+    <li><strong>Screw Representation:</strong> A 6D twist ξ encodes both linear velocity (v) and angular velocity (ω). Why? Because rigid body motion can always be represented as a screw: rotation about an axis + translation along that axis.</li>
+    <li><strong>Exponential Mapping:</strong> Mapping from twists to transformation matrices via matrix exponential: e^{ξθ}. Forward kinematics becomes a product of exponentials: g_st = e^{ξ₁θ₁} · e^{ξ₂θ₂} · ... · g_st₀</li>
+    <li><strong>Jacobians in Twist Space:</strong> The spatial Jacobian maps from joint velocities to end-effector twists. Critical for inverse kinematics and control.</li>
+  </ul>
+  <p style="margin-top: 16px;">
+    HW2 covered the bidirectional mappings between vector representations and matrix representations — the foundation for everything that follows in the curriculum. Understanding this at a deep level (implementing the conversions, verifying properties) is what enables quick learning of control and planning algorithms later.
+  </p>
 
   <h3>Optimal Control — Dragrace Problem</h3>
   <p>

@@ -230,27 +230,6 @@
     A clean two-layer GRU that reads a sliding window of sensor observations and outputs a single RUL prediction. Trained end-to-end with a custom <strong>asymmetric scoring loss</strong> — the standard in RUL literature, which penalizes late predictions (missing imminent failure) more heavily than early ones.
   </p>
 
-  <div class="code-label">GRU Architecture + Asymmetric Loss</div>
-  <div class="code-block"><span class="keyword">class</span> <span class="cls">RUL_GRU</span>(nn.Module):
-    <span class="keyword">def</span> <span class="func">__init__</span>(<span class="keyword">self</span>, input_size=<span class="num">21</span>, hidden_size=<span class="num">64</span>, num_layers=<span class="num">2</span>):
-        <span class="keyword">super</span>().__init__()
-        <span class="keyword">self</span>.gru = nn.<span class="func">GRU</span>(input_size, hidden_size, num_layers, batch_first=<span class="keyword">True</span>)
-        <span class="keyword">self</span>.fc  = nn.<span class="func">Linear</span>(hidden_size, <span class="num">1</span>)
-
-    <span class="keyword">def</span> <span class="func">forward</span>(<span class="keyword">self</span>, x):
-        out, _ = <span class="keyword">self</span>.<span class="func">gru</span>(x)
-        <span class="keyword">return</span> <span class="keyword">self</span>.<span class="func">fc</span>(out[:, <span class="num">-1</span>, :])  <span class="comment"># last time step → RUL scalar</span>
-
-
-<span class="keyword">class</span> <span class="cls">AsymmetricScoringLoss</span>(nn.Module):
-    <span class="comment">"""Penalises late predictions (missed failures) harder than early ones."""</span>
-    <span class="keyword">def</span> <span class="func">forward</span>(<span class="keyword">self</span>, y_pred, y_true):
-        d = y_pred - y_true
-        <span class="keyword">return</span> torch.<span class="func">where</span>(
-            d &lt; <span class="num">0</span>,
-            torch.<span class="func">exp</span>(-d / <span class="num">13</span>) - <span class="num">1</span>,   <span class="comment"># under-prediction: steeper penalty</span>
-            torch.<span class="func">exp</span>( d / <span class="num">10</span>) - <span class="num">1</span>    <span class="comment"># over-prediction: milder penalty</span>
-        ).<span class="func">mean</span>()</div>
 
   <h4>Approach 2: Embed-RUL (Encoder-Decoder Autoencoder)</h4>
   <p>
@@ -260,29 +239,6 @@
     The key insight: normal operating embeddings cluster together (near the learned <em>Z_norm</em> reference), while degraded embeddings drift away. Distance from Z_norm becomes a continuous degradation signal.
   </p>
 
-  <div class="code-label">Encoder / Decoder Architecture</div>
-  <div class="code-block"><span class="keyword">class</span> <span class="cls">Encoder</span>(nn.Module):
-    <span class="comment">"""Reads masked sensor windows → fixed-size health embedding."""</span>
-    <span class="keyword">def</span> <span class="func">__init__</span>(<span class="keyword">self</span>, input_size=<span class="num">45</span>, hidden_size=<span class="num">55</span>, dropout=<span class="num">0.2</span>):
-        <span class="keyword">super</span>().__init__()
-        <span class="keyword">self</span>.cell = nn.<span class="func">GRUCell</span>(input_size, hidden_size)
-        <span class="keyword">self</span>.drop = nn.<span class="func">Dropout</span>(p=dropout)
-
-    <span class="keyword">def</span> <span class="func">forward</span>(<span class="keyword">self</span>, x):  <span class="comment"># x = [batch, seq, features+mask+delta]</span>
-        h = torch.<span class="func">zeros</span>(x.size(<span class="num">0</span>), <span class="keyword">self</span>.hidden_size, device=x.device)
-        <span class="keyword">for</span> t <span class="keyword">in</span> <span class="func">range</span>(x.size(<span class="num">1</span>)):
-            h = <span class="keyword">self</span>.<span class="func">cell</span>(<span class="keyword">self</span>.drop(x[:, t, :]), h)
-        <span class="keyword">return</span> h  <span class="comment"># final hidden = compact health embedding</span>
-
-
-<span class="keyword">class</span> <span class="cls">Decoder</span>(nn.Module):
-    <span class="comment">"""Reconstructs sensor sequence from embedding (autoencoder objective)."""</span>
-    <span class="keyword">def</span> <span class="func">forward</span>(<span class="keyword">self</span>, embedding, seq_len):
-        h, outs = embedding, []
-        <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="func">range</span>(seq_len):
-            h = <span class="keyword">self</span>.<span class="func">cell</span>(<span class="keyword">self</span>.drop(h), h)
-            outs.<span class="func">append</span>(<span class="keyword">self</span>.<span class="func">fc</span>(h).<span class="func">unsqueeze</span>(<span class="num">1</span>))
-        <span class="keyword">return</span> torch.<span class="func">cat</span>(outs, dim=<span class="num">1</span>)</div>
 
   <h3>Visualization: Learned Embedding Space</h3>
   <p>

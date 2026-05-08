@@ -152,31 +152,6 @@
     <li><strong>Simulation rate:</strong> 333 Hz</li>
   </ul>
 
-  <div class="code-label">MATLAB — TWIP Forward Dynamics (twip3.m)</div>
-  <div class="code-block"><span class="keyword">function</span> [whdd, thdd] = <span class="func">twip3</span>(wh, whd, th, thd, trq, m_w, r_w, I_w, m_p, l_p, I_p, g, f)
-<span class="comment">% Two-wheeled inverted pendulum forward dynamics</span>
-<span class="comment">% State: [wheel_angle, wheel_vel, body_angle, body_vel]</span>
-
-<span class="comment">% Inertial parameters</span>
-p1 = I_w + (m_p + m_w) * r_w^<span class="num">2</span>;
-p2 = m_p * l_p;
-p3 = I_p + m_p * l_p^<span class="num">2</span>;
-
-<span class="comment">% Mass matrix (nonlinear — depends on body angle th)</span>
-m12 = p1 + p2 * r_w * <span class="func">cos</span>(th);
-M = [p1,  m12;
-     m12, (p1 + <span class="num">2</span>*p2*r_w*<span class="func">cos</span>(th) + p3)];
-
-<span class="comment">% Right-hand side (gravity + centripetal + torque)</span>
-v_exp = p2 * r_w * thd^<span class="num">2</span> * <span class="func">sin</span>(th);
-v = [(-trq - f*whd + v_exp);
-     (v_exp + p2*g*<span class="func">sin</span>(th))];
-
-<span class="comment">% Solve: M * [whdd; thdd] = v</span>
-result = <span class="func">inv</span>(M) * v;
-whdd = result(<span class="num">1</span>);
-thdd = result(<span class="num">2</span>);
-<span class="keyword">end</span></div>
 
   <h3>Controller Progression</h3>
 
@@ -221,29 +196,6 @@ thdd = result(<span class="num">2</span>);
     </div>
   </div>
 
-  <div class="code-label">MATLAB — Gain-Optimized Control Loop (from computer_lqr_gains.m)</div>
-  <div class="code-block"><span class="keyword">function</span> cost = <span class="func">twip_cost_unconstrained</span>(Kc)
-<span class="comment">% Kc = [K1, K2, K3, K4] gains — returns negative time survived</span>
-
-x0 = [<span class="num">0</span>; <span class="num">0</span>; <span class="num">0.1</span>; <span class="num">0</span>];  <span class="comment">% small initial tilt (0.1 rad)</span>
-xx = x0;
-dt = <span class="num">1</span> / <span class="num">333</span>;  <span class="comment">% 333 Hz simulation</span>
-
-<span class="keyword">for</span> i = <span class="num">1</span>:<span class="num">2000</span>
-    uu = -Kc * xx;  <span class="comment">% linear control law</span>
-
-    <span class="comment">% Integrate nonlinear dynamics</span>
-    [wdd, thdd] = <span class="func">twip3</span>(xx(<span class="num">1</span>), xx(<span class="num">2</span>), xx(<span class="num">3</span>), xx(<span class="num">4</span>), uu, ...
-                         m_w, r_w, I_w, m_p, l_p, I_p, g, <span class="num">0</span>);
-    xx = <span class="func">integrate_step</span>(xx, wdd, thdd, dt);
-
-    <span class="keyword">if</span> <span class="func">abs</span>(xx(<span class="num">3</span>)) > <span class="num">1.5</span>  <span class="comment">% fallen if |body_angle| > 1.5 rad</span>
-        cost = -i * dt;  <span class="comment">% cost = negative survival time</span>
-        <span class="keyword">return</span>;
-    <span class="keyword">end</span>
-<span class="keyword">end</span>
-cost = -<span class="num">6</span>;  <span class="comment">% survived full 6 seconds</span>
-<span class="keyword">end</span></div>
 
   <h3>Simulation Results</h3>
   <div class="image-grid">

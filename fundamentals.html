@@ -194,28 +194,6 @@
     </div>
   </div>
 
-  <div class="code-label">Example: 2D Block in Compression (BristolFE MATLAB)</div>
-  <div class="code-block"><span class="comment">% Material: aluminum — E = 70 GPa, ν = 1/3, plane stress</span>
-youngs_modulus = <span class="num">70e9</span>;   poissons_ratio = <span class="num">1</span>/<span class="num">3</span>;
-materials(<span class="num">1</span>).stiffness_matrix = <span class="func">fn_isotropic_plane_stress_stiffness_matrix</span>(...
-    youngs_modulus, poissons_ratio);
-
-<span class="comment">% Mesh a 100×100 mm block at 5 mm element size</span>
-corner_nodes = [<span class="num">0</span>, <span class="num">0</span>; <span class="num">0.1</span>, <span class="num">0.1</span>];
-[nodes, elements] = <span class="func">fn_rectangular_structured_mesh</span>(corner_nodes, <span class="num">0.005</span>);
-
-<span class="comment">% Frictionless support on base, uniform compressive stress on top</span>
-fixed_nodes = <span class="func">fn_find_nodes_on_line</span>(nodes, [<span class="num">0</span>,<span class="num">0</span>], [<span class="num">0.1</span>,<span class="num">0</span>], <span class="num">5e-4</span>);
-applied_displacements(fixed_nodes, <span class="num">2</span>) = <span class="num">0</span>;
-[applied_forces, ~] = <span class="func">fn_apply_stress_along_line</span>(nodes, [<span class="num">0</span>,<span class="num">0.1</span>], ...
-    [<span class="num">0.1</span>,<span class="num">0.1</span>], <span class="num">5e-4</span>, [<span class="num">0</span>, <span class="num">-7e9</span>, <span class="num">0</span>]);
-
-<span class="comment">% Build global K, solve, recover stresses</span>
-[K, M, Q] = <span class="func">fn_build_global_matrices</span>(nodes, elements, element_materials, materials);
-[u, f] = <span class="func">fn_static_solver</span>(K, applied_forces, applied_displacements);
-[sigma_xx, sigma_yy, sigma_xy] = <span class="func">fn_stress_from_disp</span>(Q, u);
-
-<span class="comment">% Result: uniform σ_yy ≈ -7 GPa, σ_xx ≈ σ_xy ≈ 0 (validates solver)</span></div>
 
   <h3>1D Heat Transfer FEA from Scratch</h3>
   <p>
@@ -225,22 +203,6 @@ applied_displacements(fixed_nodes, <span class="num">2</span>) = <span class="nu
     Building this from scratch — assembling element stiffness matrices manually, handling conduction and convection terms, applying Neumann boundary conditions — gave me a much deeper understanding of what the structural FEA solver was doing under the hood.
   </p>
 
-  <div class="code-label">1D Heat Transfer — Direct Stiffness Assembly</div>
-  <div class="code-block"><span class="comment">% Element properties: [conductivity k, length L, convection h, BC flags]</span>
-elements = [
-    <span class="num">0.8</span>,   <span class="num">0.004</span>, <span class="num">10</span>, <span class="num">1</span>, <span class="num">0</span>;   <span class="comment">% Glass: k=0.8 W/m·C, h=10</span>
-    <span class="num">0.025</span>, <span class="num">0.010</span>,  <span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>;   <span class="comment">% Air:   k=0.025, no convection</span>
-    <span class="num">0.8</span>,   <span class="num">0.004</span>, <span class="num">30</span>, <span class="num">0</span>, <span class="num">1</span>;   <span class="comment">% Glass: k=0.8 W/m·C, h=30</span>
-];
-
-K_global = <span class="func">zeros</span>(numNodes);
-<span class="keyword">for</span> e = <span class="num">1</span>:numElements
-    k = elements(e,<span class="num">1</span>);  L = elements(e,<span class="num">2</span>);  h = elements(e,<span class="num">3</span>);
-    k_cond = (A * k / L) * [<span class="num">1</span> <span class="num">-1</span>; <span class="num">-1</span> <span class="num">1</span>];    <span class="comment">% conduction stiffness</span>
-    k_conv = h * A * [elements(e,<span class="num">4</span>) <span class="num">0</span>; <span class="num">0</span> elements(e,<span class="num">5</span>)];  <span class="comment">% convection</span>
-    K_global(e:e+<span class="num">1</span>, e:e+<span class="num">1</span>) += k_cond + k_conv;   <span class="comment">% direct assembly</span>
-<span class="keyword">end</span>
-T = K_global \ Q_global;   <span class="comment">% solve for nodal temperatures</span></div>
 
   <div class="highlight-box">
     <p><strong>What FEA taught me:</strong> The same mathematical structure — assemble element contributions into a global system, apply boundary conditions, solve — appears everywhere in numerical engineering. Understanding it from first principles means I can read the output of commercial FEA tools critically, not just accept them.</p>

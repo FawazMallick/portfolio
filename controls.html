@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Robotics & Controls — Fawaz Mallick</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --accent: #00d4ff; --accent-dim: #0099cc; --accent-light: rgba(0,212,255,0.12);
+      --bg: #0a0e27; --card: #0f1429; --border: #1a2240;
+      --text: #e8ecf1; --text-dim: #a8b2c1; --muted: #6b7684;
+      --nav-h: 64px; --sec-nav-h: 44px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+
+    /* ── Main nav ── */
+    nav {
+      position: sticky; top: 0; z-index: 100; height: var(--nav-h);
+      background: rgba(10,14,39,0.92); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; padding: 0 40px;
+    }
+    nav a.logo { color: var(--text); text-decoration: none; font-weight: 600; font-size: 0.95rem; }
+    nav a.back { color: var(--accent); text-decoration: none; font-size: .85rem; font-weight: 500; }
+    nav a.back:hover { opacity: .7; }
+
+    /* ── Section nav ── */
+    .sec-nav {
+      position: sticky; top: var(--nav-h); z-index: 90; height: var(--sec-nav-h);
+      background: rgba(15,20,41,0.97); backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 0; padding: 0 40px; overflow-x: auto;
+    }
+    .sec-nav a {
+      color: var(--muted); text-decoration: none; font-size: 0.78rem; font-weight: 500;
+      padding: 0 16px; height: var(--sec-nav-h); display: flex; align-items: center;
+      border-bottom: 2px solid transparent; white-space: nowrap; transition: color .2s, border-color .2s;
+    }
+    .sec-nav a:hover { color: var(--text); }
+    .sec-nav a.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    /* ── Layout ── */
+    .container { max-width: 900px; margin: 0 auto; padding: 60px 24px 100px; }
+    section { margin-bottom: 72px; scroll-margin-top: calc(var(--nav-h) + var(--sec-nav-h) + 20px); }
+
+    /* ── Page header ── */
+    .page-header { margin-bottom: 48px; }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    .tag { background: var(--accent-light); color: var(--accent); border: 1px solid rgba(0,212,255,0.25);
+           border-radius: 4px; padding: 3px 10px; font-size: 0.72rem; font-weight: 700;
+           text-transform: uppercase; letter-spacing: 0.08em; }
+    .page-header h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 700; color: #fff; margin-bottom: 10px; letter-spacing: -.02em; }
+    .page-header .subtitle { font-size: 1rem; color: var(--accent); font-weight: 500; margin-bottom: 24px; }
+
+    /* ── Typography ── */
+    h2 { font-size: 1.5rem; font-weight: 700; color: #fff; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 2px solid var(--border); }
+    h3 { font-size: 1.05rem; font-weight: 600; color: var(--accent); margin-top: 26px; margin-bottom: 10px; }
+    h4 { font-size: 0.95rem; font-weight: 600; color: var(--text); margin-top: 18px; margin-bottom: 8px; }
+    p { font-size: 0.97rem; color: var(--text-dim); line-height: 1.8; margin-bottom: 14px; }
+    p strong { color: var(--text); }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { opacity: .8; }
+    ul { list-style: none; padding: 0; margin: 10px 0; }
+    ul li { margin-bottom: 7px; padding-left: 22px; position: relative; font-size: .95rem; color: var(--text-dim); line-height: 1.6; }
+    ul li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-weight: 600; }
+
+    /* ── Abstract ── */
+    .abstract { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 24px 28px; margin-bottom: 48px; }
+    .abstract-label { font-size: 0.72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .abstract p { font-size: 0.97rem; color: var(--text-dim); line-height: 1.8; margin: 0; }
+
+    /* ── Callout boxes ── */
+    .box-method { background: rgba(59,130,246,0.07); border-left: 4px solid #3b82f6; padding: 18px 20px; margin: 20px 0; border-radius: 0 6px 6px 0; }
+    .box-result { background: rgba(34,197,94,0.07);  border-left: 4px solid #22c55e; padding: 18px 20px; margin: 20px 0; border-radius: 0 6px 6px 0; }
+    .box-method p, .box-result p { margin-bottom: 8px; }
+    .box-method p:last-child, .box-result p:last-child { margin-bottom: 0; }
+
+    /* ── Equation ── */
+    .eq { background: var(--card); border: 1px solid var(--border); border-radius: 6px;
+          padding: 14px 20px; font-family: 'Georgia', serif; font-style: italic;
+          font-size: 0.97rem; color: var(--text); margin: 16px 0; text-align: center; }
+
+    /* ── Tables ── */
+    .table-wrap { overflow-x: auto; margin: 20px 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    th { background: rgba(0,212,255,0.08); color: var(--accent); font-weight: 600; text-align: left;
+         padding: 10px 14px; border-bottom: 2px solid var(--border); font-size: 0.78rem; text-transform: uppercase; letter-spacing: .05em; }
+    td { padding: 9px 14px; color: var(--text-dim); border-bottom: 1px solid rgba(26,34,64,0.6); }
+    tr:hover td { background: rgba(0,212,255,0.03); }
+    td.hi { color: var(--text); font-weight: 600; }
+
+    /* ── Project cards (for MCT projects) ── */
+    .project-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 24px 0; }
+    @media (max-width: 640px) { .project-grid { grid-template-columns: 1fr; } }
+    .proj-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px 22px; }
+    .proj-card .proj-label { font-size: 0.7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+    .proj-card .proj-title { font-size: 0.97rem; font-weight: 600; color: var(--text); margin-bottom: 10px; }
+    .proj-card p { font-size: 0.88rem; color: var(--text-dim); margin-bottom: 8px; }
+    .proj-card p:last-child { margin-bottom: 0; }
+    .proj-card .proj-tech { font-size: 0.8rem; color: var(--muted); margin-top: 10px; }
+
+    /* ── Figures ── */
+    figure { margin: 32px 0; }
+    figure img { max-width: 100%; border-radius: 8px; border: 1px solid var(--border); display: block; transition: border-color .25s; }
+    figure img:hover { border-color: var(--accent); }
+    figcaption { font-size: 0.86rem; color: var(--muted); margin-top: 10px; font-style: italic; text-align: center; line-height: 1.6; }
+
+    /* ── Cross-link ── */
+    .crosslink { background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+                 padding: 14px 20px; margin-top: 20px; display: flex; align-items: center; gap: 12px; }
+    .crosslink span { font-size: 0.88rem; color: var(--text-dim); flex: 1; }
+    .crosslink a { font-size: 0.84rem; font-weight: 600; color: var(--accent);
+                   white-space: nowrap; border: 1px solid rgba(0,212,255,0.3);
+                   padding: 6px 14px; border-radius: 5px; transition: background .2s; }
+    .crosslink a:hover { background: var(--accent-light); opacity: 1; }
+
+    /* ── Footer ── */
+    footer { border-top: 1px solid var(--border); text-align: center; padding: 32px 20px; color: var(--muted); font-size: .85rem; }
+    footer a { color: var(--accent); }
+
+    @media (max-width: 768px) { nav { padding: 0 20px; } .sec-nav { padding: 0 16px; } .container { padding: 40px 16px 80px; } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="index.html">Fawaz Mallick</a>
+  <a class="back" href="index.html">← Back to Portfolio</a>
+</nav>
+
+<div class="sec-nav" id="secNav">
+  <a href="#rda"   data-sec="rda">Robot Dynamics &amp; Analysis</a>
+  <a href="#mct"   data-sec="mct">Modern Control Theory</a>
+  <a href="#ocrl"  data-sec="ocrl">Optimal Control &amp; RL</a>
+</div>
+
+<div class="container">
+
+  <div class="page-header">
+    <div class="tag-row">
+      <span class="tag">Screw Theory</span>
+      <span class="tag">SE(3)</span>
+      <span class="tag">LQR</span>
+      <span class="tag">EKF SLAM</span>
+      <span class="tag">iLQR</span>
+      <span class="tag">Webots</span>
+    </div>
+    <h1>Robotics &amp; Controls</h1>
+    <p class="subtitle">Robot Dynamics &amp; Analysis · Modern Control Theory · Optimal Control &amp; Reinforcement Learning</p>
+  </div>
+
+  <div class="abstract">
+    <div class="abstract-label">Course Overview</div>
+    <p>
+      This page covers three graduate courses forming the core of my controls and robotics foundation
+      at CMU. <strong>Robot Dynamics &amp; Analysis (RDA)</strong> developed rigorous mathematical
+      tools — screw theory, SE(3), product of exponentials, Jacobians, and constrained dynamics —
+      applied to multi-DOF manipulators. <strong>Modern Control Theory (MCT)</strong> moved from
+      theory to simulation, implementing PID, LQR, A* planning, and EKF SLAM in Webots across
+      five progressive projects. <strong>Optimal Control &amp; Reinforcement Learning (OCRL)</strong>
+      closed the loop with trajectory optimization (iLQR) and neural network policies applied to a
+      Two-Wheeled Inverted Pendulum — documented in depth on the TWIP project page.
+    </p>
+  </div>
+
+  <!-- 1. Robot Dynamics & Analysis -->
+  <section id="rda">
+    <h2>1. Robot Dynamics &amp; Analysis (RDA)</h2>
+    <p>
+      RDA builds the mathematical machinery for describing and analyzing rigid body motion, from
+      a single joint to a 6-DOF manipulator. The course works in SE(3) — the Lie group of rigid
+      body transformations — rather than Euler angles, which avoids singularities and provides
+      a unified framework for position and orientation.
+    </p>
+
+    <h3>1.1 Screw Theory Toolkit</h3>
+    <p>
+      The foundational tools translate between different representations of rigid body velocity
+      and pose:
+    </p>
+    <div class="box-method">
+      <p><strong>Key functions implemented:</strong></p>
+      <ul>
+        <li><strong>twist2rbvel.m</strong> — converts a 6-vector twist ξ = [v; ω] to its
+            4×4 matrix representation <code>ξ̂</code> in se(3) (the Lie algebra), enabling
+            matrix exponentials via <code>expm(ξ̂·θ)</code></li>
+        <li><strong>rbvel2twist.m</strong> — inverse map: extracts the twist vector from a
+            4×4 matrix; used to compute Jacobian columns from differentiated FK</li>
+        <li><strong>tform2adjoint.m</strong> — computes the 6×6 Adjoint Ad<sub>g</sub>
+            of a homogeneous transformation g ∈ SE(3), enabling wrench and velocity
+            transformations between frames</li>
+        <li><strong>angvel2skew.m / skew2angvel.m</strong> — convert between angular velocity
+            3-vectors and their 3×3 skew-symmetric matrix representations (elements of so(3))</li>
+      </ul>
+    </div>
+
+    <h3>1.2 6-DOF Manipulator — HW4 Part 1</h3>
+    <p>
+      A 6-DOF industrial manipulator (PUMA-style, 3 shoulder joints + 3 wrist joints) was analyzed
+      using both the Denavit-Hartenberg (DH) convention and the product of exponentials (PoE)
+      formulation, and results verified to match symbolically.
+    </p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Frame Offset</th><th>Symbol</th><th>Value (mm)</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Link 2 x-offset</td><td>l<sub>x2</sub></td><td class="hi">320</td><td>Shoulder to elbow, x-dir</td></tr>
+          <tr><td>Link 5 x-offset</td><td>l<sub>x5</sub></td><td class="hi">887</td><td>Elbow to wrist, x-dir</td></tr>
+          <tr><td>Link 2 z-offset</td><td>l<sub>z2</sub></td><td class="hi">680</td><td>Base to shoulder, z-dir</td></tr>
+          <tr><td>Link 3 z-offset</td><td>l<sub>z3</sub></td><td class="hi">975</td><td>Shoulder to elbow, z-dir</td></tr>
+          <tr><td>Tool x-offset</td><td>l<sub>x6</sub></td><td>200</td><td>Wrist to end-effector</td></tr>
+          <tr><td>Link 4 z-offset</td><td>l<sub>z4</sub></td><td>200</td><td>Elbow segment, z-dir</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>
+      At the home configuration (all joint angles zero), the end-effector sits at
+      <strong>p = (1407, 0, 1855) mm</strong>. The spatial Jacobian J<sub>s</sub> (6×6) was computed
+      two ways — via direct differentiation of the FK and via the adjoint method — and verified
+      to agree symbolically.
+    </p>
+
+    <div class="box-method">
+      <p><strong>Product of Exponentials formulation:</strong> The forward kinematics is expressed
+      as a chain of matrix exponentials of joint twists:</p>
+    </div>
+
+    <div class="eq">
+      g<sub>st</sub>(q) = e<sup>ξ̂₁q₁</sup> · e<sup>ξ̂₂q₂</sup> · e<sup>ξ̂₃q₃</sup> · e<sup>ξ̂₄q₄</sup> · e<sup>ξ̂₅q₅</sup> · e<sup>ξ̂₆q₆</sup> · g<sub>st</sub>(0)
+    </div>
+
+    <p>
+      The Adjoint-based Jacobian computes each column as the adjoint-transported joint twist
+      at the current configuration, avoiding repeated symbolic differentiation:
+    </p>
+
+    <div class="eq">
+      J<sub>s,i</sub> = Ad<sub>g₁₂...i</sub>(q) · ξ<sub>i</sub>
+    </div>
+
+    <figure>
+      <img src="Coursework/Robotics &amp; Controls/fmallick_P1.png" alt="Modern Control Theory P1 result">
+      <figcaption>
+        Figure 1: MCT Project 1 — Tesla Model 3 bicycle model tracking a reference trajectory in
+        Webots. The PID longitudinal controller maintains target speed (5.0 m/s); the pure pursuit
+        lateral controller steers to a look-ahead point on the path. Cross-track error converges
+        to near zero on straight segments.
+      </figcaption>
+    </figure>
+
+    <h3>1.3 2-Link Planar Arm — HW4 Part 2</h3>
+    <p>
+      A 2-link planar arm (lengths l₁, l₂) was used to derive and compare the spatial and body
+      Jacobians, and to identify manipulator singularities.
+    </p>
+    <ul>
+      <li><strong>Spatial Jacobian J<sub>s</sub></strong> (6×2): columns express joint velocities
+          in the spatial (fixed world) frame</li>
+      <li><strong>Body Jacobian J<sub>b</sub></strong> (6×2): related by
+          J<sub>b</sub> = Ad<sub>g<sub>st</sub>⁻¹</sub> · J<sub>s</sub>, expressing the same
+          velocities in the end-effector body frame</li>
+      <li><strong>Singularity:</strong> the arm loses a degree of freedom when θ₂ = 0° (fully
+          extended) or θ₂ = 180° (fully folded) — the Jacobian loses rank and the manipulator
+          cannot generate velocity radially inward or outward</li>
+    </ul>
+
+    <h3>1.4 Planar Grasping — HW5</h3>
+    <p>
+      Grasping theory was applied to a planar object gripped at two contact points with Coulomb
+      friction (friction coefficient μ<sub>f</sub>).
+    </p>
+    <div class="box-method">
+      <p><strong>Grasp map construction:</strong></p>
+      <ul>
+        <li>Contact frames rotated from object frame via rotation matrices R<sub>oc1</sub>, R<sub>oc2</sub></li>
+        <li>Each grasp block: G<sub>i</sub> = Ad<sup>T</sup><sub>i</sub> · B<sub>ci</sub>, where B<sub>ci</sub> ∈ ℝ<sup>6×2</sup> is the contact wrench basis (normal + tangential friction)</li>
+        <li>Full grasp map: G = [G₁ G₂] ∈ ℝ<sup>6×4</sup></li>
+        <li>Reduced grasp map G<sub>p</sub> (forces + yaw) has rank 3 → form-closure satisfied for friction ≥ 0</li>
+      </ul>
+    </div>
+    <p>
+      The null space of G (dim = 1) represents internal force modes — contact forces that cancel
+      at the object level but can be used to squeeze the grasp and increase friction headroom
+      without disturbing object equilibrium.
+    </p>
+
+    <h3>1.5 Constrained Dynamics</h3>
+    <p>
+      Contact mechanics and constrained dynamics were analyzed via block-structured linear systems.
+      When a manipulator makes contact with a rigid environment, the constrained equations of
+      motion take the form:
+    </p>
+    <div class="eq">
+      ⎡ M &nbsp; −Aᵀ ⎤ ⎡ q̈ ⎤ &nbsp; ⎡ τ − C(q,q̇)q̇ ⎤
+      <br>
+      ⎣ A &nbsp; &nbsp; 0 &nbsp; ⎦ ⎣ λ ⎦ = ⎣ &nbsp; &nbsp; 0 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ⎦
+    </div>
+    <p>
+      where A is the constraint Jacobian, λ are the Lagrange multiplier contact forces, and M
+      is the mass matrix. This system was solved numerically for acceleration and contact force,
+      and the results compared for different contact mode assumptions (sticking vs. sliding).
+    </p>
+  </section>
+
+  <!-- 2. Modern Control Theory -->
+  <section id="mct">
+    <h2>2. Modern Control Theory (MCT) — Webots Projects</h2>
+    <p>
+      MCT applied state-space control, planning, and estimation in Webots — a 3D robot simulation
+      environment — across five progressive projects. Each project built on the previous, from
+      basic PID control to full SLAM.
+    </p>
+
+    <div class="project-grid">
+      <div class="proj-card">
+        <div class="proj-label">Project 1</div>
+        <div class="proj-title">Vehicle Path Tracking — Tesla Model 3 Bicycle Model</div>
+        <p>Implemented longitudinal PID speed control (target: 5.0 m/s) with rolling resistance
+        feedforward (F_roll = 0.019·m·g). Lateral control via pure pursuit — steering toward a
+        look-ahead point 40 waypoints ahead on the reference path.</p>
+        <p>Vehicle parameters: m=1,888.6 kg, I<sub>z</sub>=25,854 kg·m², l<sub>f</sub>=1.55 m,
+        l<sub>r</sub>=1.39 m (bicycle model approximation).</p>
+        <div class="proj-tech">Tools: Python · Webots · PID · Pure Pursuit</div>
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-label">Project 2</div>
+        <div class="proj-title">Optimal Trajectory Generation — Lane Change / Parking</div>
+        <p>Generated optimal vehicle trajectories for constrained maneuvers (lane change and
+        parallel parking) using polynomial trajectory planning with boundary conditions on
+        position, velocity, and acceleration at initial and final states.</p>
+        <p>Compared greedy vs. optimal controllers — the optimal approach satisfied comfort
+        constraints (bounded jerk) that the reactive controller violated.</p>
+        <div class="proj-tech">Tools: Python · Webots · Polynomial Trajectory · scipy.linalg</div>
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-label">Project 3</div>
+        <div class="proj-title">A* Path Planning + LQR Trajectory Following</div>
+        <p>Implemented A* on a 2D occupancy grid (0.05 m resolution) to find minimum-cost
+        collision-free waypoints. An LQR controller then tracked the planned path in closed-loop,
+        rejecting disturbances and maintaining stability along the full trajectory.</p>
+        <p>Demonstrated clean separation of planning (global, offline) from control (local, online).</p>
+        <div class="proj-tech">Tools: Python · Webots · A* (heapq) · LQR · scipy.linalg</div>
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-label">Project 4</div>
+        <div class="proj-title">EKF SLAM — Simultaneous Localization and Mapping</div>
+        <p>Implemented full Extended Kalman Filter SLAM. State vector augmented to include robot
+        pose [X, Y, ψ] and 2D landmark positions [x<sub>L,1</sub>, y<sub>L,1</sub>, …, x<sub>L,n</sub>, y<sub>L,n</sub>],
+        totaling (3+2n) states.</p>
+        <p>Nonlinear motion model f(x,u) and measurement model h(x) linearized via Jacobians
+        at each timestep. Landmark association performed by nearest-neighbor gating.</p>
+        <div class="proj-tech">Tools: Python · Webots · EKF · Jacobian linearization · numpy</div>
+      </div>
+    </div>
+
+    <h3>EKF SLAM — State &amp; Measurement Model Detail</h3>
+    <div class="box-method">
+      <p><strong>State vector:</strong> μ = [X, Y, ψ, x<sub>L,1</sub>, y<sub>L,1</sub>, …, x<sub>L,n</sub>, y<sub>L,n</sub>]<sup>T</sup> ∈ ℝ<sup>3+2n</sup></p>
+      <p><strong>Motion model:</strong></p>
+    </div>
+    <div class="eq">
+      ⎡ X<sub>t+1</sub> ⎤ &nbsp; ⎡ X<sub>t</sub> + Δt(ẋ cosψ − ẏ sinψ) ⎤
+      <br>
+      ⎢ Y<sub>t+1</sub> ⎥ = ⎢ Y<sub>t</sub> + Δt(ẋ sinψ + ẏ cosψ) ⎥
+      <br>
+      ⎣ ψ<sub>t+1</sub> ⎦ &nbsp; ⎣ &nbsp; &nbsp; &nbsp; &nbsp; ψ<sub>t</sub> + Δt·ψ̇ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ⎦
+    </div>
+    <div class="box-method">
+      <p><strong>Measurement model:</strong> range + bearing from robot to each observed landmark; Jacobian H<sub>t</sub> linearizes h(x) at current estimate for the Kalman update step.</p>
+      <p><strong>Covariance propagation:</strong> Σ<sub>t|t−1</sub> = F·Σ<sub>t−1</sub>·F<sup>T</sup> + W, where W is the process noise covariance and F = ∂f/∂x evaluated at μ<sub>t−1</sub>.</p>
+    </div>
+  </section>
+
+  <!-- 3. Optimal Control & RL -->
+  <section id="ocrl">
+    <h2>3. Optimal Control &amp; Reinforcement Learning (OCRL)</h2>
+    <p>
+      OCRL advanced from state-space design into nonlinear trajectory optimization and neural
+      network policy learning. The centerpiece project applied four control frameworks
+      progressively to a Two-Wheeled Inverted Pendulum (TWIP) — a canonical underactuated
+      system where classical methods fail for large-angle maneuvers.
+    </p>
+
+    <div class="box-result">
+      <p><strong>Key results from the TWIP project:</strong></p>
+      <ul>
+        <li>LQR stabilization: K = [−0.7958, −0.7138, −51.7877, −4.6309], converging from θ₀=0.1 rad within 5 s</li>
+        <li>Kalman Filter: estimated state converges to truth within ~2 s under sensor noise (σ²_θ = 0.5 rad²)</li>
+        <li>iLQR drag-race: target φ* = 2π rad achieved in ~3.0 s; converged in 7 iterations</li>
+        <li>Neural network policy (4→2→1, 13 params): fine-tuned to 42 ms balance time — 7× longer than linear gains</li>
+      </ul>
+    </div>
+
+    <p>
+      The course also covered surrogate-based optimization (neural network surrogate for the
+      4D Rosenbrock function), policy gradient methods, and the trade-off between sample efficiency
+      and asymptotic performance in model-free RL.
+    </p>
+
+    <div class="crosslink">
+      <span>The TWIP project is documented in full as an interactive conference paper — system parameters, linearization, LQR design, Kalman filter, iLQR convergence, and NN policy results.</span>
+      <a href="dynamics_skills.html">TWIP Project Page →</a>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <p>&copy; 2026 Fawaz Mallick. All rights reserved.</p>
+  <p style="margin-top:10px;"><a href="mailto:fawazmallick9@gmail.com">fawazmallick9@gmail.com</a> · <a href="https://www.linkedin.com/in/fawaz-mallick/" target="_blank">LinkedIn</a></p>
+</footer>
+
+<script>
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.sec-nav a[data-sec]');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const active = document.querySelector(`.sec-nav a[data-sec="${e.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -65% 0px', threshold: 0 });
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>

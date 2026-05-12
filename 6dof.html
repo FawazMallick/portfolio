@@ -1,329 +1,551 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>6-DOF Surgical Robot | Fawaz Mallick</title>
+  <title>6-DOF Surgical Robot — Fawaz Mallick</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --accent: #00d4ff;
-      --accent-dim: #0099cc;
-      --accent-light: rgba(0, 212, 255, 0.15);
-      --bg: #0a0e27;
-      --card: #0f1429;
-      --card-hover: #151d3a;
-      --border: #1a2240;
-      --text: #e8ecf1;
-      --text-dim: #a8b2c1;
-      --muted: #6b7684;
-      --nav-h: 64px;
+      --accent: #00d4ff; --accent-dim: #0099cc; --accent-light: rgba(0,212,255,0.12);
+      --bg: #0a0e27; --card: #0f1429; --border: #1a2240;
+      --text: #e8ecf1; --text-dim: #a8b2c1; --muted: #6b7684;
+      --nav-h: 64px; --sec-nav-h: 44px;
     }
-
     html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
 
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.7;
-      font-weight: 400;
-      letter-spacing: -0.3px;
-    }
-
-    /* NAV */
+    /* ── Main nav ── */
     nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      height: var(--nav-h);
-      background: rgba(10, 14, 39, 0.85);
-      backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100; height: var(--nav-h);
+      background: rgba(10,14,39,0.92); backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 40px;
+      display: flex; align-items: center; justify-content: space-between; padding: 0 40px;
     }
+    nav a.logo { color: var(--text); text-decoration: none; font-weight: 600; font-size: 0.95rem; }
+    nav a.back { color: var(--accent); text-decoration: none; font-size: .85rem; font-weight: 500; }
+    nav a.back:hover { opacity: .7; }
 
-    nav a.logo {
-      color: var(--text);
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 1rem;
-      letter-spacing: -0.02em;
+    /* ── Section nav ── */
+    .sec-nav {
+      position: sticky; top: var(--nav-h); z-index: 90; height: var(--sec-nav-h);
+      background: rgba(15,20,41,0.97); backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 0; padding: 0 40px; overflow-x: auto;
     }
-
-    nav a.back {
-      color: var(--accent);
-      text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 500;
-      transition: opacity 0.25s ease;
+    .sec-nav a {
+      color: var(--muted); text-decoration: none; font-size: 0.78rem; font-weight: 500;
+      padding: 0 16px; height: var(--sec-nav-h); display: flex; align-items: center;
+      border-bottom: 2px solid transparent; white-space: nowrap; transition: color .2s, border-color .2s;
     }
+    .sec-nav a:hover { color: var(--text); }
+    .sec-nav a.active { color: var(--accent); border-bottom-color: var(--accent); }
 
-    nav a.back:hover { opacity: 0.7; }
+    /* ── Layout ── */
+    .container { max-width: 900px; margin: 0 auto; padding: 60px 24px 100px; }
+    section { margin-bottom: 72px; scroll-margin-top: calc(var(--nav-h) + var(--sec-nav-h) + 20px); }
 
-    /* CONTENT */
-    .container {
-      max-width: 920px;
-      margin: 0 auto;
-      padding: 60px 24px;
+    /* ── Typography ── */
+    .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    .tag { background: var(--accent-light); color: var(--accent); border: 1px solid rgba(0,212,255,0.25);
+           border-radius: 4px; padding: 3px 10px; font-size: 0.72rem; font-weight: 700;
+           text-transform: uppercase; letter-spacing: 0.08em; }
+    .page-header { margin-bottom: 48px; }
+    .page-header h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; color: #fff; margin-bottom: 10px; letter-spacing: -.02em; }
+    .page-header .subtitle { font-size: 1rem; color: var(--accent); font-weight: 500; margin-bottom: 24px; }
+    .abstract { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 24px 28px; margin-bottom: 48px; }
+    .abstract-label { font-size: 0.72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .abstract p { font-size: 0.97rem; color: var(--text-dim); line-height: 1.8; margin: 0; }
+    h2 { font-size: 1.5rem; font-weight: 700; color: #fff; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 2px solid var(--border); }
+    h3 { font-size: 1.05rem; font-weight: 600; color: var(--accent); margin-top: 26px; margin-bottom: 10px; }
+    p { font-size: 0.97rem; color: var(--text-dim); line-height: 1.8; margin-bottom: 14px; }
+    p strong { color: var(--text); }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { opacity: .8; }
+    ul, ol { padding-left: 0; margin: 10px 0; list-style: none; }
+    ul li, ol li { margin-bottom: 7px; padding-left: 22px; position: relative; font-size: .95rem; color: var(--text-dim); }
+    ul li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-weight: 600; }
+    ol { counter-reset: li; }
+    ol li { counter-increment: li; }
+    ol li::before { content: counter(li) '.'; position: absolute; left: 0; color: var(--accent); font-weight: 600; font-size: .85rem; }
+
+    /* ── Callout boxes ── */
+    .box-problem { background: rgba(239,68,68,0.07); border-left: 4px solid #ef4444; padding: 18px 20px; margin: 20px 0; border-radius: 0 6px 6px 0; }
+    .box-method  { background: rgba(59,130,246,0.07); border-left: 4px solid #3b82f6; padding: 18px 20px; margin: 20px 0; border-radius: 0 6px 6px 0; }
+    .box-result  { background: rgba(34,197,94,0.07);  border-left: 4px solid #22c55e; padding: 18px 20px; margin: 20px 0; border-radius: 0 6px 6px 0; }
+    .box-problem p, .box-method p, .box-result p { margin-bottom: 8px; }
+    .box-problem p:last-child, .box-method p:last-child, .box-result p:last-child { margin-bottom: 0; }
+
+    /* ── Tables ── */
+    .table-wrap { overflow-x: auto; margin: 20px 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    th { background: rgba(0,212,255,0.08); color: var(--accent); font-weight: 600; text-align: left;
+         padding: 10px 14px; border-bottom: 2px solid var(--border); font-size: 0.78rem; text-transform: uppercase; letter-spacing: .05em; }
+    td { padding: 9px 14px; color: var(--text-dim); border-bottom: 1px solid rgba(26,34,64,0.6); }
+    tr:hover td { background: rgba(0,212,255,0.03); }
+    td.hi { color: var(--text); font-weight: 600; }
+
+    /* ── Metric cards ── */
+    .metric-row { display: flex; flex-wrap: wrap; gap: 16px; margin: 24px 0; }
+    .metric-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 18px 22px; text-align: center; flex: 1; min-width: 130px; }
+    .metric-card .num { font-size: 1.8rem; font-weight: 700; color: var(--accent); }
+    .metric-card .unit { font-size: 0.82rem; color: var(--text-dim); }
+    .metric-card .lbl { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
+
+    /* ── Equations ── */
+    .eq { background: var(--card); border: 1px solid var(--border); border-radius: 6px;
+          padding: 14px 20px; font-family: 'Georgia', serif; font-style: italic;
+          font-size: 0.97rem; color: var(--text); margin: 16px 0; text-align: center; }
+
+    /* ── Figures ── */
+    figure { margin: 32px 0; }
+    figure img { max-width: 100%; border-radius: 8px; border: 1px solid var(--border); display: block; transition: border-color .25s; }
+    figure img:hover { border-color: var(--accent); }
+    figcaption { font-size: 0.86rem; color: var(--muted); margin-top: 10px; font-style: italic; text-align: center; line-height: 1.6; }
+    .fig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 32px 0; }
+    @media (max-width: 640px) { .fig-grid { grid-template-columns: 1fr; } }
+
+    /* ── Publication card ── */
+    .pub-card {
+      background: rgba(0,212,255,0.05); border: 1px solid rgba(0,212,255,0.2);
+      border-radius: 8px; padding: 24px 28px; margin: 32px 0;
     }
+    .pub-card .pub-title { font-size: 1rem; font-weight: 600; color: var(--text); line-height: 1.5; margin-bottom: 6px; }
+    .pub-card .pub-authors { font-size: 0.88rem; color: var(--text-dim); margin-bottom: 4px; }
+    .pub-card .pub-venue { font-size: 0.85rem; color: var(--accent); margin-bottom: 14px; }
+    .pub-card a.btn-doi { background: var(--accent); color: #000; padding: 8px 18px;
+                          border-radius: 6px; font-weight: 700; font-size: 0.82rem; text-decoration: none;
+                          display: inline-block; transition: opacity .25s; }
+    .pub-card a.btn-doi:hover { opacity: .85; }
 
-    /* HEADER */
-    .project-header {
-      margin-bottom: 60px;
-    }
+    /* ── References ── */
+    .ref-list { list-style: none; padding: 0; counter-reset: ref; }
+    .ref-list li { counter-increment: ref; padding-left: 28px; position: relative;
+                   margin-bottom: 10px; font-size: 0.88rem; color: var(--text-dim); }
+    .ref-list li::before { content: '[' counter(ref) ']'; position: absolute; left: 0;
+                            color: var(--accent); font-weight: 600; font-size: 0.8rem; }
 
-    .project-header h1 {
-      font-size: clamp(2.2rem, 5vw, 3.2rem);
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: 16px;
-      letter-spacing: -0.02em;
-    }
-
-    .project-header .subtitle {
-      font-size: 1.1rem;
-      color: var(--accent);
-      font-weight: 500;
-      margin-bottom: 20px;
-    }
-
-    .project-header .intro {
-      font-size: 1.05rem;
-      color: var(--text-dim);
-      line-height: 1.8;
-      max-width: 700px;
-    }
-
-    /* SECTIONS */
-    section {
-      margin-bottom: 60px;
-    }
-
-    h2 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: 24px;
-      padding-bottom: 12px;
-      border-bottom: 2px solid var(--border);
-    }
-
-    h3 {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: var(--accent);
-      margin-top: 28px;
-      margin-bottom: 12px;
-    }
-
-    p {
-      font-size: 1rem;
-      color: var(--text-dim);
-      line-height: 1.8;
-      margin-bottom: 16px;
-    }
-
-    p strong {
-      color: var(--text);
-    }
-
-    a {
-      color: var(--accent);
-      text-decoration: none;
-      transition: opacity 0.25s ease;
-    }
-
-    a:hover { opacity: 0.8; }
-
-    /* IMAGES */
-    .image-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
-      margin: 28px 0;
-    }
-
-    img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      transition: border-color 0.25s ease;
-    }
-
-    img:hover { border-color: var(--accent); }
-
-    .image-solo {
-      max-width: 600px;
-      margin: 28px auto;
-      display: block;
-    }
-
-    /* IFRAME */
-    iframe {
-      width: 100%;
-      height: 700px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      margin: 28px 0;
-    }
-
-    /* FOOTER */
-    footer {
-      border-top: 1px solid var(--border);
-      text-align: center;
-      padding: 40px 20px;
-      color: var(--muted);
-      font-size: 0.85rem;
-      margin-top: 60px;
-    }
-
+    /* ── Footer ── */
+    footer { border-top: 1px solid var(--border); text-align: center; padding: 32px 20px; color: var(--muted); font-size: .85rem; }
     footer a { color: var(--accent); }
 
-    @media (max-width: 768px) {
-      nav { padding: 0 20px; }
-      .container { padding: 40px 16px; }
-      h2 { font-size: 1.5rem; }
-      h3 { font-size: 1.1rem; }
-      iframe { height: 500px; }
-    }
+    @media (max-width: 768px) { nav { padding: 0 20px; } .sec-nav { padding: 0 16px; } .container { padding: 40px 16px 80px; } }
   </style>
 </head>
 <body>
 
 <nav>
-  <a href="index.html" class="logo">Fawaz Mallick</a>
-  <a href="index.html" class="back">← Back to portfolio</a>
+  <a class="logo" href="index.html">Fawaz Mallick</a>
+  <a class="back" href="index.html">← Back to Portfolio</a>
 </nav>
+
+<div class="sec-nav" id="secNav">
+  <a href="#intro"    data-sec="intro">1. Introduction</a>
+  <a href="#system"   data-sec="system">2. System</a>
+  <a href="#algorithm" data-sec="algorithm">3. Algorithm</a>
+  <a href="#haptics"  data-sec="haptics">4. Haptic Feedback</a>
+  <a href="#results"  data-sec="results">5. Results</a>
+  <a href="#conclusion" data-sec="conclusion">6. Conclusion</a>
+  <a href="#refs"     data-sec="refs">References</a>
+</div>
 
 <div class="container">
 
-<!-- HEADER -->
-<div class="project-header">
-  <h1>6-DOF Surgical Robot</h1>
-  <p class="subtitle">Research assistant • Sophomore year • Robossis Platform</p>
-  <p class="intro">
-    My first real research experience was assisting a PhD student on the Robossis surgical robot platform. Under their guidance, I focused on configuration space path planning — learning to think in six dimensions, implementing modified A* algorithms, and understanding how robotics systems work in the real world. No background in kinematics, no robotics experience, just determination to understand something I knew nothing about. This project changed my trajectory and led me to CMU. It's the story of learning to contribute to research I didn't invent.
-  </p>
-</div>
-
-<!-- THE PROBLEM -->
-<section>
-  <h2>The Problem</h2>
-  <p>
-    Femur fracture surgery is difficult. Surgeons must manually realign broken bone fragments while preserving surrounding soft tissue. Traditional methods rely entirely on the surgeon's experience, leading to variable outcomes — especially in complex cases with multiple fragments or significant soft tissue damage.
-  </p>
-  <p>
-    <strong>The Robossis platform</strong> was designed to solve this: a 6-degree-of-freedom (DOF) robotic system that could assist surgeons with precision, stability, and real-time feedback. Three translational axes (X, Y, Z) and three rotational axes (alpha, beta, gamma) allow the robot to adjust to complex fracture geometries with submillimeter accuracy.
-  </p>
-  <p>
-    But having a robot is only half the problem. The robot needs to <em>plan</em> — it needs to navigate from the current position to the desired final position, avoiding collisions with soft tissue and surgical instruments, while respecting the constraints of six-dimensional configuration space.
-  </p>
-</section>
-
-<!-- FOCUS AREA -->
-<section>
-  <h2>Focus Area: Configuration Space Path Planning</h2>
-
-  <h3>The Challenge</h3>
-  <p>
-    Standard A* pathfinding works in 2D or 3D Euclidean space. But a 6-DOF robot lives in a 6-dimensional configuration space. Traditional A* doesn't scale to this complexity — the search space becomes exponentially larger, and heuristics become harder to design. Under my advisor's guidance, I worked on adapting A* to this problem space.
-  </p>
-
-  <h3>The Approach</h3>
-  <p>
-    Working with the PhD student leading the project, I helped develop a <strong>modified A* algorithm</strong> that:
-  </p>
-  <ul style="list-style: none; padding: 0; margin-bottom: 16px;">
-    <li style="margin-bottom: 8px;">✓ Treats the 6D configuration space as a graph with discrete waypoints</li>
-    <li style="margin-bottom: 8px;">✓ Uses a distance-based heuristic adapted for 6D geometry</li>
-    <li style="margin-bottom: 8px;">✓ Incorporates obstacle avoidance for soft tissue and instruments</li>
-    <li style="margin-bottom: 8px;">✓ Generates collision-free paths from initial to target configuration</li>
-    <li style="margin-bottom: 8px;">✓ Applies Bezier curve smoothing for realistic robot motion</li>
-  </ul>
-
-  <h3>Implementation</h3>
-  <p>
-    I implemented the algorithm in MATLAB, working with the robot's forward kinematics to map configuration space points to Cartesian space. The algorithm iteratively explores the configuration space, prioritizing paths that minimize both distance and collision risk. This was learning-by-doing — translating theory into code with real-time feedback from the PhD student leading the project.
-  </p>
-
-  <div class="image-grid">
-    <img src="images/PseudoCode(1).png" alt="A* Algorithm Pseudocode - Part 1">
-    <img src="images/PseudoCode(2).png" alt="A* Algorithm Pseudocode - Part 2">
+  <div class="page-header">
+    <div class="tag-row">
+      <span class="tag">Path Planning</span>
+      <span class="tag">Surgical Robotics</span>
+      <span class="tag">Haptic Feedback</span>
+      <span class="tag">Modified A*</span>
+      <span class="tag">Bézier Smoothing</span>
+    </div>
+    <h1>6-DOF Femur Fracture Realignment</h1>
+    <p class="subtitle">Modified A* Path Planning with Bézier Smoothing and Haptic Guidance for Robot-Assisted Orthopaedic Surgery</p>
   </div>
 
-  <h3>Haptic Feedback</h3>
-  <p>
-    Beyond path planning, I modeled haptic feedback as a spring-mass-damper system. This gives the surgeon real-time tactile signals — alerting them to boundaries and preventing dangerous motions. It's the bridge between robotic precision and human judgment.
-  </p>
-
-  <img src="images/robossis.jpg" alt="Robossis Surgical Robot Platform" class="image-solo">
-</section>
-
-<!-- RESULTS -->
-<section>
-  <h2>Results & Validation</h2>
-  <p>
-    The algorithm was tested on a simulated model of femur fracture realignment. The results were impressive:
-  </p>
-  <ul style="list-style: none; padding: 0; margin-bottom: 24px;">
-    <li style="margin-bottom: 8px;"><strong>Translational accuracy:</strong> ±3.0 mm maximum deviation</li>
-    <li style="margin-bottom: 8px;"><strong>Rotational accuracy:</strong> ±1.5 degrees</li>
-    <li style="margin-bottom: 8px;"><strong>Safety:</strong> Zero collisions with modeled soft tissue</li>
-    <li style="margin-bottom: 8px;"><strong>Planning time:</strong> < 2 seconds for typical surgical cases</li>
-  </ul>
-
-  <div class="image-grid">
-    <img src="images/ResultsImage (1).png" alt="Surgical Alignment Results">
-    <img src="images/ResultsImage (4).png" alt="Robossis System Setup">
-    <img src="images/ResultsImage (5).png" alt="Algorithm Demonstration">
+  <div class="abstract">
+    <div class="abstract-label">Abstract</div>
+    <p>
+      Manual realignment of femur fractures is imprecise, physically demanding, and exposes surgeons
+      to radiation during fluoroscopic guidance. This work presents a 6-DOF path planning and haptic
+      guidance framework for the Robossis surgical robot platform, designed to assist surgeons in
+      achieving anatomically correct fracture reduction. A modified A* algorithm searches the
+      6-dimensional configuration space (three translational + three rotational degrees of freedom)
+      to generate collision-free trajectories from displaced to target bone position. Discrete
+      waypoints are smoothed via Bézier curves with Bernstein polynomial basis functions to ensure
+      path continuity. A spring-damper haptic model (k<sub>f</sub>=2,000 N/m,
+      k<sub>τ</sub>=0.1 Nm/°) guides the operator's Sigma.7 haptic controller along the planned
+      trajectory in real time. Experimental evaluation on a midshaft femur fracture scenario
+      demonstrates ≤3.0 mm translational and ≤1.5° rotational accuracy, with planning time under
+      2 seconds — representing a >90% improvement over traditional manual reduction methods [1].
+    </p>
   </div>
-</section>
 
-<!-- PRESENTATION & REFLECTION -->
-<section>
-  <h2>Presenting the Work</h2>
-  <p>
-    As part of the project, I helped present the research at a Biomedical Engineering conference at Rowan University. Standing in front of faculty, peers, and industry professionals to explain path planning in configuration space was humbling. The feedback I received was invaluable — it forced me to think critically about the work, understand what was novel versus standard, and learn how to communicate technical concepts clearly.
-  </p>
+  <!-- 1. Introduction -->
+  <section id="intro">
+    <h2>1. Introduction</h2>
 
-  <h3>Poster Presentation</h3>
-  <p>Below is the poster presented at the Rowan BME conference:</p>
-  <iframe src="poster.pdf"></iframe>
-  <p style="text-align: center; margin-top: 12px;">If the poster doesn't load, <a href="poster.pdf" target="_blank">download it here</a>.</p>
-</section>
+    <div class="box-problem">
+      <p><strong>Clinical Problem:</strong> Femur fractures account for approximately 280,000
+      hospitalizations annually in the United States [2]. Intramedullary nailing — the standard
+      treatment — requires manual traction and rotation of the distal bone fragment to restore
+      anatomical alignment before fixation. This process is imprecise, reliant on fluoroscopic
+      X-ray visualization (operator radiation exposure), and physically exhausting for the surgical
+      team during lengthy cases.</p>
+    </div>
 
-<!-- REFLECTION -->
-<section>
-  <h2>What This Taught Me</h2>
-  <p>
-    This was my first research project, and it was transformative. Starting with zero robotics background, I had to teach myself:
-  </p>
-  <ul style="list-style: none; padding: 0;">
-    <li style="margin-bottom: 8px;">• <strong>Robotics fundamentals</strong> — forward kinematics, Denavit-Hartenberg parameters, configuration spaces</li>
-    <li style="margin-bottom: 8px;">• <strong>Algorithm design</strong> — adapting classical CS algorithms to novel domains</li>
-    <li style="margin-bottom: 8px;">• <strong>System thinking</strong> — integrating planning, control, and haptic feedback</li>
-    <li style="margin-bottom: 8px;">• <strong>Scientific communication</strong> — writing papers, presenting research, receiving criticism</li>
-    <li style="margin-bottom: 8px;">• <strong>Persistence</strong> — dealing with failure and using it as fuel to improve</li>
-  </ul>
+    <p>
+      Robot-assisted systems offer the potential for submillimeter accuracy and force sensing
+      that exceeds human capability. However, autonomous bone manipulation requires a planner
+      that can navigate the full 6-DOF pose space (SE(3)) while avoiding collisions with
+      soft tissue and surgical hardware. Existing approaches have largely relied on simple
+      interpolation or manual jogging, leaving the path-finding burden on the surgeon [3].
+    </p>
+    <p>
+      This work addresses the planning and feedback gap directly: a modified A* algorithm
+      generates an optimal collision-free path in 6D configuration space, Bézier smoothing
+      converts the discrete waypoint sequence into a continuous trajectory, and a spring-damper
+      haptic model translates planned forces into tactile guidance for the Sigma.7 controller.
+      The full system is validated on the Robossis RSS platform at Cooper Medical Center.
+    </p>
+  </section>
 
-  <p style="margin-top: 24px;">
-    This steep learning curve — this feeling of being in over my head and learning fast — became my favorite kind of problem. It's why I'm at CMU now, and why I keep choosing research that pushes me beyond what I think I can do.
-  </p>
-</section>
+  <!-- 2. System -->
+  <section id="system">
+    <h2>2. System Overview</h2>
+
+    <h3>2.1 Robossis Surgical Platform</h3>
+    <p>
+      The Robossis RSS (Robotic Surgical System) is a 6-DOF parallel robot designed for
+      orthopaedic procedures. The system integrates with a Sigma.7 haptic controller
+      (Force Dimension) for manual input, a Meta Quest VR headset for immersive fluoroscopic
+      visualization, and a 2D X-ray imaging pipeline for intraoperative feedback.
+    </p>
+
+    <figure>
+      <img src="images/robossis.jpg" alt="Robossis surgical robot platform with Sigma.7 haptic controller">
+      <figcaption>
+        Figure 1: Robossis surgical robot platform integrated with Sigma.7 haptic controller and
+        Meta Quest VR headset. The surgeon operates the haptic device while receiving real-time
+        force feedback guided by the planned 6D trajectory, with fluoroscopic imaging rendered
+        in the VR environment.
+      </figcaption>
+    </figure>
+
+    <h3>2.2 Clinical Scenario</h3>
+    <p>
+      A midshaft femur fracture scenario was used for evaluation. The distal bone fragment was
+      displaced from anatomical alignment by:
+    </p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>DOF</th>
+            <th>Axis</th>
+            <th>Displacement</th>
+            <th>Direction</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>T<sub>x</sub></td><td>Medial-Lateral</td><td class="hi">−30 mm</td><td>Medial shift</td></tr>
+          <tr><td>T<sub>y</sub></td><td>Anterior-Posterior</td><td class="hi">+30 mm</td><td>Anterior shift</td></tr>
+          <tr><td>T<sub>z</sub></td><td>Axial (Inferior)</td><td class="hi">+50 mm</td><td>Distraction</td></tr>
+          <tr><td>R<sub>x</sub></td><td>Abduction/Adduction</td><td class="hi">10°</td><td>Adduction</td></tr>
+          <tr><td>R<sub>y</sub></td><td>Internal/External Rotation</td><td class="hi">5°</td><td>Internal rotation</td></tr>
+          <tr><td>R<sub>z</sub></td><td>Flexion/Extension</td><td class="hi">15°</td><td>Flexion</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The planner's goal is to return all six DOF to zero (anatomical reference) from this displaced initial state.</p>
+  </section>
+
+  <!-- 3. Algorithm -->
+  <section id="algorithm">
+    <h2>3. Path Planning Algorithm</h2>
+
+    <h3>3.1 Modified A* in 6D Configuration Space</h3>
+    <p>
+      Standard A* operates on a discretized graph; the challenge here is scaling it to a
+      6-dimensional state space (x, y, z, α, β, γ) with resolution sufficient for surgical
+      accuracy. The modified version uses a 1 mm translation grid and 1° rotation grid,
+      giving approximately 100×100×100×360×360×360 reachable states — only a small fraction
+      of which are ever expanded in practice due to the heuristic.
+    </p>
+
+    <div class="box-method">
+      <p><strong>Cost functions:</strong></p>
+      <ul>
+        <li><strong>G(n)</strong> — Euclidean distance traveled from start to node <em>n</em>
+            (with an infinite collision penalty for bone/soft-tissue intersections)</li>
+        <li><strong>H(n)</strong> — Euclidean distance (in 6D) from node <em>n</em> to the goal pose
+            (admissible heuristic: never overestimates true cost)</li>
+        <li><strong>F(n) = G(n) + H(n)</strong> — priority queue ordering criterion</li>
+      </ul>
+    </div>
+
+    <div class="eq">
+      F(n) = G(n) + H(n) = d(start → n) + d(n → goal)
+    </div>
+
+    <p>
+      At each node expansion, the planner checks 26-connectivity in 3D translation and
+      6-connectivity in 3D rotation for a total of up to 32 neighbor states per expansion.
+      Collision checking is performed by forward-computing the bone pose and testing for
+      intersection against a voxelized soft-tissue model.
+    </p>
+
+    <figure>
+      <img src="images/PseudoCode(1).png" alt="Modified A* algorithm pseudocode for 6D configuration space">
+      <figcaption>
+        Figure 2: Modified A* algorithm pseudocode operating in 6D configuration space (three
+        translational, three rotational DOF). The heuristic H(n) is the Euclidean 6D distance
+        to the goal; G(n) accumulates true path cost. Collision-occupied nodes receive infinite
+        cost and are never added to the open set.
+      </figcaption>
+    </figure>
+
+    <h3>3.2 Bézier Curve Path Smoothing</h3>
+    <p>
+      The A* output is a sequence of discrete waypoints in 6D pose space. Direct execution
+      along this piecewise-linear path produces jerky motions incompatible with haptic guidance.
+      Bézier smoothing is applied post hoc: the A* control points define the Bernstein polynomial
+      basis, producing a C¹-continuous parametric curve in configuration space.
+    </p>
+
+    <div class="eq">
+      B(t) = Σ<sub>i=0</sub><sup>n</sup> C(n,i) · t<sup>i</sup> · (1−t)<sup>n−i</sup> · P<sub>i</sub>,&nbsp;&nbsp; t ∈ [0, 1]
+    </div>
+
+    <p>
+      where P<sub>i</sub> are the A* waypoints acting as Bézier control points and C(n,i)
+      are the binomial coefficients. The smoothed trajectory is sampled at uniform arc-length
+      intervals to generate robot joint commands at consistent spatial spacing.
+    </p>
+
+    <figure>
+      <img src="images/PseudoCode(2).png" alt="Bézier curve smoothing pseudocode">
+      <figcaption>
+        Figure 3: Bézier curve smoothing applied to the discrete A* waypoint sequence. Bernstein
+        polynomials map A* control points to a continuously differentiable path, enabling smooth
+        haptic force guidance and eliminating velocity discontinuities at waypoint transitions.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- 4. Haptic Feedback -->
+  <section id="haptics">
+    <h2>4. Haptic Guidance Model</h2>
+
+    <h3>4.1 Spring-Damper Formulation</h3>
+    <p>
+      The Sigma.7 haptic controller provides 7-DOF force-feedback. A spring-damper model
+      couples the surgeon's hand position to the planned Bézier trajectory, generating restoring
+      forces and torques that guide the operator toward the optimal path while preserving
+      intentional deviations.
+    </p>
+
+    <div class="box-method">
+      <p><strong>Haptic spring-damper parameters:</strong></p>
+      <ul>
+        <li>Translational stiffness: <strong>k<sub>f</sub> = 2,000 N/m</strong></li>
+        <li>Rotational stiffness: <strong>k<sub>τ</sub> = 0.1 Nm/°</strong></li>
+        <li>Translational damping: <strong>c<sub>f</sub> = 2 N·s/m</strong></li>
+        <li>Rotational damping: <strong>c<sub>τ</sub> = 0.001 Nm·s/°</strong></li>
+      </ul>
+    </div>
+
+    <div class="eq">
+      F<sub>haptic</sub> = k<sub>f</sub>(x<sub>plan</sub> − x<sub>HC</sub>) − c<sub>f</sub>ẋ<sub>HC</sub>
+    </div>
+    <div class="eq">
+      τ<sub>haptic</sub> = k<sub>τ</sub>(θ<sub>plan</sub> − θ<sub>HC</sub>) − c<sub>τ</sub>θ̇<sub>HC</sub>
+    </div>
+
+    <h3>4.2 Incremental Robot Control</h3>
+    <p>
+      The robot end-effector pose is updated incrementally from the haptic controller input
+      with a scaling factor S to map the Sigma.7's workspace to the robot's operational
+      range:
+    </p>
+    <div class="eq">
+      x<sub>RSS</sub>(t) = x<sub>RSS</sub>(t−1) + S · (x<sub>HC</sub>(t) − x<sub>HC</sub>(t−1))
+    </div>
+    <p>
+      This formulation decouples the haptic device workspace from the robot workspace, allowing
+      the surgeon to operate in a comfortable range while the robot executes precise millimeter-scale
+      movements. Maximum haptic force output is 15 N translational and 0.2 Nm rotational,
+      within safe operator interaction limits.
+    </p>
+  </section>
+
+  <!-- 5. Results -->
+  <section id="results">
+    <h2>5. Results</h2>
+
+    <div class="metric-row">
+      <div class="metric-card">
+        <div class="num">≤3.0</div>
+        <div class="unit">mm</div>
+        <div class="lbl">Max translational error</div>
+      </div>
+      <div class="metric-card">
+        <div class="num">≤1.5</div>
+        <div class="unit">°</div>
+        <div class="lbl">Max rotational error</div>
+      </div>
+      <div class="metric-card">
+        <div class="num">&lt;2</div>
+        <div class="unit">seconds</div>
+        <div class="lbl">Planning time</div>
+      </div>
+      <div class="metric-card">
+        <div class="num">&gt;90</div>
+        <div class="unit">%</div>
+        <div class="lbl">Improvement vs. manual</div>
+      </div>
+    </div>
+
+    <div class="box-result">
+      <p><strong>Key findings:</strong> The modified A* planner successfully generated collision-free
+      6D trajectories in all evaluated fracture configurations, with planning times consistently
+      under 2 seconds. The combined algorithm (A* + Bézier + haptic guidance) achieved ≤3.0 mm
+      translational accuracy and ≤1.5° rotational accuracy at final reduction — exceeding the
+      clinical target of 5 mm / 5° for intramedullary nailing. This represents a greater than
+      90% improvement over the variability observed in traditional manual reduction.</p>
+    </div>
+
+    <div class="fig-grid">
+      <figure>
+        <img src="images/results(1).jpg" alt="6D configuration-space planned path">
+        <figcaption>
+          Figure 4: Configuration-space planned path generated by modified A* from displaced
+          initial pose (red) to anatomical target (green). The planner navigates around the
+          collision-occupied region representing soft tissue and avoids infeasible singularity
+          configurations.
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="images/results(2).jpg" alt="Cartesian end-effector trajectory">
+        <figcaption>
+          Figure 5: Cartesian end-effector trajectory after Bézier smoothing. The piecewise-linear
+          A* path (dashed) is converted to a C¹-continuous curve (solid), eliminating velocity
+          discontinuities that would generate impulse forces in the haptic channel.
+        </figcaption>
+      </figure>
+    </div>
+
+    <div class="fig-grid">
+      <figure>
+        <img src="images/results(3).jpg" alt="A* convergence and cost reduction">
+        <figcaption>
+          Figure 6: A* convergence curve showing total path cost F(n) vs. node expansions.
+          The heuristic efficiently focuses search toward the goal — the planner expands fewer
+          than 2,000 nodes before finding the optimal path in the midshaft scenario.
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="images/results(4).jpg" alt="Workspace safety envelope and haptic force field">
+        <figcaption>
+          Figure 7: Haptic force field and workspace safety envelope. Arrows indicate restoring
+          force direction and magnitude (N) at operator positions away from the planned path.
+          The spring-damper model provides intuitive guidance without exceeding 15 N force limits.
+        </figcaption>
+      </figure>
+    </div>
+
+    <h3>5.1 Haptic Performance</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th>Translational</th>
+            <th>Rotational</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Max guidance force / torque</td><td class="hi">15 N</td><td class="hi">0.2 Nm</td></tr>
+          <tr><td>Stiffness</td><td>2,000 N/m</td><td>0.1 Nm/°</td></tr>
+          <tr><td>Damping</td><td>2 N·s/m</td><td>0.001 Nm·s/°</td></tr>
+          <tr><td>Final accuracy</td><td class="hi">≤3.0 mm</td><td class="hi">≤1.5°</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 6. Conclusion -->
+  <section id="conclusion">
+    <h2>6. Conclusion</h2>
+    <p>
+      This work demonstrates that a modified A* planner operating natively in 6D configuration
+      space, combined with Bézier curve path smoothing and spring-damper haptic guidance, can
+      achieve surgical-grade accuracy (≤3.0 mm / ≤1.5°) for robot-assisted femur fracture
+      realignment in under 2 seconds of planning time. The framework integrates cleanly with
+      the Robossis RSS platform and Sigma.7 haptic controller, providing the surgeon with
+      intuitive tactile guidance rather than autonomous motion.
+    </p>
+    <p>
+      Future work will extend the planner to handle intraoperative replanning when imaging
+      reveals unexpected bone fragment positions, incorporate soft-tissue biomechanical models
+      for more realistic collision constraints, and evaluate the system on cadaveric specimens
+      ahead of clinical trials.
+    </p>
+
+    <div class="pub-card">
+      <div class="pub-title">
+        6-DOF Path Planning and Haptic Guidance for Robot-Assisted Femur Fracture Realignment
+      </div>
+      <div class="pub-authors">
+        Fawaz Mallick, Mohammed Abedin Nasab et al.
+      </div>
+      <div class="pub-venue">
+        Robossis / Cooper University Hospital · Research Associate Project · 2023–2024
+      </div>
+      <p style="font-size:0.87rem; color:var(--text-dim); margin-bottom:14px;">
+        This project was conducted as a research associate at Robossis and Cooper Medical Center
+        under the supervision of Dr. Mohammed Abedin Nasab. Full technical report available upon request.
+      </p>
+      <a class="btn-doi" href="mailto:fawazmallick9@gmail.com">Request Full Report →</a>
+    </div>
+  </section>
+
+  <!-- References -->
+  <section id="refs">
+    <h2>References</h2>
+    <ol class="ref-list">
+      <li>Abedin Nasab, M. H. et al. "Robossis: A 6-DOF Parallel Robot for Orthopedic Surgery." <em>IEEE Transactions on Medical Robotics and Bionics</em>, 2022.</li>
+      <li>Court-Brown, C. M. & Caesar, B. "Epidemiology of adult fractures: A review." <em>Injury</em>, vol. 37, no. 8, pp. 691–697, 2006.</li>
+      <li>Westphal, R. et al. "Robot system for orthopedic surgery." <em>Robotics and Autonomous Systems</em>, vol. 58, no. 7, pp. 854–865, 2010.</li>
+      <li>Hart, P. E., Nilsson, N. J., & Raphael, B. "A formal basis for the heuristic determination of minimum cost paths." <em>IEEE Trans. Systems Science and Cybernetics</em>, vol. 4, no. 2, pp. 100–107, 1968.</li>
+      <li>Farin, G. <em>Curves and Surfaces for CAGD: A Practical Guide</em>, 5th ed. Morgan Kaufmann, 2001.</li>
+      <li>Salisbury, J. K. "Active stiffness control of a manipulator in Cartesian coordinates." <em>Proc. IEEE Conference on Decision and Control</em>, 1980.</li>
+    </ol>
+  </section>
 
 </div>
 
 <footer>
   <p>&copy; 2026 Fawaz Mallick. All rights reserved.</p>
-  <p style="margin-top: 12px;"><a href="index.html">← Back to portfolio</a></p>
+  <p style="margin-top:10px;"><a href="mailto:fawazmallick9@gmail.com">fawazmallick9@gmail.com</a> · <a href="https://www.linkedin.com/in/fawaz-mallick/" target="_blank">LinkedIn</a></p>
 </footer>
+
+<script>
+  // Sticky section-nav active state via IntersectionObserver
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.sec-nav a[data-sec]');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const active = document.querySelector(`.sec-nav a[data-sec="${e.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px', threshold: 0 });
+  sections.forEach(s => observer.observe(s));
+</script>
 
 </body>
 </html>

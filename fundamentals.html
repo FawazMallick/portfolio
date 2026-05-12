@@ -1,338 +1,507 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Engineering Fundamentals | Fawaz Mallick</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <title>Regulatory & Medical Device — Fawaz Mallick</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --accent: #00d4ff; --accent-dim: #0099cc; --accent-light: rgba(0,212,255,0.12);
-      --bg: #0a0e27; --card: #0f1429; --card-hover: #151d3a; --border: #1a2240;
-      --text: #e8ecf1; --text-dim: #a8b2c1; --muted: #6b7684; --nav-h: 64px;
+      --bg: #0a0e27; --card: #0f1429; --border: #1a2240;
+      --text: #e8ecf1; --text-dim: #a8b2c1; --muted: #6b7684;
+      --nav-h: 64px; --sec-nav-h: 44px;
     }
     html { scroll-behavior: smooth; }
     body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
 
-    /* NAV */
+    /* ── Main nav ── */
     nav {
       position: sticky; top: 0; z-index: 100; height: var(--nav-h);
-      background: rgba(10,14,39,0.85); backdrop-filter: blur(12px);
+      background: rgba(10,14,39,0.92); backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
       display: flex; align-items: center; justify-content: space-between; padding: 0 40px;
     }
-    nav a.logo { color: var(--text); text-decoration: none; font-weight: 600; }
-    nav a.back { color: var(--accent); text-decoration: none; font-size: .85rem; font-weight: 500; transition: opacity .25s; }
+    nav a.logo { color: var(--text); text-decoration: none; font-weight: 600; font-size: 0.95rem; }
+    nav a.back { color: var(--accent); text-decoration: none; font-size: .85rem; font-weight: 500; }
     nav a.back:hover { opacity: .7; }
 
-    /* LAYOUT */
-    .container { max-width: 960px; margin: 0 auto; padding: 60px 24px; }
-    .page-header { margin-bottom: 60px; }
-    .page-header h1 { font-size: clamp(2rem,5vw,3rem); font-weight: 700; color: #fff; margin-bottom: 16px; letter-spacing: -.02em; }
-    .page-header .subtitle { font-size: 1.1rem; color: var(--accent); font-weight: 500; margin-bottom: 20px; }
-    .page-header .intro { font-size: 1.05rem; color: var(--text-dim); line-height: 1.8; max-width: 720px; }
-    section { margin-bottom: 70px; }
-    h2 { font-size: 1.7rem; font-weight: 700; color: #fff; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 2px solid var(--border); }
-    h3 { font-size: 1.15rem; font-weight: 600; color: var(--accent); margin-top: 32px; margin-bottom: 12px; }
-    h4 { font-size: 1rem; font-weight: 600; color: #fff; margin-bottom: 8px; margin-top: 20px; }
-    p { font-size: 1rem; color: var(--text-dim); line-height: 1.8; margin-bottom: 16px; }
+    /* ── Section nav ── */
+    .sec-nav {
+      position: sticky; top: var(--nav-h); z-index: 90; height: var(--sec-nav-h);
+      background: rgba(15,20,41,0.97); backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 0; padding: 0 40px; overflow-x: auto;
+    }
+    .sec-nav a {
+      color: var(--muted); text-decoration: none; font-size: 0.78rem; font-weight: 500;
+      padding: 0 16px; height: var(--sec-nav-h); display: flex; align-items: center;
+      border-bottom: 2px solid transparent; white-space: nowrap; transition: color .2s, border-color .2s;
+    }
+    .sec-nav a:hover { color: var(--text); }
+    .sec-nav a.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    /* ── Layout ── */
+    .container { max-width: 900px; margin: 0 auto; padding: 60px 24px 100px; }
+    section { margin-bottom: 72px; scroll-margin-top: calc(var(--nav-h) + var(--sec-nav-h) + 20px); }
+
+    /* ── Page header ── */
+    .page-header { margin-bottom: 48px; }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    .tag { background: var(--accent-light); color: var(--accent); border: 1px solid rgba(0,212,255,0.25);
+           border-radius: 4px; padding: 3px 10px; font-size: 0.72rem; font-weight: 700;
+           text-transform: uppercase; letter-spacing: 0.08em; }
+    .page-header h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 700; color: #fff; margin-bottom: 10px; letter-spacing: -.02em; }
+    .page-header .subtitle { font-size: 1rem; color: var(--accent); font-weight: 500; margin-bottom: 24px; }
+
+    /* ── Typography ── */
+    .abstract { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 24px 28px; margin-bottom: 48px; }
+    .abstract-label { font-size: 0.72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .abstract p { font-size: 0.97rem; color: var(--text-dim); line-height: 1.8; margin: 0; }
+    h2 { font-size: 1.5rem; font-weight: 700; color: #fff; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 2px solid var(--border); }
+    h3 { font-size: 1.05rem; font-weight: 600; color: var(--accent); margin-top: 26px; margin-bottom: 10px; }
+    h4 { font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 6px; margin-top: 16px; }
+    p { font-size: 0.97rem; color: var(--text-dim); line-height: 1.8; margin-bottom: 14px; }
     p strong { color: var(--text); }
-    p em { color: var(--accent); font-style: normal; }
-    a { color: var(--accent); text-decoration: none; transition: opacity .25s; }
+    a { color: var(--accent); text-decoration: none; }
     a:hover { opacity: .8; }
-    ul { list-style: none; padding: 0; margin: 12px 0; }
-    ul li { margin-bottom: 8px; padding-left: 22px; position: relative; font-size: .97rem; color: var(--text-dim); }
+    ul { list-style: none; padding: 0; margin: 10px 0; }
+    ul li { margin-bottom: 7px; padding-left: 22px; position: relative; font-size: .95rem; color: var(--text-dim); line-height: 1.6; }
     ul li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-weight: 600; }
 
-    /* CODE */
-    .code-block {
-      background: #070b1a; border: 1px solid var(--border); border-radius: 8px;
-      padding: 24px; margin: 24px 0; overflow-x: auto;
-      font-family: 'JetBrains Mono', 'Courier New', monospace; font-size: .88rem;
-      color: #c9d1d9; line-height: 1.7;
-    }
-    .code-block .comment { color: #8b949e; }
-    .code-block .keyword { color: #ff7b72; }
-    .code-block .func { color: #d2a8ff; }
-    .code-block .num { color: #79c0ff; }
-    .code-block .str { color: #a5d6ff; }
-    .code-label { font-size: .75rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+    /* ── Callout boxes ── */
+    .box-method { background: rgba(59,130,246,0.07); border-left: 4px solid #3b82f6; padding: 18px 20px; margin: 20px 0; border-radius: 0 6px 6px 0; }
+    .box-result { background: rgba(34,197,94,0.07);  border-left: 4px solid #22c55e; padding: 18px 20px; margin: 20px 0; border-radius: 0 6px 6px 0; }
+    .box-insight { background: rgba(0,212,255,0.07); border-left: 4px solid var(--accent); padding: 18px 20px; margin: 20px 0; border-radius: 0 6px 6px 0; }
+    .box-method p, .box-result p, .box-insight p { margin-bottom: 8px; }
+    .box-method p:last-child, .box-result p:last-child, .box-insight p:last-child { margin-bottom: 0; }
 
-    /* HIGHLIGHT BOX */
-    .highlight-box { background: var(--card); border-left: 4px solid var(--accent); padding: 24px; margin: 28px 0; border-radius: 6px; }
-    .highlight-box p:last-child { margin-bottom: 0; }
+    /* ── Tables ── */
+    .table-wrap { overflow-x: auto; margin: 20px 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    th { background: rgba(0,212,255,0.08); color: var(--accent); font-weight: 600; text-align: left;
+         padding: 10px 14px; border-bottom: 2px solid var(--border); font-size: 0.78rem; text-transform: uppercase; letter-spacing: .05em; }
+    td { padding: 9px 14px; color: var(--text-dim); border-bottom: 1px solid rgba(26,34,64,0.6); }
+    tr:hover td { background: rgba(0,212,255,0.03); }
+    td.hi { color: var(--text); font-weight: 600; }
 
-    /* DOMAIN CARDS */
-    .domain-intro { display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 16px; margin: 28px 0; }
-    .domain-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 22px; transition: border-color .25s; }
-    .domain-card:hover { border-color: var(--accent); }
-    .domain-card .icon { font-size: 1.5rem; margin-bottom: 10px; }
-    .domain-card h4 { color: #fff; margin-bottom: 6px; margin-top: 0; }
-    .domain-card p { font-size: .9rem; color: var(--muted); margin: 0; }
-
-    /* FEA PIPELINE */
-    .pipeline { display: flex; flex-direction: column; gap: 0; margin: 28px 0; position: relative; }
+    /* ── FEA pipeline ── */
+    .pipeline { display: flex; flex-direction: column; gap: 0; margin: 24px 0; position: relative; }
     .pipeline::before { content:''; position: absolute; left: 19px; top: 40px; bottom: 40px; width: 2px; background: var(--border); }
-    .pipe-step { display: flex; gap: 20px; align-items: flex-start; padding: 16px 0; position: relative; }
+    .pipe-step { display: flex; gap: 20px; align-items: flex-start; padding: 14px 0; }
     .pipe-num { width: 40px; height: 40px; border-radius: 50%; background: var(--card); border: 2px solid var(--accent); color: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .85rem; flex-shrink: 0; }
-    .pipe-body { flex: 1; }
-    .pipe-body h4 { color: #fff; margin-top: 8px; }
+    .pipe-body { flex: 1; padding-top: 6px; }
+    .pipe-body h4 { color: #fff; margin-top: 0; }
     .pipe-body p { font-size: .92rem; color: var(--text-dim); margin-bottom: 0; }
 
-    /* IMAGES */
-    .image-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap: 20px; margin: 28px 0; }
-    .image-solo { max-width: 640px; margin: 24px auto; display: block; }
-    img { max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border); transition: border-color .25s; }
-    img:hover { border-color: var(--accent); }
+    /* ── Domain cards ── */
+    .domain-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px,1fr)); gap: 16px; margin: 24px 0; }
+    .domain-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; transition: border-color .25s; }
+    .domain-card:hover { border-color: var(--accent); }
+    .domain-card .icon { font-size: 1.4rem; margin-bottom: 10px; }
+    .domain-card h4 { color: #fff; font-size: 0.9rem; font-weight: 600; margin: 0 0 6px; }
+    .domain-card p { font-size: .85rem; color: var(--muted); margin: 0; }
 
-    /* SKILL TAGS */
-    .skill-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
-    .skill-tag { background: var(--accent-light); border: 1px solid rgba(0,212,255,0.3); color: var(--accent); font-size: .78rem; font-weight: 600; padding: 4px 12px; border-radius: 20px; letter-spacing: .03em; }
+    /* ── Deliverables chips ── */
+    .deliverable-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0; }
+    .deliverable { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.3);
+                   border-radius: 6px; padding: 6px 14px; font-size: 0.82rem;
+                   color: #fde68a; font-weight: 500; }
 
-    /* FOOTER */
-    footer { border-top: 1px solid var(--border); text-align: center; padding: 40px 20px; color: var(--muted); font-size: .85rem; margin-top: 60px; }
+    /* ── Images ── */
+    figure { margin: 32px 0; }
+    figure img { max-width: 100%; border-radius: 8px; border: 1px solid var(--border); display: block; transition: border-color .25s; }
+    figure img:hover { border-color: var(--accent); }
+    figcaption { font-size: 0.86rem; color: var(--muted); margin-top: 10px; font-style: italic; text-align: center; line-height: 1.6; }
+    .fig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 32px 0; }
+    @media (max-width: 640px) { .fig-grid { grid-template-columns: 1fr; } }
+
+    /* ── Cross-link ── */
+    .crosslink { background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+                 padding: 14px 20px; margin-top: 20px; display: flex; align-items: center; gap: 12px; }
+    .crosslink span { font-size: 0.88rem; color: var(--text-dim); flex: 1; }
+    .crosslink a { font-size: 0.84rem; font-weight: 600; color: var(--accent);
+                   white-space: nowrap; border: 1px solid rgba(0,212,255,0.3);
+                   padding: 6px 14px; border-radius: 5px; transition: background .2s; }
+    .crosslink a:hover { background: var(--accent-light); opacity: 1; }
+
+    /* ── Footer ── */
+    footer { border-top: 1px solid var(--border); text-align: center; padding: 32px 20px; color: var(--muted); font-size: .85rem; }
     footer a { color: var(--accent); }
 
-    @media (max-width: 768px) {
-      nav { padding: 0 20px; }
-      .container { padding: 40px 16px; }
-      h2 { font-size: 1.4rem; }
-    }
+    @media (max-width: 768px) { nav { padding: 0 20px; } .sec-nav { padding: 0 16px; } .container { padding: 40px 16px 80px; } }
   </style>
 </head>
 <body>
 
 <nav>
-  <a href="index.html" class="logo">Fawaz Mallick</a>
-  <a href="index.html" class="back">← Back to portfolio</a>
+  <a class="logo" href="index.html">Fawaz Mallick</a>
+  <a class="back" href="index.html">← Back to Portfolio</a>
 </nav>
+
+<div class="sec-nav" id="secNav">
+  <a href="#fea"      data-sec="fea">Finite Element Analysis</a>
+  <a href="#regulatory" data-sec="regulatory">Medical Device Regulatory</a>
+  <a href="#biomech"  data-sec="biomech">Biomechanics &amp; Gait</a>
+</div>
 
 <div class="container">
 
-<!-- HEADER -->
-<div class="page-header">
-  <h1>Engineering Fundamentals</h1>
-  <p class="subtitle">Finite Element Analysis · Biomechanics · Embedded Systems · CAD & Fabrication</p>
-  <p class="intro">
-    The research and control work I do is built on a foundation that doesn't get highlighted in algorithm papers: understanding how structures fail under load, how human joints generate force, how sensors talk to microcontrollers, and how to fabricate something that actually works in the real world. These skills are what make the difference between a simulation and a device someone can wear.
-  </p>
-</div>
-
-<!-- OVERVIEW -->
-<section>
-  <h2>Domain Overview</h2>
-  <div class="domain-intro">
-    <div class="domain-card">
-      <div class="icon">⚙️</div>
-      <h4>Finite Element Analysis</h4>
-      <p>2D structural FEA with custom mesh generation, global stiffness assembly, and stress field visualization. Heat transfer FEA by direct stiffness method.</p>
+  <div class="page-header">
+    <div class="tag-row">
+      <span class="tag">FEA</span>
+      <span class="tag">ISO 13485</span>
+      <span class="tag">FDA 510(k)</span>
+      <span class="tag">Biomechanics</span>
+      <span class="tag">OpenSim</span>
     </div>
-    <div class="domain-card">
-      <div class="icon">🦵</div>
-      <h4>Biomechanics & Gait</h4>
-      <p>Joint mechanics, musculoskeletal modeling (OpenSim), gait phase analysis, ground reaction forces, lower-limb kinetics and kinematics.</p>
-    </div>
-    <div class="domain-card">
-      <div class="icon">📡</div>
-      <h4>Embedded Systems & Sensors</h4>
-      <p>Arduino + BNO055 IMU over I²C, quaternion attitude estimation, TCA9548A multiplexer for multi-sensor networks, real-time serial data logging.</p>
-    </div>
-    <div class="domain-card">
-      <div class="icon">🔧</div>
-      <h4>CAD & Fabrication</h4>
-      <p>SolidWorks parametric design, laser cutting, 3D printing (ABS/PLA), iterative prototyping and hardware integration.</p>
-    </div>
+    <h1>Regulatory &amp; Medical Device</h1>
+    <p class="subtitle">Finite Element Analysis · Medical Device Regulation · Biomechanics &amp; Gait</p>
   </div>
-</section>
 
-<!-- FEA -->
-<section>
-  <h2>Finite Element Analysis</h2>
+  <div class="abstract">
+    <div class="abstract-label">Course Overview</div>
+    <p>
+      This page covers the biomedical engineering foundation courses at Rowan University that
+      directly inform my wearable robotics research. <strong>Finite Element Analysis</strong>
+      developed the tools to evaluate structural integrity of device components from first
+      principles, applying ISO 7206 fatigue standards to implant simulation. The
+      <strong>Medical Device Regulatory Bootcamp</strong> simulated a Class III device startup
+      through FDA 510(k) submission — producing SOPs, CAPA forms, design history files, and
+      ISO 13485 audit documentation. <strong>Biomechanics &amp; Gait Analysis</strong> provided
+      the movement science grounding that connects sensor signals to human intent — the domain
+      knowledge underlying both the exoskeleton and prosthetics research projects.
+    </p>
+  </div>
 
-  <h3>Why FEA Matters for Device Design</h3>
-  <p>
-    Every hardware component in the exoskeleton had to be structurally validated before anyone wore it. FEA lets you find failure modes in simulation — identifying where stress concentrations exceed material yield strength — before committing to fabrication. That's not just efficiency; for a wearable medical device, it's a safety requirement.
-  </p>
-  <p>
-    I learned FEA in depth through two frameworks: a <strong>2D structural solver</strong> built on the BristolFE MATLAB library (which I used to understand the algorithm at the mesh, stiffness matrix, and solver level), and a <strong>1D heat transfer solver</strong> written from scratch using the direct stiffness method.
-  </p>
+  <!-- 1. FEA -->
+  <section id="fea">
+    <h2>1. Finite Element Analysis</h2>
 
-  <h3>2D Structural FEA Pipeline</h3>
-  <p>
-    The BristolFE framework implements the complete finite element pipeline — meshing, element stiffness assembly, global matrix construction, boundary condition application, linear system solve, and stress recovery. I used it to analyze structural components under load, learning the pipeline by working through it step by step.
-  </p>
+    <h3>1.1 Course Overview</h3>
+    <p>
+      FEA coursework developed the mathematical and computational foundation for structural
+      analysis of medical device components. Rather than relying on commercial solvers as black
+      boxes, the course required building the FEA pipeline from first principles — from mesh
+      generation through global stiffness assembly and stress recovery — giving insight into what
+      software like ANSYS and Abaqus are actually computing.
+    </p>
 
-  <div class="pipeline">
-    <div class="pipe-step">
-      <div class="pipe-num">1</div>
-      <div class="pipe-body">
-        <h4>Mesh Generation</h4>
-        <p>Define geometry and element size. Auto-generate node positions and element connectivity. Hexagonal or rectangular structured meshes for simple geometries; unstructured Mesh2D for complex shapes.</p>
+    <div class="domain-grid">
+      <div class="domain-card">
+        <div class="icon">⚙️</div>
+        <h4>2D Structural FEA</h4>
+        <p>Custom MATLAB solver using BristolFE framework. Plane stress and plane strain formulations; hexagonal and unstructured meshes.</p>
+      </div>
+      <div class="domain-card">
+        <div class="icon">🌡️</div>
+        <h4>1D Heat Transfer FEA</h4>
+        <p>Direct stiffness method from scratch. Three-layer composite (glass–air–glass); conduction + convection terms; Neumann BCs.</p>
+      </div>
+      <div class="domain-card">
+        <div class="icon">🦴</div>
+        <h4>Hip Implant Fatigue</h4>
+        <p>ISO 7206-4 axial fatigue and ISO 7206-6 bending load simulation. Stress concentration identification and fatigue life estimation.</p>
       </div>
     </div>
-    <div class="pipe-step">
-      <div class="pipe-num">2</div>
-      <div class="pipe-body">
-        <h4>Material & Stiffness Matrix</h4>
-        <p>Define isotropic material (Young's modulus, Poisson's ratio). Compute element stiffness matrices using plane stress or plane strain formulations. Assemble into global K matrix.</p>
+
+    <h3>1.2 2D Structural FEA Pipeline</h3>
+    <p>
+      The BristolFE MATLAB library implements the complete finite element pipeline. Working
+      through it step by step — understanding what each function computes and why — built
+      intuition that carries over to interpreting commercial solver outputs critically.
+    </p>
+
+    <div class="pipeline">
+      <div class="pipe-step">
+        <div class="pipe-num">1</div>
+        <div class="pipe-body">
+          <h4>Mesh Generation</h4>
+          <p>Define geometry and element size. Generate node positions and element connectivity. Structured (rectangular/hexagonal) meshes for uniform geometries; unstructured Mesh2D for curved or complex shapes.</p>
+        </div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-num">2</div>
+        <div class="pipe-body">
+          <h4>Material Properties &amp; Element Stiffness</h4>
+          <p>Specify Young's modulus and Poisson's ratio. Compute element stiffness matrices K<sub>e</sub> via plane stress or plane strain constitutive law. Evaluate at Gauss quadrature points.</p>
+        </div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-num">3</div>
+        <div class="pipe-body">
+          <h4>Global Stiffness Assembly</h4>
+          <p>Map element stiffness into global K matrix using element-to-global DOF connectivity table. Enforce symmetry and sparsity for efficiency.</p>
+        </div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-num">4</div>
+        <div class="pipe-body">
+          <h4>Boundary Conditions &amp; Loading</h4>
+          <p>Apply displacement constraints at support nodes (frictionless base = vertical DOF fixed). Apply distributed load or prescribed displacement on loaded surfaces.</p>
+        </div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-num">5</div>
+        <div class="pipe-body">
+          <h4>Solve → Stress Recovery</h4>
+          <p>Solve K·u = f for displacement field u. Back-compute element stresses (σ<sub>xx</sub>, σ<sub>yy</sub>, σ<sub>xy</sub>). Visualize as color-mapped contour plots. Compare σ<sub>max</sub> to material yield strength.</p>
+        </div>
       </div>
     </div>
-    <div class="pipe-step">
-      <div class="pipe-num">3</div>
-      <div class="pipe-body">
-        <h4>Boundary Conditions & Loading</h4>
-        <p>Apply displacement constraints at support nodes (frictionless base = vertical DOF fixed). Apply distributed stress or point displacement on loading surface.</p>
-      </div>
+
+    <h3>1.3 Hip Implant Fatigue Simulation — ISO 7206 Standards</h3>
+    <p>
+      A hip implant femoral stem was analyzed under clinically relevant loading conditions,
+      following the ISO 7206 standard test series used in regulatory submissions:
+    </p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Standard</th><th>Load Case</th><th>Objective</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="hi">ISO 7206-4</td>
+            <td>Axial fatigue — 2.3 kN at 5 Hz, 5×10⁶ cycles</td>
+            <td>Identify stem failure under repetitive vertical load</td>
+          </tr>
+          <tr>
+            <td class="hi">ISO 7206-6</td>
+            <td>Bending fatigue — cantilever setup, 10 mm offset</td>
+            <td>Assess neck-stem junction stress concentration under bending</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <div class="pipe-step">
-      <div class="pipe-num">4</div>
-      <div class="pipe-body">
-        <h4>Static Solve → Stress Recovery</h4>
-        <p>Solve K·u = f for unknown displacements. Recover element stresses (σ_xx, σ_yy, σ_xy) from displacement field. Visualize with color-mapped contour plots.</p>
-      </div>
+
+    <div class="box-result">
+      <p><strong>Key finding:</strong> The neck-stem junction exhibits the highest von Mises stress
+      concentration under ISO 7206-6 bending load — consistent with clinical literature on implant
+      fatigue fracture sites. The FEA stress map directly informed the region targeted for material
+      upgrades and surface finish improvement in the regulatory design review.</p>
     </div>
-  </div>
 
+    <div class="box-insight">
+      <p><strong>What FEA taught me:</strong> The same mathematical structure — assemble element
+      contributions into a global system, apply boundary conditions, solve — appears across
+      numerical engineering. Understanding it from first principles means I can read commercial
+      FEA output critically rather than just accepting it. For a medical device, that distinction
+      matters: the regulatory reviewer expects you to understand why your simulation is valid,
+      not just that it passed.</p>
+    </div>
+  </section>
 
-  <h3>1D Heat Transfer FEA from Scratch</h3>
-  <p>
-    For a thermodynamics assignment, I built a <strong>1D heat transfer FEA solver from first principles</strong> using the direct stiffness method. The model: a three-layer composite (glass–air–glass) with conduction and convection terms, solved for nodal temperatures under applied heat flux.
-  </p>
-  <p>
-    Building this from scratch — assembling element stiffness matrices manually, handling conduction and convection terms, applying Neumann boundary conditions — gave me a much deeper understanding of what the structural FEA solver was doing under the hood.
-  </p>
+  <!-- 2. Medical Device Regulatory Bootcamp -->
+  <section id="regulatory">
+    <h2>2. Medical Device Regulatory Bootcamp</h2>
 
+    <h3>2.1 Overview</h3>
+    <p>
+      The Medical Device Regulatory Bootcamp was a capstone course that simulated the full lifecycle
+      of a Class III medical device startup pursuing FDA 510(k) clearance for a hip implant. Teams
+      operated as if they were a real medical device company — responsible for the entire quality
+      system and regulatory dossier from concept through mock submission.
+    </p>
 
-  <div class="highlight-box">
-    <p><strong>What FEA taught me:</strong> The same mathematical structure — assemble element contributions into a global system, apply boundary conditions, solve — appears everywhere in numerical engineering. Understanding it from first principles means I can read the output of commercial FEA tools critically, not just accept them.</p>
-  </div>
-</section>
+    <div class="box-method">
+      <p><strong>Device classification:</strong> Class III active implantable device (hip femoral stem).
+      Regulatory pathway: FDA 510(k) premarket notification, citing predicate device(s) with
+      substantial equivalence argument. Quality framework: ISO 13485:2016 Medical Devices — Quality
+      Management Systems.</p>
+    </div>
 
-<!-- BIOMECHANICS -->
-<section>
-  <h2>Biomechanics & Gait Analysis</h2>
+    <h3>2.2 Quality System Deliverables</h3>
+    <p>The course required producing and defending the following quality system documents:</p>
 
-  <h3>Why Biomechanics Shows Up in My Robotics Work</h3>
-  <p>
-    You can't design a wearable device for a human without understanding how that human moves. The exoskeleton project required knowing what happens at the hip joint during a slip perturbation. The prosthetics research required understanding how gait phase maps onto sensor signals. These aren't optional extras — they're core design constraints.
-  </p>
+    <div class="deliverable-row">
+      <div class="deliverable">Standard Operating Procedures (SOPs)</div>
+      <div class="deliverable">Design History File (DHF)</div>
+      <div class="deliverable">CAPA Forms</div>
+      <div class="deliverable">Risk Management File (ISO 14971)</div>
+      <div class="deliverable">ISO 13485 Internal Audit</div>
+      <div class="deliverable">510(k) Submission Package</div>
+      <div class="deliverable">Neck Fatigue Test Report</div>
+      <div class="deliverable">Stem Fatigue Test Report</div>
+      <div class="deliverable">Toxicological Risk Assessment</div>
+    </div>
 
-  <h3>Key Concepts Applied</h3>
-  <ul>
-    <li><strong>Gait cycle phases:</strong> Stance (heel strike → toe-off) and swing (toe-off → heel strike). Phase detection from FSR and IMU is the foundation of both my exoskeleton and prosthetics work.</li>
-    <li><strong>Ground reaction forces (GRF):</strong> The force the ground exerts on the foot. Changes in GRF pattern are early indicators of perturbations — used in exoskeleton control logic.</li>
-    <li><strong>Joint torques:</strong> Calculated from inverse dynamics given GRF and kinematics. Validated against OpenSim simulation to set exoskeleton torque targets.</li>
-    <li><strong>Foot placement mechanics:</strong> During swing phase, the nervous system uses sensory feedback to predict where the foot will land. My prosthetics research targets this prediction computationally.</li>
-    <li><strong>Hip abductor function:</strong> The hip's lateral stabilization role during single-leg stance — the primary target of the exoskeleton actuator. Simulated in OpenSim under perturbation conditions.</li>
-  </ul>
+    <h3>2.3 Regulatory Pathway — FDA 510(k)</h3>
+    <p>
+      The 510(k) pathway requires demonstrating <em>substantial equivalence</em> — that the new
+      device is at least as safe and effective as a legally marketed predicate device. The course
+      walked through the full submission logic:
+    </p>
+    <ul>
+      <li><strong>Predicate identification:</strong> search the FDA 510(k) database for cleared devices with the same intended use and technological characteristics</li>
+      <li><strong>Substantial equivalence argument:</strong> side-by-side comparison of new device vs. predicate on materials, dimensions, performance, and labeling</li>
+      <li><strong>Performance testing:</strong> reference to consensus standards (ISO 7206-4, ISO 7206-6) to satisfy bench testing requirements</li>
+      <li><strong>Biocompatibility:</strong> material toxicological risk assessment per ISO 10993 series</li>
+      <li><strong>Design controls:</strong> design input/output traceability, verification &amp; validation plan per 21 CFR Part 820</li>
+    </ul>
 
-  <h3>OpenSim Musculoskeletal Simulation</h3>
-  <p>
-    For the exoskeleton project, I used <strong>OpenSim</strong> — the Stanford musculoskeletal simulation environment — to validate our control strategy before testing on humans. I built a full-body gait model, applied simulated slip perturbations during swing phase, and measured the stabilizing torque profile that our actuator needed to replicate.
-  </p>
-  <p>
-    The simulation revealed a critical constraint: the effective assistive torque window is only <strong>100–200ms</strong> during early swing. Outside that window, intervention is either too late (the fall has begun) or counterproductive (disrupts normal gait). This directly set the real-time latency requirement for our IMU-based perturbation detection algorithm.
-  </p>
+    <h3>2.4 ISO 13485 Quality Audit</h3>
+    <p>
+      An internal quality audit was conducted against ISO 13485:2016, covering the management,
+      resource, product realization, and monitoring/measurement clauses. Audit findings were
+      documented in CAPA (Corrective and Preventive Action) forms:
+    </p>
+    <ul>
+      <li><strong>Major nonconformity:</strong> inadequate traceability between design inputs and verification activities (§7.3.6) — CAPA required within 30 days</li>
+      <li><strong>Minor nonconformity:</strong> supplier qualification records not current (§7.4.1) — corrective action and re-audit scheduled</li>
+      <li><strong>Observation:</strong> SOPs not reviewed on annual schedule (§4.2.4) — preventive action initiated</li>
+    </ul>
 
-  <img src="images/best_result_walk_sim.jpg" alt="OpenSim Walking Simulation — Best Result Validation" class="image-solo">
+    <h3>2.5 Risk Management — ISO 14971</h3>
+    <p>
+      Risk management followed ISO 14971:2019. The process: hazard identification → risk estimation
+      (severity × probability) → risk control → residual risk evaluation → benefit-risk judgment.
+    </p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Hazard</th><th>Severity</th><th>Probability</th><th>Initial Risk</th><th>Control</th><th>Residual Risk</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Implant fracture</td><td class="hi">Catastrophic</td><td>Remote</td><td>High</td><td>ISO 7206 fatigue testing; material spec</td><td>Acceptable</td></tr>
+          <tr><td>Infection</td><td class="hi">Critical</td><td>Occasional</td><td>High</td><td>Surface finish + antimicrobial coating</td><td>ALARP</td></tr>
+          <tr><td>Aseptic loosening</td><td>Marginal</td><td>Probable</td><td>Medium</td><td>Surface roughness specification</td><td>Acceptable</td></tr>
+          <tr><td>Toxicity (metal ions)</td><td>Critical</td><td>Remote</td><td>Medium</td><td>ISO 10993 biocompatibility testing</td><td>Acceptable</td></tr>
+        </tbody>
+      </table>
+    </div>
 
-  <p>
-    <a href="exoskeleton.html">→ Full exoskeleton research page</a> covers the complete OpenSim validation methodology and results.
-  </p>
+    <div class="fig-grid">
+      <figure>
+        <img src="Coursework/Regulatory/Screenshot 2025-05-31 191649.png" alt="Regulatory submission document excerpt">
+        <figcaption>
+          Figure 1: Excerpt from the regulatory design history file. Design inputs, outputs, and
+          verification activities are traced in the DHF as required by 21 CFR Part 820 design controls.
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="Coursework/Regulatory/Screenshot 2025-05-31 191812.png" alt="ISO 13485 audit checklist">
+        <figcaption>
+          Figure 2: ISO 13485 internal audit checklist results. Highlighted cells indicate nonconformities
+          identified during the audit, with severity classification (major / minor / observation).
+        </figcaption>
+      </figure>
+    </div>
 
-  <div class="skill-tags">
-    <span class="skill-tag">OpenSim</span>
-    <span class="skill-tag">Inverse Dynamics</span>
-    <span class="skill-tag">Gait Phase Analysis</span>
-    <span class="skill-tag">GRF Analysis</span>
-    <span class="skill-tag">Lower Limb Biomechanics</span>
-    <span class="skill-tag">Motion Capture Processing</span>
-  </div>
-</section>
+    <div class="box-result">
+      <p><strong>Key takeaway:</strong> The regulatory bootcamp made clear that FDA clearance is not
+      a single submission event — it is an evidence-based argument assembled over the entire design
+      lifecycle. Every decision in device design generates a document; that document is what the
+      reviewer reads. Getting comfortable with this paper trail early is what distinguishes engineers
+      who can move a device to market from those who can only design one.</p>
+    </div>
+  </section>
 
-<!-- EMBEDDED SYSTEMS -->
-<section>
-  <h2>Embedded Systems & Sensors</h2>
+  <!-- 3. Biomechanics & Gait -->
+  <section id="biomech">
+    <h2>3. Biomechanics &amp; Gait Analysis</h2>
 
-  <h3>Current Experience: Multi-Sensor IMU Integration</h3>
-  <p>
-    For the exoskeleton project, I implemented the embedded sensing layer: reading orientation data from BNO055 IMUs over I²C, multiplexing multiple sensors on a shared bus using a TCA9548A multiplexer, and streaming real-time quaternion data to a PC for processing. This gave me hands-on experience with the physical foundation that control algorithms run on.
-  </p>
+    <h3>3.1 Why Biomechanics Underlies My Robotics Work</h3>
+    <p>
+      You cannot design a wearable device for a human without understanding how that human moves.
+      The exoskeleton project required knowing what happens at the hip joint during a slip
+      perturbation. The prosthetics research required understanding how gait phase maps onto
+      IMU sensor signals. These are not optional extras — they are core design constraints.
+    </p>
 
-  <h3>Technical Foundation Built</h3>
-  <ul>
-    <li><strong>BNO055 IMU:</strong> 9-axis absolute orientation sensor (accelerometer + gyroscope + magnetometer) with on-chip sensor fusion. Outputs calibrated quaternions at 100 Hz — no need to implement Kalman filters for orientation estimation. Critical for real-time gait phase detection.</li>
-    <li><strong>I²C Multiplexing:</strong> Multiple sensors on the same microcontroller bus using a TCA9548A multiplexer to switch between channels. Common pattern in multi-sensor embedded systems; understanding this at the register level enables quick adaptation to new sensor combinations.</li>
-    <li><strong>Real-Time Serial Data Logging:</strong> Streaming sensor data at deterministic rates (100 Hz quaternion updates) to a processing PC. Understanding latency budgets and buffer management is critical for control applications.</li>
-  </ul>
+    <h3>3.2 Normal Gait Cycle</h3>
+    <p>
+      The normal walking gait cycle is divided into <strong>stance phase</strong> (~60% of cycle:
+      heel strike → foot flat → midstance → heel-off → toe-off) and
+      <strong>swing phase</strong> (~40%: initial swing → midswing → terminal swing).
+      The transition between them — toe-off — is the event that triggers prosthetic swing phase
+      control and defines the feature extraction window for foot placement prediction.
+    </p>
 
-  <div class="highlight-box">
-    <p><strong>Graduate Coursework in Embedded Systems:</strong> As I progress through my graduate studies, I'm planning to deepen embedded systems knowledge significantly — real-time operating systems (RTOS), low-level driver development, mixed-signal circuit design, and state machine implementation on microcontrollers. The exoskeleton project provided a solid applied foundation; formal coursework will extend this into system-level architecture and design.</p>
-  </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Phase</th><th>% Gait Cycle</th><th>Key Event</th><th>Relevance to Device Design</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="hi">Heel Strike</td><td>0%</td><td>Foot contacts ground</td><td>Ground reaction force onset; FSR trigger event</td></tr>
+          <tr><td>Loading Response</td><td>0–10%</td><td>Weight transfer to stance leg</td><td>Peak quadriceps demand; implant loading</td></tr>
+          <tr><td>Midstance</td><td>10–30%</td><td>Single limb support</td><td>Hip abductor stabilization — exoskeleton target</td></tr>
+          <tr><td>Terminal Stance</td><td>30–50%</td><td>Heel rise</td><td>Plantarflexion power burst; prosthetic push-off</td></tr>
+          <tr><td class="hi">Toe-Off</td><td>60%</td><td>Foot leaves ground</td><td>Swing phase initiation; foot placement prediction window opens</td></tr>
+          <tr><td>Swing Phase</td><td>60–100%</td><td>Limb advancement</td><td>IMU-based intent prediction; hip/knee angle feature extraction</td></tr>
+        </tbody>
+      </table>
+    </div>
 
-  <div class="skill-tags">
-    <span class="skill-tag">Arduino</span>
-    <span class="skill-tag">I²C Protocol</span>
-    <span class="skill-tag">BNO055 IMU</span>
-    <span class="skill-tag">TCA9548A Multiplexer</span>
-    <span class="skill-tag">Quaternion Estimation</span>
-    <span class="skill-tag">Real-Time Sensor Fusion</span>
-  </div>
-</section>
+    <h3>3.3 Joint Mechanics &amp; Ground Reaction Forces</h3>
+    <ul>
+      <li><strong>Ground Reaction Forces (GRF):</strong> the ground's reaction to body weight and dynamic loading. The characteristic double-bump GRF profile (loading peak ~1.2 BW, push-off peak ~1.1 BW) is used to validate OpenSim simulations against force plate measurements</li>
+      <li><strong>Hip abductor function:</strong> during single-leg stance, the hip abductors (gluteus medius/minimus) prevent pelvic drop on the swing side. Perturbation of this mechanism is the target of the exoskeleton actuator</li>
+      <li><strong>Inverse dynamics:</strong> from GRF and kinematics, compute joint moments. Used to set torque targets for exoskeleton actuation and validate OpenSim simulation magnitudes</li>
+      <li><strong>EMG patterns:</strong> timing of key muscle activation relative to gait events (e.g., tibialis anterior peaks at heel strike; soleus peaks at push-off). Used to interpret IMU signals in context of neuromuscular control</li>
+    </ul>
 
-<!-- CAD & FABRICATION -->
-<section>
-  <h2>CAD & Fabrication</h2>
+    <h3>3.4 OpenSim — Musculoskeletal Simulation</h3>
+    <p>
+      OpenSim (Stanford) provides validated musculoskeletal models for forward and inverse dynamics
+      simulation. For the exoskeleton project, a full-body gait model was used to:
+    </p>
+    <ul>
+      <li>Simulate exoskeleton contact forces using elastic foundation contact (stiffness 60,000 N/m; damping 3,000 N·s/m)</li>
+      <li>Convert BNO055 IMU quaternion streams to joint angles as simulation inputs</li>
+      <li>Validate simulated F1 module loads against FSR measurements (≈85% accuracy on peak timing)</li>
+      <li>Identify the <strong>100–200 ms response window</strong> during early swing in which perturbation correction is both possible and beneficial</li>
+    </ul>
 
-  <h3>From Model to Physical Device</h3>
-  <p>
-    All design work on the exoskeleton started in <strong>SolidWorks</strong> — parametric CAD that let me iterate on bracket geometry, actuator mounting positions, and sensor housings without committing to material. Fabrication used the full workshop toolkit: laser cutting for flat aluminum brackets, 3D printing (ABS) for custom sensor housings, and a drill press for assembly.
-  </p>
-  <p>
-    We built three hardware iterations over the project timeline. Each iteration revealed something the simulation missed — a stress concentration, a fit issue, a sensor drift problem — and the CAD model was updated before the next fabrication run.
-  </p>
+    <figure>
+      <img src="images/best_result_walk_sim.jpg" alt="OpenSim best-match walking simulation result">
+      <figcaption>
+        Figure 3: Best-match OpenSim simulation result for a 5-stride walking trial. Simulated F1
+        module load (hip flexion direction) shows comparable timing to FSR measurements, with
+        magnitude differences attributed to soft-tissue compliance and individual subject variation.
+        Simulation validated at ≈85% accuracy.
+      </figcaption>
+    </figure>
 
-  <div class="image-grid">
-    <img src="images/Exoskeleton (1).png" alt="Exoskeleton CAD Design — SolidWorks Assembly">
-    <img src="images/Exoskeleton (2).png" alt="Exoskeleton Prototype — Third Iteration">
-  </div>
+    <div class="crosslink">
+      <span>OpenSim simulation methodology, elastic foundation contact parameters, and validation results are detailed on the exoskeleton research page.</span>
+      <a href="exoskeleton.html">Exoskeleton Research →</a>
+    </div>
 
-  <div class="highlight-box">
-    <p><strong>Design process insight:</strong> The hardest part of hardware isn't the CAD or the fabrication — it's the interface between the two. Where the 3D-printed part meets the laser-cut bracket is where tolerances accumulate. Where the IMU mount attaches to the brace is where sensor placement drift happens. Designing for fabrication variability is a skill that only comes from building things, not from simulation.</p>
-  </div>
-
-  <div class="skill-tags">
-    <span class="skill-tag">SolidWorks</span>
-    <span class="skill-tag">Laser Cutting</span>
-    <span class="skill-tag">3D Printing (ABS/PLA)</span>
-    <span class="skill-tag">Iterative Prototyping</span>
-    <span class="skill-tag">ISO 14971 Risk Analysis</span>
-    <span class="skill-tag">Hardware Integration</span>
-  </div>
-
-  <p>
-    <a href="exoskeleton.html">→ Full device design details on the exoskeleton project page</a>, including risk analysis per ISO 14971 and the hazard reduction workflow.
-  </p>
-</section>
-
-<!-- WHY IT MATTERS -->
-<section>
-  <h2>Why These Skills Matter Together</h2>
-  <p>
-    The reason I invested in these fundamentals is the same reason a good surgeon understands anatomy before picking up a robot: <em>you can't trust a system you don't understand</em>. FEA tells me whether my bracket will survive the loads I'm simulating in control theory. Biomechanics tells me which joint angles matter and why. The embedded systems work tells me whether my latency budget is physically achievable.
-  </p>
-  <p>
-    Research at the intersection of robotics, control, and medicine requires all three layers — the algorithm, the hardware, and the domain knowledge. These fundamentals are what connect them.
-  </p>
-</section>
+    <div class="box-insight">
+      <p><strong>Biomechanics as a design constraint:</strong> The 100–200 ms perturbation correction
+      window identified in OpenSim directly set the latency requirement for the FSR detection
+      algorithm (observed: &lt;150 ms response time). Similarly, understanding that foot placement
+      during swing is determined by terminal swing kinematics — not earlier — defined the feature
+      extraction window for the prosthetics research. Domain knowledge shapes what the algorithm
+      must do before you write a single line of code.</p>
+    </div>
+  </section>
 
 </div>
 
 <footer>
   <p>&copy; 2026 Fawaz Mallick. All rights reserved.</p>
-  <p style="margin-top:12px;"><a href="index.html">← Back to portfolio</a></p>
+  <p style="margin-top:10px;"><a href="mailto:fawazmallick9@gmail.com">fawazmallick9@gmail.com</a> · <a href="https://www.linkedin.com/in/fawaz-mallick/" target="_blank">LinkedIn</a></p>
 </footer>
+
+<script>
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.sec-nav a[data-sec]');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const active = document.querySelector(`.sec-nav a[data-sec="${e.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -65% 0px', threshold: 0 });
+  sections.forEach(s => observer.observe(s));
+</script>
 
 </body>
 </html>

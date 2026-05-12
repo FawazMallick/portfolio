@@ -206,7 +206,14 @@
     <li><strong>Infrastructure:</strong> Trained on Kaggle (2× NVIDIA GPU), ~100 epochs each model</li>
   </ul>
 
-  <img src="images/fig_fd001.png" alt="FD001 Actual vs Predicted RUL — GRU Baseline vs Embed-RUL" class="image-solo">
+  <figure style="margin: 32px auto; max-width: 680px;">
+    <img src="images/fig_fd001.png" alt="FD001 training data — sensor signal degradation trajectories" style="width:100%; border-radius:8px; border:1px solid var(--border);">
+    <figcaption style="font-size:0.86rem; color:var(--muted); margin-top:10px; font-style:italic; text-align:center; line-height:1.6;">
+      Figure 1: FD001 training data — sensor signal degradation trajectories for 100 turbofan engines
+      over operational cycle count. Gradual drift in key channels (e.g., exhaust temperature, fan speed)
+      indicates progressive engine wear.
+    </figcaption>
+  </figure>
 
   <h3>Two Approaches: Baseline GRU vs Embed-RUL</h3>
   <p>
@@ -246,8 +253,20 @@
   </p>
 
   <div class="image-grid">
-    <img src="images/fig_tsne.png" alt="t-SNE of Encoder Embeddings — Normal vs Degraded">
-    <img src="images/fig_hi_curves.png" alt="Health Index Curves — Sample Training Engines">
+    <figure>
+      <img src="images/fig_tsne.png" alt="t-SNE of Encoder Embeddings — Normal vs Degraded">
+      <figcaption style="font-size:0.83rem; color:var(--muted); margin-top:8px; font-style:italic; text-align:center; line-height:1.5;">
+        Figure 2: t-SNE of encoder embeddings. Normal-state windows cluster separately from degraded
+        windows, validating the encoder's health-sensitive representation.
+      </figcaption>
+    </figure>
+    <figure>
+      <img src="images/fig_hi_curves.png" alt="Health Index Curves — Sample Training Engines">
+      <figcaption style="font-size:0.83rem; color:var(--muted); margin-top:8px; font-style:italic; text-align:center; line-height:1.5;">
+        Figure 3: Learned Health Index (HI) curves for Embed-RUL across FD001 training engines.
+        HI increases monotonically from near-zero (healthy) toward peak (near failure).
+      </figcaption>
+    </figure>
   </div>
 
   <h3>Results</h3>
@@ -306,7 +325,14 @@
     <p><strong>Key Insight:</strong> The GRU baseline dominates on accuracy (RMSE 13.17 on FD001, paired t-test p &lt; 0.0001). But its failure on multi-condition datasets reveals a fundamental limitation: a discriminative model trained end-to-end on one condition can't generalize without retraining. The Embed-RUL approach, while less accurate when it works, offers <em>interpretability</em> — the Health Index curves and t-SNE embeddings make it possible to see <em>why</em> the model predicts what it predicts, which matters in safety-critical deployment.</p>
   </div>
 
-  <img src="images/fig_rul_estimation.png" alt="RUL Estimation Results — Predicted vs Actual" class="image-solo">
+  <figure style="margin: 32px auto; max-width: 680px;">
+    <img src="images/fig_rul_estimation.png" alt="GRU predicted vs ground-truth RUL on FD001 test set" style="width:100%; border-radius:8px; border:1px solid var(--border);">
+    <figcaption style="font-size:0.86rem; color:var(--muted); margin-top:10px; font-style:italic; text-align:center; line-height:1.6;">
+      Figure 4: GRU predicted vs. ground-truth RUL on the FD001 test set. RMSE = 13.17 cycles;
+      60% of predictions fall within ±10 cycles of ground truth. Larger errors occur at low RUL
+      values where the degradation signal is most variable.
+    </figcaption>
+  </figure>
 
   <p>
     <strong>Takeaway:</strong> This project taught me that choosing a model architecture is an engineering decision, not just a performance optimization. Accuracy and interpretability trade off. Multi-condition generalization requires either domain adaptation or richer training data — not a bigger model.
@@ -399,22 +425,8 @@
 <section>
   <h2>Applied to Real Problems</h2>
   <p>
-    Beyond coursework, I've applied ML methods to two engineering domains that I care about — medical imaging and human gait. Both are harder than clean benchmark datasets: real-world noise, small data, and stakes that matter.
+    Beyond coursework, I've applied ML methods to engineering domains that I care about — starting with turbofan RUL prediction and extending into human gait analysis. Both are harder than clean benchmark datasets: real-world noise, inter-subject variability, and stakes that matter.
   </p>
-
-  <h3>Fracture Detection with ResNet-50</h3>
-  <p>
-    For a biomedical engineering project, I applied a <strong>ResNet-50 convolutional neural network</strong> (transfer learning from ImageNet) to detect and localize fractures in X-ray images. The goal was to replicate surgical annotation — identifying fracture sites to support pre-operative planning.
-  </p>
-  <p>
-    We manually annotated a dataset of fracture X-rays, then fine-tuned ResNet-50 in MATLAB. The model was evaluated by comparing its predicted fracture regions against expert surgeon annotations. The side-by-side comparison showed high visual agreement — a promising proof of concept for AI-assisted surgical planning.
-  </p>
-
-  <div class="image-grid">
-    <img src="images/AI (1).png" alt="Fracture Detection — X-ray Input">
-    <img src="images/AI (2).png" alt="Fracture Detection — Model Architecture">
-    <img src="images/AI (3).png" alt="Fracture Detection — Prediction vs Ground Truth">
-  </div>
 
   <h3>Bayesian Gait Prediction (Current RA Research)</h3>
   <p>
@@ -425,11 +437,14 @@
   </p>
 
   <div class="highlight-box">
-    <p><strong>Current results:</strong> Offline evaluation on motion capture + IMU data shows RMSE &lt; 50mm for foot placement prediction across multiple subjects and walking speeds. Feature importance analysis reveals that mid-swing angular velocity is the strongest predictor — consistent with biomechanical intuition about the swing-to-stance transition.</p>
+    <p><strong>Current results:</strong> Offline evaluation on motion capture + IMU data (11,761 steps, 8 subjects, 8 treadmill speeds) shows RMSE ~9.7 cm Euclidean foot placement error. The Bayesian framework outperforms a pure likelihood estimate at low speeds where gait is most periodic; at high speeds, speed-dependent stride length variability drives anterior-posterior error up to ~14 cm while medial-lateral error remains consistently low (~3 cm).</p>
   </div>
 
   <p>
-    <a href="prosthetics.html">→ Read the full prosthetics research page</a> for the complete pipeline, dataset description, and future multi-modal sensing directions.
+    <a href="prosthetics.html">→ Read the full prosthetics research page</a> for the complete Bayesian framework, dataset description, per-trial results, and future directions.
+  </p>
+  <p>
+    <a href="rul.html">→ Read the full RUL project page</a> for complete metrics, GRU vs Embed-RUL comparison, statistical analysis, and architecture details.
   </p>
 </section>
 

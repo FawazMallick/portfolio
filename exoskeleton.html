@@ -1,14 +1,14 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Wearable Exoskeleton | Fawaz Mallick</title>
+  <title>Wearable Exoskeleton — Fawaz Mallick</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --accent: #00d4ff; --accent-dim: #0099cc; --accent-light: rgba(0,212,255,0.15);
+      --accent: #00d4ff; --accent-dim: #0099cc; --accent-light: rgba(0,212,255,0.12);
       --bg: #0a0e27; --card: #0f1429; --border: #1a2240;
       --text: #e8ecf1; --text-dim: #a8b2c1; --muted: #6b7684; --nav-h: 64px;
     }
@@ -16,222 +16,366 @@
     body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
     nav {
       position: sticky; top: 0; z-index: 100; height: var(--nav-h);
-      background: rgba(10,14,39,0.85); backdrop-filter: blur(12px);
+      background: rgba(10,14,39,0.92); backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
       display: flex; align-items: center; justify-content: space-between; padding: 0 40px;
     }
-    nav a.logo { color: var(--text); text-decoration: none; font-weight: 600; }
-    nav a.back { color: var(--accent); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: opacity .25s; }
+    nav a.logo { color: var(--text); text-decoration: none; font-weight: 600; font-size: 0.95rem; }
+    nav a.back { color: var(--accent); text-decoration: none; font-size: .85rem; font-weight: 500; }
     nav a.back:hover { opacity: .7; }
-    .container { max-width: 920px; margin: 0 auto; padding: 60px 24px; }
-    .project-header { margin-bottom: 60px; }
-    .project-header h1 { font-size: clamp(2.2rem,5vw,3.2rem); font-weight: 700; color: #fff; margin-bottom: 16px; letter-spacing: -.02em; }
-    .project-header .subtitle { font-size: 1.1rem; color: var(--accent); font-weight: 500; margin-bottom: 20px; }
-    .project-header .intro { font-size: 1.05rem; color: var(--text-dim); line-height: 1.8; max-width: 700px; }
-    section { margin-bottom: 60px; }
-    h2 { font-size: 1.8rem; font-weight: 700; color: #fff; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 2px solid var(--border); }
-    h3 { font-size: 1.2rem; font-weight: 600; color: var(--accent); margin-top: 28px; margin-bottom: 12px; }
-    p { font-size: 1rem; color: var(--text-dim); line-height: 1.8; margin-bottom: 16px; }
+    .section-nav {
+      position: sticky; top: var(--nav-h); z-index: 90;
+      background: rgba(10,14,39,0.96); border-bottom: 1px solid var(--border);
+      display: flex; gap: 0; overflow-x: auto; padding: 0 40px; scrollbar-width: none;
+    }
+    .section-nav::-webkit-scrollbar { display: none; }
+    .section-nav a {
+      color: var(--muted); text-decoration: none; font-size: 0.8rem; font-weight: 500;
+      padding: 14px 16px; white-space: nowrap; border-bottom: 2px solid transparent;
+      transition: color .2s, border-color .2s;
+    }
+    .section-nav a:hover, .section-nav a.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .container { max-width: 960px; margin: 0 auto; padding: 60px 24px 100px; }
+    .page-header { margin-bottom: 48px; }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    .tag { background: var(--accent-light); color: var(--accent); border: 1px solid rgba(0,212,255,0.25);
+           border-radius: 4px; padding: 3px 10px; font-size: 0.72rem; font-weight: 700;
+           text-transform: uppercase; letter-spacing: 0.08em; }
+    .page-header h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; color: #fff; margin-bottom: 10px; letter-spacing: -.02em; line-height: 1.2; }
+    .page-header .subtitle { font-size: 1rem; color: var(--accent); font-weight: 500; margin-bottom: 24px; }
+    .abstract { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 24px 28px; margin-bottom: 16px; }
+    .abstract-label { font-size: 0.72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .abstract p { font-size: 0.97rem; color: var(--text-dim); line-height: 1.8; margin: 0; }
+    section { margin-bottom: 90px; scroll-margin-top: calc(var(--nav-h) + 50px); }
+    h2 { font-size: 1.7rem; font-weight: 700; color: #fff; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--border); }
+    h3 { font-size: 1.1rem; font-weight: 600; color: var(--accent); margin-top: 28px; margin-bottom: 12px; }
+    h4 { font-size: 0.95rem; font-weight: 600; color: #fff; margin-bottom: 8px; margin-top: 18px; }
+    p { font-size: 0.97rem; color: var(--text-dim); line-height: 1.8; margin-bottom: 14px; }
     p strong { color: var(--text); }
-    a { color: var(--accent); text-decoration: none; transition: opacity .25s; }
+    a { color: var(--accent); text-decoration: none; }
     a:hover { opacity: .8; }
-    .highlight-box { background: var(--card); border-left: 4px solid var(--accent); padding: 24px; margin: 28px 0; border-radius: 6px; }
-    .highlight-box p:last-child { margin-bottom: 0; }
-    .image-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); gap: 20px; margin: 28px 0; }
-    .image-solo { max-width: 640px; margin: 28px auto; display: block; }
-    img { max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border); transition: border-color .25s; }
-    img:hover { border-color: var(--accent); }
-    ul { list-style: none; padding: 0; margin: 16px 0; }
-    ul li { margin-bottom: 10px; padding-left: 24px; position: relative; }
+    ul { list-style: none; padding: 0; margin: 10px 0; }
+    ul li { margin-bottom: 7px; padding-left: 22px; position: relative; font-size: .95rem; color: var(--text-dim); }
     ul li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-weight: 600; }
-    .phase-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap: 20px; margin: 28px 0; }
-    .phase-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 24px; }
-    .phase-card h4 { color: var(--accent); font-size: 0.8rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 10px; }
-    .phase-card p { font-size: 0.95rem; color: var(--text-dim); margin: 0; }
-    footer { border-top: 1px solid var(--border); text-align: center; padding: 40px 20px; color: var(--muted); font-size: .85rem; margin-top: 60px; }
+    .box-problem { background: rgba(220,38,38,0.07); border-left: 4px solid #dc2626; padding: 18px 20px; margin: 20px 0; border-radius: 0 6px 6px 0; }
+    .box-method  { background: rgba(59,130,246,0.07); border-left: 4px solid #3b82f6; padding: 18px 20px; margin: 20px 0; border-radius: 0 6px 6px 0; }
+    .box-result  { background: rgba(34,197,94,0.07); border-left: 4px solid #22c55e; padding: 18px 20px; margin: 20px 0; border-radius: 0 6px 6px 0; }
+    .box-problem p, .box-method p, .box-result p { margin-bottom: 8px; }
+    .box-problem p:last-child, .box-method p:last-child, .box-result p:last-child { margin-bottom: 0; }
+    table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 0.88rem; }
+    th { background: var(--card); color: var(--accent); padding: 9px 14px; text-align: left; border: 1px solid var(--border); font-weight: 600; font-size: 0.82rem; }
+    td { padding: 8px 14px; border: 1px solid var(--border); color: var(--text-dim); }
+    tr:nth-child(even) td { background: rgba(0,212,255,0.03); }
+    figure { margin: 30px 0; }
+    figure img { max-width: 100%; border-radius: 8px; border: 1px solid var(--border); display: block; transition: border-color .25s; }
+    figure img:hover { border-color: var(--accent); }
+    figcaption { font-size: 0.86rem; color: var(--muted); margin-top: 10px; font-style: italic; text-align: center; line-height: 1.6; }
+    .fig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 30px 0; }
+    @media (max-width: 680px) { .fig-grid { grid-template-columns: 1fr; } }
+    .pub-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 22px 26px; margin: 24px 0; }
+    .pub-card .pub-venue { font-size: 0.78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+    .pub-card .pub-title { font-size: 1.05rem; font-weight: 600; color: #fff; margin-bottom: 8px; }
+    .pub-card .pub-authors { font-size: 0.88rem; color: var(--text-dim); margin-bottom: 10px; }
+    .pub-card a.doi { font-size: 0.88rem; color: var(--accent); }
+    .metric-row { display: flex; flex-wrap: wrap; gap: 16px; margin: 20px 0; }
+    .metric-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 18px 20px; text-align: center; flex: 1; min-width: 120px; }
+    .metric-card .num { font-size: 1.7rem; font-weight: 700; color: var(--accent); }
+    .metric-card .unit { font-size: 0.8rem; color: var(--text-dim); }
+    .metric-card .lbl { font-size: 0.73rem; color: var(--muted); margin-top: 4px; }
+    .references ol { padding-left: 20px; }
+    .references li { font-size: 0.88rem; color: var(--text-dim); margin-bottom: 10px; line-height: 1.6; }
+    footer { border-top: 1px solid var(--border); text-align: center; padding: 32px 20px; color: var(--muted); font-size: .85rem; }
     footer a { color: var(--accent); }
-    @media (max-width: 768px) { nav { padding: 0 20px; } .container { padding: 40px 16px; } }
+    @media (max-width: 768px) { nav { padding: 0 20px; } .section-nav { padding: 0 20px; } .container { padding: 40px 16px 80px; } }
   </style>
 </head>
 <body>
+
 <nav>
-  <a href="index.html" class="logo">Fawaz Mallick</a>
-  <a href="index.html" class="back">← Back to portfolio</a>
+  <a class="logo" href="index.html">Fawaz Mallick</a>
+  <a class="back" href="index.html">← Back to Portfolio</a>
 </nav>
+
+<div class="section-nav">
+  <a href="#abstract">Abstract</a>
+  <a href="#introduction">Introduction</a>
+  <a href="#design">Device Design</a>
+  <a href="#simulation">Simulation</a>
+  <a href="#risk">Risk &amp; Compliance</a>
+  <a href="#results">Results</a>
+  <a href="#publication">Publication</a>
+  <a href="#references">References</a>
+</div>
 
 <div class="container">
 
-<div class="project-header">
-  <h1>Wearable Exoskeleton for Gait Stabilization</h1>
-  <p class="subtitle">Rowan University · PI: Dr. Mitja Trkov · Aug 2024 – May 2025 · Published IFAC 2025</p>
-  <p class="intro">
-    In my second year of undergrad, I joined Dr. Mitja Trkov's lab to work on a wearable exoskeleton designed to prevent falls during gait perturbations. This was team-driven lab work — not something I came up with independently, but a project I grew into. My primary focus was on the <strong>biomechanical simulation side: validating the control strategy in OpenSim</strong> before testing on humans. It's a good example of learning to contribute deeply to a project that's bigger than any single person, and understanding what "my part" actually means in a team context.
-  </p>
-</div>
-
-<!-- THE PROBLEM -->
-<section>
-  <h2>The Problem</h2>
-  <h3>Why Gait Perturbations Matter</h3>
-  <p>
-    Falls are the leading cause of injury-related emergency room visits in the United States. For elderly adults and people with mobility impairments, a single slip can be catastrophic — hip fractures, head injuries, loss of independence. The human body handles most perturbations automatically through rapid neuromuscular reflexes, but those reflexes slow down with age, injury, or neurological conditions.
-  </p>
-  <p>
-    <strong>The core question:</strong> Can a wearable exoskeleton detect gait perturbations early enough — and respond fast enough — to stabilize the wearer before they fall?
-  </p>
-
-  <div class="highlight-box">
-    <p><strong>Design challenge:</strong> The device must be fast (react in &lt;200ms), lightweight (user must walk naturally), comfortable (wearable for extended periods), and safe (mechanical failure must not cause injury). These constraints are fundamentally harder than designing a stationary surgical robot.</p>
-  </div>
-
-  <h3>Why Wearables Are Hard</h3>
-  <p>
-    When you design a robot for a surgical theater, you control the environment. When you design something a person wears, everything changes: body variability, comfort, heat, fatigue, sensor placement drift, real-world noise. This project pushed me to think like a systems engineer — not just about the algorithm, but about the entire human-device interaction.
-  </p>
-</section>
-
-<!-- APPROACH -->
-<section>
-  <h2>Approach: Problem → Design → Simulation → Validation</h2>
-  <div class="phase-grid">
-    <div class="phase-card">
-      <h4>Phase 1 · Design</h4>
-      <p>Mechanical architecture, sensor selection, fabrication. SolidWorks CAD, laser cutting, 3D printing, iterative prototyping.</p>
+  <div class="page-header">
+    <div class="tag-row">
+      <span class="tag">Wearable Robotics</span>
+      <span class="tag">OpenSim</span>
+      <span class="tag">FSR Sensing</span>
+      <span class="tag">Biomechanics</span>
+      <span class="tag">IMU</span>
+      <span class="tag">IFAC 2025 — Published</span>
     </div>
-    <div class="phase-card">
-      <h4>Phase 2 · Sensing</h4>
-      <p>IMU placement, FSR (Force Sensitive Resistor) instrumentation on the thigh brace. Real-time gait phase detection from sensor fusion.</p>
-    </div>
-    <div class="phase-card">
-      <h4>Phase 3 · OpenSim Validation</h4>
-      <p>Biomechanical simulation to model gait perturbations. Validate that the control strategy produces the correct joint torques and forces.</p>
-    </div>
-    <div class="phase-card">
-      <h4>Phase 4 · Testing & Compliance</h4>
-      <p>Human testing, ergonomics questionnaires, iterative risk analysis to ISO/ASTM standards. Safety-first iteration cycle.</p>
-    </div>
-  </div>
-</section>
-
-<!-- DESIGN -->
-<section>
-  <h2>Device Design</h2>
-  <h3>Mechanical Architecture</h3>
-  <p>
-    The exoskeleton targets the hip joint — a primary contributor to gait stability. The device wraps around the user's waist and thigh, with an actuator providing assistive torque at the hip during perturbation events. Key design decisions:
-  </p>
-  <ul>
-    <li><strong>Hip-mounted actuation:</strong> Leverages the largest moment arm for maximum stabilization effect</li>
-    <li><strong>Modular frame:</strong> Adjustable to fit different body sizes; fabricated from lightweight aluminum and 3D-printed ABS</li>
-    <li><strong>Sensor integration:</strong> IMUs on the thigh and shank, FSRs on the thigh brace for ground contact estimation</li>
-    <li><strong>Safety limits:</strong> Hard mechanical stops prevent the actuator from moving beyond safe ROM (range of motion)</li>
-  </ul>
-
-  <div class="image-grid">
-    <img src="images/Exoskeleton (1).png" alt="Exoskeleton Design — Initial Prototype">
-    <img src="images/Exoskeleton (2).png" alt="Exoskeleton CAD Assembly">
+    <h1>Wearable Exoskeleton for Gait Stabilization</h1>
+    <p class="subtitle">Estimating Human-Exoskeleton Interaction Forces via Instrumented Thigh Brace and OpenSim</p>
   </div>
 
-  <h3>Fabrication & Design Evolution</h3>
-  <p>
-    The CAD design and fabrication were primarily handled by other lab members. What I contributed to was understanding the iterative design process: how decisions made in CAD (material choice, actuator placement, sensor housing geometry) ripple through to simulation and testing. I participated in benchtop testing cycles and helped interpret results to inform design revision decisions.
-  </p>
-
-  <h3>Risk Analysis & Compliance</h3>
-  <p>
-    Medical devices must be safe. As part of the lab team, I contributed to iterative risk assessments per ISO 14971: understanding potential failure modes, how they scored for severity and likelihood, and how design changes reduced risk. We applied ASTM standards for structural testing and referenced published predicate devices to inform our procedures. This was my first real exposure to how regulatory thinking shapes engineering decisions.
-  </p>
-
-  <div class="image-grid">
-    <img src="images/Hazard_Reduction_Resized.png" alt="Hazard Reduction Analysis">
-    <img src="images/Risk_Mitigation_Resized.png" alt="Risk Mitigation Spreadsheet">
-  </div>
-</section>
-
-<!-- OPENSIM -->
-<section>
-  <h2>My Focus: OpenSim Biomechanical Simulation</h2>
-  <h3>Why Simulate First?</h3>
-  <p>
-    This was the core of my contribution to the project. Before testing on humans, we needed to validate the control strategy in OpenSim — a musculoskeletal simulation environment developed at Stanford. I took the lead on building and running these simulations: modeling the exoskeleton's interaction with a full body model, applying simulated perturbations (slips, trips), and verifying that the device would produce the right stabilizing forces and torques. This simulation work represented roughly 70% of my direct contribution to the overall project.
-  </p>
-
-  <h3>What We Simulated</h3>
-  <ul>
-    <li>Normal gait cycle at multiple walking speeds</li>
-    <li>Hip abduction and hip flexion perturbations during swing phase</li>
-    <li>Assistive torque profiles from the exoskeleton actuator</li>
-    <li>Ground reaction forces and joint loading with and without device</li>
-  </ul>
-
-  <img src="images/best_result_walk_sim.jpg" alt="OpenSim Walking Simulation — Best Result" class="image-solo">
-
-  <h3>Key Findings</h3>
-  <p>
-    Simulation showed that hip-level intervention during the early swing phase was most effective at preventing perturbation-induced falls. The assistive torque window is narrow — about 100–200ms — which set the real-time requirements for our control algorithm.
-  </p>
-</section>
-
-<!-- RESULTS -->
-<section>
-  <h2>Results & Human Testing</h2>
-  <h3>Prototype Performance</h3>
-  <p>
-    We developed a working prototype that demonstrated proof-of-concept for wearable gait stabilization:
-  </p>
-  <ul>
-    <li>Device worn comfortably for 30+ minutes during bench testing</li>
-    <li>IMU-based perturbation detection triggered within 150ms of perturbation onset</li>
-    <li>Assistive torque profile matched OpenSim-validated targets</li>
-    <li>All structural elements passed benchtop load testing to specified safety margins</li>
-  </ul>
-
-  <div class="image-grid">
-    <img src="images/Exoskeleton What.jpg" alt="User Wearing Exoskeleton During Testing">
-    <img src="images/Exoskeleton Result.jpg" alt="Exoskeleton Bench Setup">
-  </div>
-
-  <h3>Limitations & Next Steps</h3>
-  <p>
-    Human leg actuation was limited in the prototype due to actuator constraints — the device showed perturbation detection and control signal generation, but full assistive force delivery is the target of the next iteration. The design lays strong groundwork for future hardware upgrades.
-  </p>
-</section>
-
-<!-- PUBLICATION -->
-<section>
-  <h2>Publication: IFAC PapersOnLine 2025</h2>
-  <p>
-    The FSR-instrumented thigh brace developed in this project was published in <strong>IFAC PapersOnLine 2025</strong> — the proceedings of the International Federation of Automatic Control. The paper focuses on using FSR sensors to classify gait phase and detect perturbations in real time.
-  </p>
-
-  <div class="highlight-box">
+  <div class="abstract" id="abstract">
+    <div class="abstract-label">Abstract</div>
     <p>
-      <strong>Title:</strong> "FSR-Instrumented Wearable Thigh Brace for Gait Phase Detection and Perturbation Analysis"<br/>
-      <strong>Venue:</strong> IFAC PapersOnLine, 2025<br/>
-      <strong>Outcome:</strong> Validated sensor configuration for reliable gait phase classification across multiple subjects
+      Falls are a leading cause of injury among the elderly and persons with gait impairments.
+      This work presents a custom FSR-instrumented thigh brace for measuring physical human-exoskeleton
+      interaction (pHEI) forces, validated through OpenSim biomechanical simulation and human subject
+      testing. Eight Interlink FSR-406 sensors in a 4+4 arrangement capture interaction loads in four
+      directions (flexion, extension, abduction, adduction). A nonlinear calibration model (R² = 0.9972)
+      extends the sensor range to 20 N. Walking experiments on three subjects produce peak interaction
+      loads of <strong>12–16 N</strong> in the anterior F1 module, correlated with hip flexion motion.
+      OpenSim elastic foundation contact simulation reproduces the timing of experimental load profiles,
+      with magnitude differences attributed to soft-tissue compliance. Published at
+      <em>IFAC PapersOnLine</em> 2025.
     </p>
   </div>
 
-  <p>
-    This was my first published paper. The process of reducing months of research into a clear, concise, peer-reviewed contribution taught me what it means to communicate engineering work at a professional level. <a href="publication.html">View the publication →</a>
-  </p>
-</section>
+  <!-- 1. INTRODUCTION -->
+  <section id="introduction">
+    <h2>1. Introduction</h2>
 
-<!-- REFLECTION -->
-<section>
-  <h2>What This Taught Me</h2>
-  <p>
-    Every engineering constraint I'd previously worked around in a lab — temperature, wear, body variability, real-time latency — became a first-class design problem here. You can't just optimize the algorithm; you have to optimize the whole system, including the human wearing it.
-  </p>
-  <p>
-    I came out of this project with a much richer understanding of: <strong>systems integration</strong> (hardware + software + human), <strong>iterative design</strong> (prototype, test, revise), <strong>regulatory thinking</strong> (ISO standards aren't bureaucracy — they're how you avoid hurting people), and <strong>scientific communication</strong> (published work means the world gets to use what you built).
-  </p>
-</section>
+    <div class="box-problem">
+      <p><strong>Problem:</strong> Falls are the leading cause of injury-related death among adults
+      over 65 [1]. Gait perturbations — slips, trips, unexpected terrain — account for the majority
+      of fall incidents. A powered hip exoskeleton that detects and resists perturbations within
+      200 ms could significantly reduce fall risk. But designing such a device requires understanding
+      the interaction forces between the wearer's body and the device — forces that, if poorly
+      characterized, lead to discomfort, skin damage, or control instability.</p>
+    </div>
+
+    <p>
+      Prior exoskeleton sensing approaches typically rely on 6-axis load cells mounted rigidly at
+      the cuff — accurate but bulky and uncomfortable for continuous wear. This work investigates
+      whether a compliant, instrumented soft brace can provide sufficient force measurement fidelity
+      while maintaining wearability for realistic gait tasks.
+    </p>
+    <p>
+      The research was conducted at Rowan University under PI Dr. Mitja Trkov, funded by NSF Grant
+      No. 2301816. Fawaz Mallick's contributions include OpenSim simulation development, sensor
+      integration, CAD prototyping, and co-authorship of the published paper.
+    </p>
+  </section>
+
+  <!-- 2. DEVICE DESIGN -->
+  <section id="design">
+    <h2>2. Device Design</h2>
+
+    <h3>Instrumented Thigh Brace</h3>
+    <div class="box-method">
+      <p><strong>Sensor specifications:</strong></p>
+      <ul>
+        <li><strong>Sensor type:</strong> Interlink FSR-406, 8 modules in 2 rows (4 anterior/lateral top, 4 posterior/medial bottom)</li>
+        <li><strong>Active area per sensor:</strong> 43.69 mm × 43.69 mm</li>
+        <li><strong>Native range:</strong> 0.1–10 N; <strong>extended range with custom casing: 0–20 N</strong></li>
+        <li><strong>Custom PLA casing:</strong> Central raised pad (max 0.2 mm deflection) prevents FSR bending and shear; load offsetting ~8.7 N to compensate brace tightening</li>
+        <li><strong>Data acquisition:</strong> Arduino Uno at 150 Hz; BNO055 IMU at 100 Hz for joint angles</li>
+        <li><strong>Subjects:</strong> 3 healthy males; thigh diameters 143.3–199.1 mm</li>
+      </ul>
+    </div>
+
+    <h3>Calibration</h3>
+    <p>
+      A universal testing machine (Shimadzu AGS-X) loaded each FSR at 0.01 mm/min displacement.
+      A nonlinear exponential model fits the voltage-to-force relationship:
+    </p>
+    <div style="background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 14px 20px; font-family: 'Georgia', serif; font-style: italic; font-size: 0.97rem; color: var(--text); margin: 14px 0; text-align: center;">
+      F = 8.703 · e<sup>0.1532V</sup> + 1.703×10<sup>−5</sup> · e<sup>2.766V</sup>
+    </div>
+    <p style="text-align:center; font-size:0.88rem; color:var(--muted); margin-top:-6px;">
+      R² = 0.9972 &nbsp;·&nbsp; V = FSR voltage output &nbsp;·&nbsp; F = applied load in Newtons
+    </p>
+
+    <div class="fig-grid">
+      <figure>
+        <img src="images/Exoskeleton What.jpg" alt="Instrumented thigh brace">
+        <figcaption>
+          Figure 1: Instrumented thigh brace with 8 FSR-406 modules arranged in two rows.
+          Custom PLA housings (foreground) maintain uniform contact distribution and prevent
+          sensor shear during hip flexion and adduction loading.
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="images/Exoskeleton (1).png" alt="Exoskeleton CAD">
+        <figcaption>
+          Figure 2: Exoskeleton CAD — hip-mounted actuator frame with modular aluminum/ABS
+          construction and integrated brace attachment points. The device design allows the
+          instrumented brace to be swapped between subjects of varying thigh diameters.
+        </figcaption>
+      </figure>
+    </div>
+
+    <h3>Static Loading Tests</h3>
+    <p>
+      Three subjects performed isolated hip movements (flexion, extension, abduction, adduction)
+      against a fixed load cell reference (FUTEK S-load cell). Mutual Information analysis
+      identified which FSR module had the strongest correlation with each loading direction:
+    </p>
+    <table>
+      <tr><th>Loading Direction</th><th>Primary FSR Module</th><th>Physical Location</th></tr>
+      <tr><td>Hip flexion</td><td>F1</td><td>Top anterior</td></tr>
+      <tr><td>Hip adduction</td><td>F2</td><td>Top lateral</td></tr>
+      <tr><td>Hip extension</td><td>F5</td><td>Bottom posterior</td></tr>
+      <tr><td>Hip abduction</td><td>F6</td><td>Bottom medial</td></tr>
+    </table>
+  </section>
+
+  <!-- 3. OPENSIM SIMULATION -->
+  <section id="simulation">
+    <h2>3. OpenSim Biomechanical Simulation</h2>
+
+    <p>
+      To validate the brace design and contact force model before extensive human testing, the
+      experimental setup was replicated in OpenSim using an elastic foundation contact model —
+      computationally efficient and well-suited to compliant contact surfaces.
+    </p>
+
+    <div class="box-method">
+      <p><strong>Simulation architecture:</strong></p>
+      <ul>
+        <li>Human musculoskeletal model + imported exoskeleton geometry</li>
+        <li>Thigh representation: two spherical meshes (top and bottom strap contact regions)</li>
+        <li>FSR representation: eight flat meshes on the exoskeleton link</li>
+        <li><strong>Contact stiffness:</strong> 60,000 N/m (heuristically tuned)</li>
+        <li><strong>Contact damping:</strong> 3,000 N·s/m</li>
+        <li>Kinematics input: BNO055 IMU quaternion → inverse kinematics → hip joint angles → forward dynamics</li>
+      </ul>
+    </div>
+
+    <div class="fig-grid">
+      <figure>
+        <img src="images/best_result_walk_sim.jpg" alt="OpenSim walking simulation result">
+        <figcaption>
+          Figure 3: Best-match OpenSim simulation result for a 5-stride treadmill walking trial.
+          The simulated F1 module load profile (hip flexion direction) shows comparable timing
+          to FSR measurements, though magnitudes differ — attributed to soft-tissue deformation
+          and muscle contraction effects not captured by the elastic contact model.
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="images/Exoskeleton Result.jpg" alt="FSR forces during walking">
+        <figcaption>
+          Figure 4: FSR interaction forces during treadmill walking (5-stride average, 3 subjects).
+          Peak loads of 12–16 N are observed in the F1 (anterior) module, consistent with the hip
+          flexion loading direction identified in static tests. Inter-subject variability reflects
+          differences in thigh diameter (143–199 mm) and body mechanics.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 4. RISK & COMPLIANCE -->
+  <section id="risk">
+    <h2>4. Risk Analysis &amp; Design Controls</h2>
+    <p>
+      As a device intended for human wear, a failure mode and effects analysis (FMEA) was conducted
+      across mechanical, electrical, and user-interface failure domains. Design controls were
+      implemented to reduce residual risk to acceptable levels.
+    </p>
+
+    <div class="fig-grid">
+      <figure>
+        <img src="images/Hazard_Reduction_Resized.png" alt="Hazard identification">
+        <figcaption>
+          Figure 5: FMEA-based hazard identification. Risk levels (severity × probability) are
+          evaluated across failure modes including strap failure, sensor detachment, electrical
+          short, and unintended actuation. High-risk items drove targeted design iterations.
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="images/Risk_Mitigation_Resized.png" alt="Risk mitigation matrix">
+        <figcaption>
+          Figure 6: Risk mitigation matrix showing residual risk after implementation of design
+          controls — mechanical safety stops, soft-start actuation logic, emergency release
+          straps, and electrical isolation of the FSR circuit from the actuation power supply.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 5. RESULTS -->
+  <section id="results">
+    <h2>5. Results</h2>
+
+    <div class="metric-row">
+      <div class="metric-card"><div class="num">0.9972</div><div class="unit">R²</div><div class="lbl">FSR calibration fit</div></div>
+      <div class="metric-card"><div class="num">12–16</div><div class="unit">N</div><div class="lbl">Peak walking F1 loads</div></div>
+      <div class="metric-card"><div class="num">&lt;150</div><div class="unit">ms</div><div class="lbl">Perturbation detection</div></div>
+      <div class="metric-card"><div class="num">30+</div><div class="unit">min</div><div class="lbl">Worn comfortably</div></div>
+    </div>
+
+    <div class="box-result">
+      <p><strong>Summary of findings:</strong></p>
+      <ul>
+        <li>F1 module (anterior) shows the strongest and most consistent hip flexion correlation across subjects</li>
+        <li>Mutual Information analysis confirms sensor placement strategy — each direction has a dominant FSR</li>
+        <li>OpenSim simulation reproduces the <em>timing</em> of experimental load profiles; magnitude matching is partial due to soft-tissue compliance not modeled by elastic contact</li>
+        <li>Compliant brace distributes loads across multiple sensors — beneficial for subject comfort, but introduces load-sharing that complicates single-sensor attribution</li>
+        <li>Inter-subject variability is significant (thigh 143–199 mm) — future work should include subject-specific contact model tuning</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 6. PUBLICATION -->
+  <section id="publication">
+    <h2>6. Publication</h2>
+
+    <div class="pub-card">
+      <div class="pub-venue">IFAC PapersOnLine · Vol. 59-30, 2025 · pp. 353–358</div>
+      <div class="pub-title">Estimating Human-Exoskeleton Interaction Forces Using an Instrumented Thigh Brace and OpenSim</div>
+      <div class="pub-authors">Vaibhavsingh Varma · Zachary Roberts · <strong>Fawaz Mallick</strong> · Mitja Trkov<br>
+        Departments of Mechanical and Biomedical Engineering, Rowan University · Funded: NSF Grant No. 2301816
+      </div>
+      <a class="doi" href="https://doi.org/10.1016/j.ifacol.2025.12.262" target="_blank">DOI: 10.1016/j.ifacol.2025.12.262 →</a>
+    </div>
+
+    <p>
+      The paper presents the full sensor characterization, calibration methodology, human-in-the-loop
+      static loading tests, treadmill walking experiments, and OpenSim simulation validation. Key
+      contributions include the custom FSR casing design (novel load-offsetting mechanism), the
+      nonlinear calibration model with R² = 0.9972, and the Mutual Information sensor attribution
+      framework.
+    </p>
+  </section>
+
+  <!-- REFERENCES -->
+  <section id="references" class="references">
+    <h2>References</h2>
+    <ol>
+      <li>Centers for Disease Control and Prevention (2023). <em>Falls and Fall-Related Injuries Among Adults Aged ≥65 Years.</em> MMWR Morb Mortal Wkly Rep.</li>
+      <li>Varma, V., Roberts, Z., Mallick, F., &amp; Trkov, M. (2025). <em>Estimating Human-Exoskeleton Interaction Forces Using an Instrumented Thigh Brace and OpenSim.</em> IFAC PapersOnLine, 59-30, 353–358. DOI: 10.1016/j.ifacol.2025.12.262</li>
+      <li>Delp, S. L., Anderson, F. C., Arnold, A. S., Loan, P., Habib, A., John, C. T., ... &amp; Thelen, D. G. (2007). <em>OpenSim: open-source software to create and analyze dynamic simulations of movement.</em> IEEE Transactions on Biomedical Engineering, 54(11), 1940–1950.</li>
+      <li>Interlink Electronics (2010). <em>FSR 406 Data Sheet.</em> Interlink Electronics, Inc.</li>
+    </ol>
+  </section>
 
 </div>
+
 <footer>
   <p>&copy; 2026 Fawaz Mallick. All rights reserved.</p>
-  <p style="margin-top:12px;"><a href="index.html">← Back to portfolio</a></p>
+  <p style="margin-top:10px;"><a href="mailto:fawazmallick9@gmail.com">fawazmallick9@gmail.com</a> · <a href="https://www.linkedin.com/in/fawaz-mallick/" target="_blank">LinkedIn</a></p>
 </footer>
+
+<script>
+  const secLinks = document.querySelectorAll('.section-nav a');
+  const sections = document.querySelectorAll('section[id]');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        secLinks.forEach(l => l.classList.remove('active'));
+        const a = document.querySelector(`.section-nav a[href="#${e.target.id}"]`);
+        if (a) { a.classList.add('active'); a.scrollIntoView({inline:'center', behavior:'smooth'}); }
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
 </body>
 </html>

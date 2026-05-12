@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Professional Experience — Fawaz Mallick</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --accent: #00d4ff; --accent-dim: #0099cc; --accent-light: rgba(0,212,255,0.12);
+      --bg: #0a0e27; --card: #0f1429; --border: #1a2240;
+      --text: #e8ecf1; --text-dim: #a8b2c1; --muted: #6b7684;
+      --nav-h: 64px; --sec-nav-h: 44px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+
+    /* ── Main nav ── */
+    nav {
+      position: sticky; top: 0; z-index: 100; height: var(--nav-h);
+      background: rgba(10,14,39,0.92); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; padding: 0 40px;
+    }
+    nav a.logo { color: var(--text); text-decoration: none; font-weight: 600; font-size: 0.95rem; }
+    nav a.back { color: var(--accent); text-decoration: none; font-size: .85rem; font-weight: 500; }
+    nav a.back:hover { opacity: .7; }
+
+    /* ── Section nav ── */
+    .sec-nav {
+      position: sticky; top: var(--nav-h); z-index: 90; height: var(--sec-nav-h);
+      background: rgba(15,20,41,0.97); backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 0; padding: 0 40px; overflow-x: auto;
+    }
+    .sec-nav a {
+      color: var(--muted); text-decoration: none; font-size: 0.78rem; font-weight: 500;
+      padding: 0 16px; height: var(--sec-nav-h); display: flex; align-items: center;
+      border-bottom: 2px solid transparent; white-space: nowrap; transition: color .2s, border-color .2s;
+    }
+    .sec-nav a:hover { color: var(--text); }
+    .sec-nav a.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    /* ── Layout ── */
+    .container { max-width: 900px; margin: 0 auto; padding: 60px 24px 100px; }
+    section { margin-bottom: 72px; scroll-margin-top: calc(var(--nav-h) + var(--sec-nav-h) + 20px); }
+
+    /* ── Page header ── */
+    .page-header { margin-bottom: 48px; }
+    .page-header h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 700; color: #fff; margin-bottom: 10px; letter-spacing: -.02em; }
+    .page-header .subtitle { font-size: 1rem; color: var(--accent); font-weight: 500; margin-bottom: 24px; }
+    .page-header .intro { font-size: 0.97rem; color: var(--text-dim); line-height: 1.8; max-width: 720px; }
+
+    /* ── Role header ── */
+    .role-header {
+      display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between;
+      gap: 8px; margin-bottom: 6px;
+    }
+    .role-header .title { font-size: 1.25rem; font-weight: 700; color: #fff; }
+    .role-date { font-size: 0.82rem; color: var(--accent); font-weight: 600;
+                 background: var(--accent-light); border: 1px solid rgba(0,212,255,0.2);
+                 border-radius: 4px; padding: 3px 10px; white-space: nowrap; align-self: flex-start; }
+    .role-org { font-size: 0.93rem; color: var(--text-dim); font-weight: 500; margin-bottom: 4px; }
+    .role-pi  { font-size: 0.85rem; color: var(--muted); font-style: italic; margin-bottom: 16px; }
+
+    /* ── Section titles ── */
+    h2 { font-size: 1.5rem; font-weight: 700; color: #fff; margin-bottom: 22px; padding-bottom: 10px; border-bottom: 2px solid var(--border); }
+    h3 { font-size: 1.0rem; font-weight: 600; color: var(--accent); margin-top: 20px; margin-bottom: 8px; }
+
+    /* ── Text ── */
+    p { font-size: 0.97rem; color: var(--text-dim); line-height: 1.8; margin-bottom: 14px; }
+    p strong { color: var(--text); }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { opacity: .8; }
+
+    /* ── Bullets ── */
+    ul { list-style: none; padding: 0; margin: 10px 0 16px; }
+    ul li { margin-bottom: 8px; padding-left: 22px; position: relative; font-size: .95rem; color: var(--text-dim); line-height: 1.6; }
+    ul li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-weight: 600; }
+
+    /* ── Callout boxes ── */
+    .box-metric { background: rgba(34,197,94,0.07); border-left: 4px solid #22c55e; padding: 16px 20px; margin: 16px 0; border-radius: 0 6px 6px 0; }
+    .box-metric p { margin-bottom: 6px; font-size: 0.93rem; }
+    .box-metric p:last-child { margin-bottom: 0; }
+    .box-insight { background: rgba(0,212,255,0.07); border-left: 4px solid var(--accent); padding: 16px 20px; margin: 16px 0; border-radius: 0 6px 6px 0; }
+    .box-insight p { margin-bottom: 6px; font-size: 0.93rem; }
+    .box-insight p:last-child { margin-bottom: 0; }
+
+    /* ── Metric row ── */
+    .metric-row { display: flex; flex-wrap: wrap; gap: 14px; margin: 20px 0; }
+    .metric-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; text-align: center; flex: 1; min-width: 120px; }
+    .metric-card .num { font-size: 1.6rem; font-weight: 700; color: var(--accent); }
+    .metric-card .unit { font-size: 0.78rem; color: var(--text-dim); }
+    .metric-card .lbl { font-size: 0.72rem; color: var(--muted); margin-top: 4px; }
+
+    /* ── Divider between roles ── */
+    .role-divider { border: none; border-top: 1px solid var(--border); margin: 48px 0; }
+
+    /* ── Cross-link ── */
+    .crosslink { background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+                 padding: 14px 20px; margin-top: 20px; display: flex; align-items: center; gap: 12px; }
+    .crosslink span { font-size: 0.88rem; color: var(--text-dim); flex: 1; }
+    .crosslink a { font-size: 0.84rem; font-weight: 600; color: var(--accent);
+                   white-space: nowrap; border: 1px solid rgba(0,212,255,0.3);
+                   padding: 6px 14px; border-radius: 5px; transition: background .2s; }
+    .crosslink a:hover { background: var(--accent-light); opacity: 1; }
+
+    /* ── Other roles table-style ── */
+    .other-roles { display: flex; flex-direction: column; gap: 20px; }
+    .other-role { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px 24px; }
+    .other-role .or-header { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+    .other-role .or-title { font-size: 1.0rem; font-weight: 600; color: var(--text); }
+    .other-role .or-date { font-size: 0.8rem; color: var(--accent); font-weight: 600; background: var(--accent-light); border: 1px solid rgba(0,212,255,0.2); border-radius: 4px; padding: 2px 8px; }
+    .other-role .or-org { font-size: 0.87rem; color: var(--text-dim); margin-bottom: 10px; }
+    .other-role ul { margin: 0; }
+    .other-role ul li { font-size: 0.9rem; margin-bottom: 5px; }
+
+    /* ── Footer ── */
+    footer { border-top: 1px solid var(--border); text-align: center; padding: 32px 20px; color: var(--muted); font-size: .85rem; }
+    footer a { color: var(--accent); }
+
+    @media (max-width: 768px) { nav { padding: 0 20px; } .sec-nav { padding: 0 16px; } .container { padding: 40px 16px 80px; } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="index.html">Fawaz Mallick</a>
+  <a class="back" href="index.html">← Back to Portfolio</a>
+</nav>
+
+<div class="sec-nav" id="secNav">
+  <a href="#gra"       data-sec="gra">Research — CMU</a>
+  <a href="#ahf"       data-sec="ahf">Housefellow — CMU</a>
+  <a href="#rowan-ra"  data-sec="rowan-ra">Research — Rowan</a>
+  <a href="#robossis"  data-sec="robossis">Research — Robossis</a>
+  <a href="#other"     data-sec="other">Other Roles</a>
+</div>
+
+<div class="container">
+
+  <div class="page-header">
+    <h1>Leadership &amp; Professional Experience</h1>
+    <p class="subtitle">CMU · Rowan University · Robossis / Cooper Medical Center · 2023–Present</p>
+    <p class="intro">
+      My professional work spans academic research, residential community leadership, and applied
+      engineering in clinical and laboratory settings. Each role has shaped a belief that good
+      engineering — whether designing control algorithms or running a student community — is an
+      iterative, feedback-driven process grounded in data and human need.
+    </p>
+  </div>
+
+  <!-- 1. Graduate Research Assistant — CMU -->
+  <section id="gra">
+    <div class="role-header">
+      <div class="title">Graduate Research Assistant</div>
+      <div class="role-date">07/2025 – Present</div>
+    </div>
+    <div class="role-org">Carnegie Mellon University · Robotics Institute · Pittsburgh, PA</div>
+    <div class="role-pi">PI: Dr. Hartmut Geyer — Human Intent Prediction for Control of Lower Limb Prosthetics</div>
+
+    <p>
+      More than 2 million people in the United States live with lower-limb amputation, and falls
+      remain the leading cause of injury among prosthetic users [1]. The core limitation of current
+      devices is that they <em>react</em> — they sense ground contact and respond, leaving no time
+      for proactive stability adjustments. My work in Dr. Geyer's lab asks: can we predict where
+      the foot will land before it lands?
+    </p>
+    <p>
+      I am evaluating kinematic and inertial features — hip and knee angles, angular velocities,
+      and IMU-derived signals from a thigh-mounted sensor — to determine which inputs most reliably
+      discriminate intended foot placement at multiple walking speeds. In parallel, I am comparing
+      deep learning architectures (LSTMs, temporal CNNs, and hybrid sequence models) for their
+      ability to estimate foot placement in real time, weighing the trade-off between model
+      complexity and the latency constraints of embedded prosthetic deployment.
+    </p>
+
+    <h3>Current Focus Areas</h3>
+    <ul>
+      <li>Feature selection: evaluating hip/knee angles and angular velocities as inputs to intent classifiers across 8 treadmill speeds</li>
+      <li>Architecture benchmarking: LSTM vs. temporal CNN vs. Bayesian sequential estimators for immediate foot placement prediction</li>
+      <li>Latency analysis: quantifying inference time vs. prediction horizon trade-offs for embedded real-time control</li>
+      <li>Dataset: 11,761 labeled steps from 8 able-bodied subjects (Geyer lab treadmill protocol)</li>
+    </ul>
+
+    <div class="crosslink">
+      <span>See the full research page for preliminary results, Bayesian estimation framework, and per-trial error analysis.</span>
+      <a href="prosthetics.html">Intent Prediction Research →</a>
+    </div>
+  </section>
+
+  <hr class="role-divider">
+
+  <!-- 2. Assistant Housefellow — CMU -->
+  <section id="ahf">
+    <div class="role-header">
+      <div class="title">Assistant Housefellow</div>
+      <div class="role-date">07/2025 – Present</div>
+    </div>
+    <div class="role-org">Carnegie Mellon University · Residential Education · Pittsburgh, PA</div>
+    <div class="role-pi">Management &amp; Support of Student Staff — First-Year Residential Community</div>
+
+    <p>
+      Alongside my research appointment, I serve as an Assistant Housefellow, working with a team
+      of residential advisors to support the transition of first-year students to university life.
+      The role sits at the intersection of community design, operations management, and pastoral
+      support — domains that turn out to require the same iterative, feedback-driven thinking
+      that underlies good engineering.
+    </p>
+
+    <div class="metric-row">
+      <div class="metric-card">
+        <div class="num">86%</div>
+        <div class="unit">%</div>
+        <div class="lbl">Overall housing satisfaction</div>
+      </div>
+      <div class="metric-card">
+        <div class="num">85%</div>
+        <div class="unit">%</div>
+        <div class="lbl">Comfort approaching staff</div>
+      </div>
+      <div class="metric-card">
+        <div class="num">~40%</div>
+        <div class="unit">utilization</div>
+        <div class="lbl">Audited resource flagged for cuts</div>
+      </div>
+    </div>
+
+    <h3>Responsibilities &amp; Achievements</h3>
+    <ul>
+      <li><strong>Staff coordination:</strong> co-coordinate the house administrative process, delegate responsibilities, and maintain staff accountability</li>
+      <li><strong>Budget management:</strong> maintain the house operational budget; ensure resources are allocated efficiently across programming and operations</li>
+      <li><strong>Community outcomes:</strong> residential experience achieving 86% overall housing satisfaction and 85% comfort approaching residential staff in end-of-year surveys</li>
+      <li><strong>Cost-reduction initiative:</strong> audited departmental program and resource utilization; identified a resource operating at approximately 40% capacity, flagged it as a candidate for budget reallocation, and presented findings in strategic budget discussions</li>
+    </ul>
+
+    <div class="box-insight">
+      <p><strong>Engineering mindset applied to community:</strong> Designing a thriving residential
+      community requires the same feedback loops as any control system — you set a target state
+      (belonging, safety, engagement), measure the gap (surveys, direct conversations), and tune
+      your interventions accordingly. The 86% satisfaction figure is a data point, not an
+      endpoint.</p>
+    </div>
+  </section>
+
+  <hr class="role-divider">
+
+  <!-- 3. Research Associate — Rowan / Trkov -->
+  <section id="rowan-ra">
+    <div class="role-header">
+      <div class="title">Research Associate</div>
+      <div class="role-date">08/2024 – 05/2025</div>
+    </div>
+    <div class="role-org">Rowan University · Department of Mechanical Engineering · Glassboro, NJ</div>
+    <div class="role-pi">PI: Dr. Mitja Trkov — Design &amp; Development of a Wearable Exoskeleton to Prevent Gait Perturbations</div>
+
+    <p>
+      This research addressed a leading cause of injury in the elderly and mobility-impaired: loss
+      of balance during gait perturbations. Working with Dr. Trkov's lab, I contributed to the
+      design, instrumentation, simulation, and publication of a wearable thigh brace equipped with
+      eight force-sensitive resistors (FSR-406) to detect human–exoskeleton interaction forces in
+      real time.
+    </p>
+
+    <h3>Contributions</h3>
+    <ul>
+      <li><strong>Sensor integration:</strong> designed PLA housings for eight Interlink FSR-406 sensors arranged in two rows; calibrated sensors to R²=0.9972 using an exponential model across the full 0–20 N range</li>
+      <li><strong>OpenSim simulation:</strong> modeled human–exoskeleton contact dynamics using elastic foundation force contact (stiffness 60,000 N/m; damping 3,000 N·s/m); achieved ≈85% validation accuracy against experimental force measurements</li>
+      <li><strong>IMU integration:</strong> interfaced BNO055 IMU (100 Hz) with Arduino Uno (150 Hz) for kinematic capture to inform musculoskeletal simulation inputs</li>
+      <li><strong>CAD &amp; prototyping:</strong> produced SolidWorks CAD models; 3D-printed custom brace components and sensor housings</li>
+      <li><strong>Publication:</strong> co-authored peer-reviewed IFAC PapersOnLine paper (2025); DOI: 10.1016/j.ifacol.2025.12.262</li>
+    </ul>
+
+    <div class="box-metric">
+      <p>📄 <strong>Publication:</strong> Varma, Roberts, Mallick, Trkov. "Estimating Human-Exoskeleton Interaction Forces Using an Instrumented Thigh Brace and OpenSim." <em>IFAC PapersOnLine</em>, Vol. 59-30 (2025), pp. 353–358.</p>
+    </div>
+
+    <div class="crosslink">
+      <span>Full device design, FSR calibration, OpenSim results, and FMEA hazard analysis documented on the research page.</span>
+      <a href="exoskeleton.html">Exoskeleton Research →</a>
+    </div>
+  </section>
+
+  <hr class="role-divider">
+
+  <!-- 4. Research Associate — Robossis -->
+  <section id="robossis">
+    <div class="role-header">
+      <div class="title">Research Associate</div>
+      <div class="role-date">05/2023 – 05/2024</div>
+    </div>
+    <div class="role-org">Robossis · Cooper University Hospital · Camden, NJ</div>
+    <div class="role-pi">PI: Dr. Mohammed Abedin Nasab — Development of a Fracture Reduction Algorithm for 6-DOF Surgical Robot</div>
+
+    <p>
+      Femur fractures require precise anatomical realignment before internal fixation; manual
+      reduction is imprecise, radiation-intensive, and physically demanding for the surgical team.
+      In this role I developed the path planning and guidance algorithm for the Robossis RSS
+      surgical platform, a 6-DOF parallel robot designed for orthopaedic procedures at Cooper
+      University Hospital.
+    </p>
+
+    <h3>Technical Work</h3>
+    <ul>
+      <li><strong>Modified A* planner:</strong> implemented a 6D A* algorithm (three translational + three rotational DOF) in MATLAB with Euclidean G+H cost; resolution: 1 mm translation, 1° rotation</li>
+      <li><strong>Bézier smoothing:</strong> post-processed discrete A* waypoints with Bernstein polynomial Bézier curves to produce C¹-continuous robot trajectories</li>
+      <li><strong>Haptic guidance:</strong> spring-damper force model (k<sub>f</sub>=2,000 N/m; k<sub>τ</sub>=0.1 Nm/°) coupled to Sigma.7 haptic controller for surgeon guidance</li>
+      <li><strong>Validation:</strong> midshaft femur fracture scenario — displaced by (−30, +30, +50) mm and (10°, 5°, 15°); achieved ≤3.0 mm / ≤1.5° final reduction accuracy</li>
+    </ul>
+
+    <div class="metric-row">
+      <div class="metric-card">
+        <div class="num">≤3.0</div>
+        <div class="unit">mm</div>
+        <div class="lbl">Translational accuracy</div>
+      </div>
+      <div class="metric-card">
+        <div class="num">≤1.5</div>
+        <div class="unit">°</div>
+        <div class="lbl">Rotational accuracy</div>
+      </div>
+      <div class="metric-card">
+        <div class="num">&gt;90%</div>
+        <div class="unit"></div>
+        <div class="lbl">Improvement vs. manual</div>
+      </div>
+      <div class="metric-card">
+        <div class="num">&lt;2</div>
+        <div class="unit">seconds</div>
+        <div class="lbl">Planning time</div>
+      </div>
+    </div>
+
+    <div class="crosslink">
+      <span>Full algorithm design, pseudocode, haptic model, and trajectory results are documented on the project page.</span>
+      <a href="6dof.html">6-DOF Surgical Robot →</a>
+    </div>
+  </section>
+
+  <hr class="role-divider">
+
+  <!-- 5. Other Roles -->
+  <section id="other">
+    <h2>Other Roles</h2>
+    <p>
+      Beyond primary research appointments, I have contributed in teaching, community leadership,
+      and interdisciplinary research roles that round out my engineering and interpersonal skills.
+    </p>
+
+    <div class="other-roles">
+
+      <div class="other-role">
+        <div class="or-header">
+          <div class="or-title">University Fellow — CREATES Program</div>
+          <div class="or-date">07/2024 – 05/2025</div>
+        </div>
+        <div class="or-org">Rowan University · Center for Research and Education in Advanced Technology and Engineering Sciences (CREATES) · Glassboro, NJ</div>
+        <ul>
+          <li>Investigated asphalt mix behavior using dynamic shear rheometer and AASHTO protocols</li>
+          <li>Mixed micro-encapsulated phase change materials (MPCMs) with aggregates; conducted sieving and thermal/volumetric testing</li>
+          <li>Achieved approximately 10% improvement in binder performance consistency over prior benchmarks</li>
+        </ul>
+      </div>
+
+      <div class="other-role">
+        <div class="or-header">
+          <div class="or-title">Peer Tutor</div>
+          <div class="or-date">Rowan University</div>
+        </div>
+        <div class="or-org">Rowan University · Academic Support · Glassboro, NJ</div>
+        <ul>
+          <li>Provided one-on-one and small-group tutoring sessions in engineering and mathematics courses</li>
+          <li>Supported students in developing problem-solving strategies and conceptual understanding</li>
+          <li>Worked with the academic support center to coordinate scheduling and track student progress</li>
+        </ul>
+      </div>
+
+      <div class="other-role">
+        <div class="or-header">
+          <div class="or-title">Community Assistant</div>
+          <div class="or-date">Rowan University</div>
+        </div>
+        <div class="or-org">Rowan University · Residential Life · Glassboro, NJ</div>
+        <ul>
+          <li>Supported residential programming and community-building initiatives for on-campus students</li>
+          <li>Served as a resource and point of contact for residents navigating university processes</li>
+          <li>Collaborated with the residential life team on event planning, wellness outreach, and policy compliance</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <p>&copy; 2026 Fawaz Mallick. All rights reserved.</p>
+  <p style="margin-top:10px;"><a href="mailto:fawazmallick9@gmail.com">fawazmallick9@gmail.com</a> · <a href="https://www.linkedin.com/in/fawaz-mallick/" target="_blank">LinkedIn</a></p>
+</footer>
+
+<script>
+  // Sticky section-nav active state via IntersectionObserver
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.sec-nav a[data-sec]');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const active = document.querySelector(`.sec-nav a[data-sec="${e.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -65% 0px', threshold: 0 });
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>

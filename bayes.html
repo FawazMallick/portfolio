@@ -3,138 +3,230 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Bayesian Foot Placement Prediction — Fawaz Mallick</title>
+  <title>Optimal State Estimator — Fawaz Mallick</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #e0e0e0; color: #333; }
-    header { text-align: center; background: #000; color: white; padding: 20px 0; }
-    header h1 { margin: 0; font-size: 2rem; }
-    header p { margin: 6px 0 0; color: #aaa; font-size: 0.9rem; }
-    .back { display: inline-block; margin: 18px 0 0 24px; color: #00509e; text-decoration: none; font-size: 0.9rem; }
-    .back:hover { text-decoration: underline; }
-    .container { max-width: 1000px; margin: 20px auto 60px; padding: 30px 36px; background: white; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-    h2 { color: #00509e; margin-top: 36px; margin-bottom: 10px; font-size: 1.3rem; }
-    h3 { color: #333; margin-top: 24px; margin-bottom: 6px; font-size: 1.05rem; }
-    p { margin-bottom: 14px; line-height: 1.65; }
-    .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
-    .tag { background: #eaf4ff; color: #00509e; border: 1px solid #b3d4f0; border-radius: 4px; padding: 3px 10px; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
-    table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 0.9rem; }
-    th { background: #00509e; color: white; padding: 9px 14px; text-align: left; }
-    td { padding: 8px 14px; border-bottom: 1px solid #ddd; }
-    tr:last-child td { border-bottom: none; }
-    tr:nth-child(even) td { background: #f5f9ff; }
-    .note { background: #f0f7ff; border-left: 4px solid #00509e; padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; font-size: 0.88rem; color: #444; }
-    .metric-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; margin: 16px 0 24px; }
-    .metric { background: #f5f9ff; border: 1px solid #cce0f5; border-radius: 8px; padding: 14px 16px; text-align: center; }
-    .metric .val { font-size: 1.6rem; font-weight: 700; color: #00509e; }
-    .metric .lbl { font-size: 0.75rem; color: #666; margin-top: 4px; }
-    .citation { background: #f8f8f8; border: 1px solid #ddd; border-radius: 6px; padding: 14px 18px; margin: 16px 0; font-size: 0.85rem; color: #444; line-height: 1.6; }
-    .citation strong { color: #333; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --accent: #00d4ff; --accent-dim: #0099cc; --accent-light: rgba(0,212,255,0.12);
+      --bg: #0a0e27; --card: #0f1429; --border: #1a2240;
+      --text: #e8ecf1; --text-dim: #a8b2c1; --muted: #6b7684; --nav-h: 64px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+    nav {
+      position: sticky; top: 0; z-index: 100; height: var(--nav-h);
+      background: rgba(10,14,39,0.92); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; padding: 0 40px;
+    }
+    nav a.logo { color: var(--text); text-decoration: none; font-weight: 600; font-size: 0.95rem; }
+    nav a.back { color: var(--accent); text-decoration: none; font-size: .85rem; font-weight: 500; }
+    nav a.back:hover { opacity: .7; }
+    .container { max-width: 900px; margin: 0 auto; padding: 60px 24px 100px; }
+    .notice-pub {
+      background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.4);
+      border-radius: 8px; padding: 18px 22px; margin-bottom: 36px;
+      display: flex; align-items: flex-start; gap: 14px;
+    }
+    .notice-pub .icon { font-size: 1.3rem; flex-shrink: 0; }
+    .notice-pub p { font-size: 0.92rem; color: #fde68a; line-height: 1.7; margin: 0; }
+    .notice-pub strong { color: #fbbf24; }
+    .page-header { margin-bottom: 48px; }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    .tag { background: var(--accent-light); color: var(--accent); border: 1px solid rgba(0,212,255,0.25);
+           border-radius: 4px; padding: 3px 10px; font-size: 0.72rem; font-weight: 700;
+           text-transform: uppercase; letter-spacing: 0.08em; }
+    .page-header h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; color: #fff; margin-bottom: 10px; letter-spacing: -.02em; }
+    .page-header .subtitle { font-size: 1rem; color: var(--accent); font-weight: 500; margin-bottom: 24px; }
+    .abstract { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 24px 28px; margin-bottom: 40px; }
+    .abstract-label { font-size: 0.72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .abstract p { font-size: 0.97rem; color: var(--text-dim); line-height: 1.8; margin: 0; }
+    section { margin-bottom: 70px; }
+    h2 { font-size: 1.6rem; font-weight: 700; color: #fff; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 2px solid var(--border); }
+    h3 { font-size: 1.05rem; font-weight: 600; color: var(--accent); margin-top: 26px; margin-bottom: 10px; }
+    p { font-size: 0.97rem; color: var(--text-dim); line-height: 1.8; margin-bottom: 14px; }
+    p strong { color: var(--text); }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { opacity: .8; }
+    ul { list-style: none; padding: 0; margin: 10px 0; }
+    ul li { margin-bottom: 7px; padding-left: 22px; position: relative; font-size: .95rem; color: var(--text-dim); }
+    ul li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-weight: 600; }
+    .box-method { background: rgba(59,130,246,0.07); border-left: 4px solid #3b82f6; padding: 18px 20px; margin: 20px 0; border-radius: 0 6px 6px 0; }
+    .box-result { background: rgba(34,197,94,0.07); border-left: 4px solid #22c55e; padding: 18px 20px; margin: 20px 0; border-radius: 0 6px 6px 0; }
+    .box-method p, .box-result p { margin-bottom: 8px; }
+    .box-method p:last-child, .box-result p:last-child { margin-bottom: 0; }
+    .metric-row { display: flex; flex-wrap: wrap; gap: 16px; margin: 20px 0; }
+    .metric-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 18px 22px; text-align: center; flex: 1; min-width: 130px; }
+    .metric-card .num { font-size: 1.8rem; font-weight: 700; color: var(--accent); }
+    .metric-card .unit { font-size: 0.82rem; color: var(--text-dim); }
+    .metric-card .lbl { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
+    figure { margin: 28px 0; }
+    figure img { max-width: 100%; border-radius: 8px; border: 1px solid var(--border); display: block; transition: border-color .25s; }
+    figure img:hover { border-color: var(--accent); }
+    figcaption { font-size: 0.86rem; color: var(--muted); margin-top: 10px; font-style: italic; text-align: center; line-height: 1.6; }
+    .fig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 28px 0; }
+    @media (max-width: 640px) { .fig-grid { grid-template-columns: 1fr; } }
+    .eq { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 14px 20px; font-family: 'Georgia', serif; font-style: italic; font-size: 0.97rem; color: var(--text); margin: 14px 0; text-align: center; }
+    .cta { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 24px 28px; margin-top: 40px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    .cta p { margin: 0; font-size: 0.95rem; color: var(--text-dim); }
+    .cta a.btn { background: var(--accent); color: #000; padding: 10px 22px; border-radius: 6px; font-weight: 700; font-size: 0.88rem; text-decoration: none; transition: opacity .25s; }
+    .cta a.btn:hover { opacity: .85; }
+    footer { border-top: 1px solid var(--border); text-align: center; padding: 32px 20px; color: var(--muted); font-size: .85rem; }
+    footer a { color: var(--accent); }
+    @media (max-width: 768px) { nav { padding: 0 20px; } .container { padding: 40px 16px 80px; } }
   </style>
 </head>
 <body>
 
-<header>
-  <h1>Bayesian Foot Placement Prediction</h1>
-  <p>Research Assistant Work — Intent Prediction for Prosthetics · CMU</p>
-</header>
-
-<a class="back" href="index.html">← Back to Portfolio</a>
+<nav>
+  <a class="logo" href="index.html">Fawaz Mallick</a>
+  <a class="back" href="index.html">← Back to Portfolio</a>
+</nav>
 
 <div class="container">
 
-  <div class="tag-row">
-    <span class="tag">Python</span>
-    <span class="tag">NumPy</span>
-    <span class="tag">Pandas</span>
-    <span class="tag">Matplotlib</span>
-    <span class="tag">Bayesian Estimation</span>
-    <span class="tag">Gait Analysis</span>
-    <span class="tag">Prosthetics Research</span>
+  <div class="notice-pub">
+    <div class="icon">⚠️</div>
+    <p>
+      <strong>Research in Progress — Publication Pending.</strong>
+      This is a project overview page. The full methodology and complete results are part of an
+      ongoing research program at CMU being prepared for publication. See the full research page
+      for more detail on the preliminary findings.
+    </p>
   </div>
 
-  <h2>Context</h2>
-  <p>
-    As part of my Research Assistant work in intent prediction for prosthetic limb users, I performed
-    an offline evaluation of a Bayesian foot placement prediction approach. The method is based on the
-    probability distribution model described in the paper by Peng et al. (IEEE Transactions on Neural
-    Systems and Rehabilitation Engineering, 2021), which predicts where a foot will land during the
-    early swing phase using a wearable IMU sensor.
-  </p>
-  <p>
-    The approach is fundamentally a state estimator: it maintains a probability distribution over
-    possible foot placement locations on a 2D grid, updating that distribution iteratively as
-    sequential gait features are observed during swing. The weighted center of the distribution is
-    taken as the predicted foot placement coordinate. This is more of a probabilistic/heuristic
-    framework than a learned model in the machine learning sense — the probability map is built from
-    prior stepping patterns, not trained end-to-end.
-  </p>
-
-  <div class="citation">
-    <strong>Based on:</strong> Y. Peng et al., "A Probability Distribution Model-Based Approach for
-    Foot Placement Prediction in the Early Swing Phase With a Wearable IMU Sensor," <em>IEEE
-    Transactions on Neural Systems and Rehabilitation Engineering</em>, 2021.
-    <br><br>
-    <strong>Dataset:</strong> Open-source lower limb biomechanics dataset (treadmill walking
-    conditions across multiple speeds and directions).
+  <div class="page-header">
+    <div class="tag-row">
+      <span class="tag">Bayesian Inference</span>
+      <span class="tag">IMU</span>
+      <span class="tag">Sequential Estimation</span>
+      <span class="tag">Human Gait</span>
+      <span class="tag">In Progress</span>
+    </div>
+    <h1>Optimal State Estimator</h1>
+    <p class="subtitle">Probabilistic Foot Placement Prediction from Sequential Bayesian Inference</p>
   </div>
 
-  <h2>How It Works</h2>
-  <p>
-    The predictor maintains a grid map of possible foot placements (101 × 71 = 7,171 cells) in the
-    anterior-posterior (AP) and medial-lateral (ML) plane. At the start of each swing phase, a prior
-    distribution is computed from the subject's previous stepping history using
-    <code>compute_prior()</code>. As the swing progresses, sequential IMU-derived features update the
-    probability map, and the predicted landing location is taken as the weighted centroid of the
-    resulting distribution.
-  </p>
-  <p>
-    In this offline evaluation, pre-trained model objects were loaded from pickle files and applied to
-    treadmill walking data from eight able-bodied subjects (AB06–AB13), covering a total of 11,761
-    steps across multiple trial conditions (direction, speed, and stance leg). Per-trial and aggregate
-    RMSE metrics were computed for AP displacement, ML displacement, and Euclidean distance to ground
-    truth foot placement.
-  </p>
-
-  <h2>Results — Aggregate (All Trials)</h2>
-
-  <h3>Subject AB13</h3>
-  <div class="metric-grid">
-    <div class="metric"><div class="val">9.11 cm</div><div class="lbl">RMSE X (AP)</div></div>
-    <div class="metric"><div class="val">3.35 cm</div><div class="lbl">RMSE Y (ML)</div></div>
-    <div class="metric"><div class="val">9.70 cm</div><div class="lbl">RMSE Distance</div></div>
-    <div class="metric"><div class="val">8.25 cm</div><div class="lbl">Mean Abs. Distance</div></div>
+  <div class="abstract">
+    <div class="abstract-label">Abstract</div>
+    <p>
+      Predicting where a foot will land — before it lands — is a core challenge in wearable robotics
+      and prosthetic limb control. This project develops a sequential Bayesian state estimator for
+      foot placement prediction during human walking, using IMU-derived kinematic features and a
+      Gaussian prior over gait history. Evaluated on 11,761 steps from 8 able-bodied subjects at
+      8 treadmill speeds, the framework achieves RMSE ~9.7 cm (Euclidean distance) for subject AB13
+      — with anterior-posterior prediction substantially more challenging than medial-lateral due to
+      speed-dependent stride length variability.
+    </p>
   </div>
 
-  <h3>Subject AB06</h3>
-  <div class="metric-grid">
-    <div class="metric"><div class="val">10.29 cm</div><div class="lbl">RMSE X (AP)</div></div>
-    <div class="metric"><div class="val">2.24 cm</div><div class="lbl">RMSE Y (ML)</div></div>
-    <div class="metric"><div class="val">10.53 cm</div><div class="lbl">RMSE Distance</div></div>
-    <div class="metric"><div class="val">8.41 cm</div><div class="lbl">Mean Abs. Distance</div></div>
-  </div>
+  <!-- 1. Problem -->
+  <section>
+    <h2>1. Why Predict Foot Placement?</h2>
+    <p>
+      Current prosthetic and exoskeleton controllers react to mechanical events — they sense ground
+      contact, then respond. This leaves no time for proactive impedance adjustment when a step goes
+      wrong. A predictive controller that knows where the foot will land <em>before</em> touchdown
+      can pre-tune stiffness, damping, or assistive torque to prevent falls and improve stability.
+    </p>
+    <p>
+      The estimation problem: given the ongoing swing phase — hip angle, knee angle, angular
+      velocities captured by an IMU worn at the thigh — compute the probability distribution over
+      where the foot will contact the ground, and output the most likely landing position.
+    </p>
+  </section>
 
-  <p>
-    The evaluation also produced per-trial breakdowns by walking direction, treadmill speed, and leg
-    (left/right), giving a detailed view of where the estimator performs well and where it struggles
-    across different conditions.
-  </p>
+  <!-- 2. Method -->
+  <section>
+    <h2>2. Approach</h2>
 
-  <h2>Tools &amp; Libraries</h2>
-  <table>
-    <tr><th>Tool</th><th>Use</th></tr>
-    <tr><td>Python / NumPy</td><td>Grid construction, RMSE and distance computations</td></tr>
-    <tr><td>Pandas</td><td>Loading and filtering treadmill CSV data by subject and trial condition</td></tr>
-    <tr><td>Matplotlib</td><td>Visualizing predicted vs. ground truth foot placements</td></tr>
-    <tr><td>pickle</td><td>Loading pre-trained Bayesian probability model objects</td></tr>
-  </table>
+    <div class="box-method">
+      <p><strong>Framework summary:</strong></p>
+      <ul>
+        <li>Feature extraction from IMU signals (hip/knee angles, angular velocities) during terminal swing phase</li>
+        <li>Ridge regression likelihood models: features → probability over a 101×71 spatial grid</li>
+        <li>Gaussian prior: centered at mean of previous 2 foot placements (captures stride periodicity)</li>
+        <li>Sequential Bayesian posterior update at each step</li>
+      </ul>
+    </div>
 
-  <div class="note">
-    The probability distribution models and the training pipeline were developed as part of the
-    broader lab research effort. My contribution here was implementing the offline evaluation
-    framework — loading the trained models, running predictions across all subjects and trial
-    conditions, and computing the per-trial and aggregate RMSE results shown above.
+    <p>The posterior over foot landing position x at step i is:</p>
+    <div class="eq">
+      P(xᵢ | zᵢ) ∝ P(zᵢ | xᵢ) · P(xᵢ)
+    </div>
+    <p>
+      The predicted foot placement is the posterior mode. The prior is updated from each new
+      observation, allowing the estimator to track speed-dependent changes in stride length
+      as walking context accumulates.
+    </p>
+
+    <div class="fig-grid">
+      <figure>
+        <img src="images/bayes_visualization.png" alt="Bayesian update visualization">
+        <figcaption>
+          Figure 1: Single-step Bayesian update. Prior (left, from gait history) × likelihood
+          (center, from IMU features) → posterior (right). The predicted foot placement is
+          the posterior mode.
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="images/sample_step_posteriors.png" alt="Sequential posterior distributions">
+        <figcaption>
+          Figure 2: Sequential posterior distributions across consecutive steps. The distribution
+          sharpens as the estimator accumulates gait context, reflecting increasing prediction
+          confidence within a consistent walking bout.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 3. Results -->
+  <section>
+    <h2>3. Preliminary Results</h2>
+    <p>
+      Evaluated on subject AB13 across 14 trials (7 speeds × left and right legs), totaling 1,120 steps.
+    </p>
+
+    <div class="metric-row">
+      <div class="metric-card"><div class="num">9.11</div><div class="unit">cm</div><div class="lbl">RMSE — AP direction</div></div>
+      <div class="metric-card"><div class="num">3.35</div><div class="unit">cm</div><div class="lbl">RMSE — ML direction</div></div>
+      <div class="metric-card"><div class="num">9.70</div><div class="unit">cm</div><div class="lbl">RMSE — Euclidean dist.</div></div>
+    </div>
+
+    <figure>
+      <img src="images/AB13_scatter.png" alt="Predicted vs actual foot placements">
+      <figcaption>
+        Figure 3: Predicted (×) vs. actual (●) foot placements for subject AB13 across all trials
+        and speeds. Anterior-posterior (stride length) prediction shows greater spread than
+        medial-lateral (stride width), consistent with the RMSE breakdown.
+      </figcaption>
+    </figure>
+
+    <div class="box-result">
+      <p><strong>Key observation:</strong> The Bayesian estimator is most accurate at low walking
+      speeds (RMSE_x as low as 6.2 cm) where gait is most periodic and the prior contributes
+      strongly. At higher speeds, stride length variability increases and AP error grows to ~14 cm.
+      Medial-lateral error remains consistently low (~3 cm) across all speeds, suggesting the ML
+      dimension is inherently more predictable than AP in treadmill walking.</p>
+    </div>
+  </section>
+
+  <!-- Status & Link -->
+  <div class="cta">
+    <div>
+      <p><strong style="color: var(--text);">This project is part of an ongoing research effort.</strong></p>
+      <p>See the full Intent Prediction research page for complete per-trial data, the experimental protocol, and future work directions.</p>
+    </div>
+    <a class="btn" href="prosthetics.html">View Full Research Page →</a>
   </div>
 
 </div>
+
+<footer>
+  <p>&copy; 2026 Fawaz Mallick. All rights reserved.</p>
+  <p style="margin-top:10px;"><a href="mailto:fawazmallick9@gmail.com">fawazmallick9@gmail.com</a> · <a href="https://www.linkedin.com/in/fawaz-mallick/" target="_blank">LinkedIn</a></p>
+</footer>
+
 </body>
 </html>

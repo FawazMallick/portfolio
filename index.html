@@ -310,10 +310,11 @@
 
 <!-- NAV -->
 <nav>
-  <a href="#story">The Story</a>
+  <a href="#story">Story</a>
   <a href="#research">Research</a>
-  <a href="#skills">Skills</a>
-  <a href="#experience">Experience</a>
+  <a href="#projects">Projects</a>
+  <a href="#professional">Professional</a>
+  <a href="#coursework">Coursework</a>
   <a href="#publications">Publications</a>
 </nav>
 
@@ -376,57 +377,86 @@
   </div>
 </section>
 
-<!-- SKILLS -->
-<section id="skills">
-  <h2 class="section-title">Technical Skills</h2>
+<!-- PROJECTS -->
+<section id="projects">
+  <h2 class="section-title">Projects <span class="tag">Engineering Work</span></h2>
   <p style="margin-bottom: 32px; color: var(--text-dim);">
-    Organized by domain. Each skill developed through coursework and real project application. Featured projects show mastery; coursework highlights demonstrate breadth.
+    Independent engineering projects applying control theory and machine learning to real systems.
   </p>
 
   <div class="card-grid">
 
+    <a class="card" href="rul.html">
+      <div class="card-tag">Deep Learning · PyTorch · C-MAPSS</div>
+      <h3>AI for Remaining Useful Life Estimation</h3>
+      <p>Compared GRU baseline (RMSE 13.17) against Embed-RUL autoencoder on NASA turbofan engine data across 4 operating conditions. Asymmetric loss, PCA preprocessing, t-SNE embedding analysis.</p>
+      <span class="card-arrow">Read the paper →</span>
+    </a>
+
     <a class="card" href="dynamics_skills.html">
-      <div class="card-tag">Robot Dynamics &amp; Control</div>
-      <h3>Robotics Fundamentals to Optimal Control</h3>
-      <p><strong>Featured:</strong> TWIP Control System (LQR → iLQR → Neural Network Policies). RDA, MCT, OCRL coursework. Webots robotics projects (P1–P5). From kinematics to learning-based control.</p>
-      <span class="card-arrow">Explore the toolkit →</span>
+      <div class="card-tag">LQR · iLQR · Neural Network Policy</div>
+      <h3>TWIP Optimal Control</h3>
+      <p>Two-wheeled inverted pendulum as a testbed: LQR stabilization → Kalman filtering → iLQR trajectory optimization → imitation-learned NN policy achieving 7× longer balance than the linear baseline.</p>
+      <span class="card-arrow">Read the paper →</span>
     </a>
 
-    <a class="card" href="ml_skills.html">
-      <div class="card-tag">AI &amp; Machine Learning</div>
-      <h3>From Classical ML to Deep Learning</h3>
-      <p><strong>Featured:</strong> RUL Prediction (GRU vs Encoder-Decoder Autoencoders). Deep learning from scratch, PyTorch, CNNs, RNNs, imitation learning. Applied to real problems (turbofan engines, prosthetic control).</p>
-      <span class="card-arrow">See the projects →</span>
-    </a>
-
-    <a class="card" href="fundamentals.html">
-      <div class="card-tag">Fundamentals &amp; Theory</div>
-      <h3>FEA, Biomechanics, Embedded Systems</h3>
-      <p>Supporting skills that enable everything: 2D FEA solver (mesh generation, stress recovery), gait biomechanics analysis, Arduino embedded systems (IMU integration, sensor fusion, I2C protocols).</p>
-      <span class="card-arrow">View supporting work →</span>
+    <a class="card" href="bayes.html">
+      <div class="card-tag">Bayesian Inference · IMU · In Progress</div>
+      <h3>Optimal State Estimator</h3>
+      <p>Probabilistic foot placement prediction during walking using sequential Bayesian updates over a spatial grid. Part of ongoing research toward publication. RMSE ~9.7 cm across 11,761 treadmill steps.</p>
+      <span class="card-arrow">Read the paper →</span>
     </a>
 
   </div>
 </section>
 
-<!-- EXPERIENCE & LEADERSHIP -->
-<section id="experience">
-  <h2 class="section-title">Leadership & Experience</h2>
+<!-- PROFESSIONAL -->
+<section id="professional">
+  <h2 class="section-title">Professional <span class="tag">Experience</span></h2>
+  <p style="margin-bottom: 32px; color: var(--text-dim);">
+    Research, leadership, and teaching roles across CMU and Rowan University — 2023 to present.
+  </p>
+
+  <div class="card-grid" style="grid-template-columns: 1fr;">
+    <a class="card" href="professional.html">
+      <div class="card-tag">CMU · Rowan University · 2023–Present</div>
+      <h3>Leadership &amp; Professional Experience</h3>
+      <p>Graduate Research Assistant (PI: Dr. Hartmut Geyer) · Assistant Housefellow · Research Associate at Robossis and Rowan · University Fellow · Peer Tutor · Community Assistant. Scroll through the full timeline.</p>
+      <span class="card-arrow">View full timeline →</span>
+    </a>
+  </div>
+</section>
+
+<!-- COURSE EXPERIENCE -->
+<section id="coursework">
+  <h2 class="section-title">Course Experience <span class="tag">Coursework</span></h2>
+  <p style="margin-bottom: 32px; color: var(--text-dim);">
+    Honorable mentions from coursework that built the technical foundation — Robot Dynamics &amp; Analysis, Modern Control Theory, Optimal Control &amp; RL, Intro to Deep Learning, and Medical Device Regulation.
+  </p>
 
   <div class="card-grid">
-    <a class="card" href="af.html">
-      <div class="card-tag">Student Leadership · CMU</div>
-      <h3>Assistant Housefellow</h3>
-      <p><strong>101 residents, 8 student staff.</strong> Managed residential community, built programming, led staff, created initiatives. Engineering isn't just code — it's designing teams, systems, and communities that work.</p>
-      <span class="card-arrow">Read the story →</span>
+
+    <a class="card" href="ml_skills.html">
+      <div class="card-tag">AI &amp; Machine Learning</div>
+      <h3>Intro to Deep Learning</h3>
+      <p>MLPs → CNNs → RNNs/LSTMs → optimization → RL policy gradients. 13-module course at CMU. Applied to time-series prediction, generative modeling, and control policy learning.</p>
+      <span class="card-arrow">Explore coursework →</span>
     </a>
 
-    <a class="card" href="experience.html">
-      <div class="card-tag">Undergraduate · Rowan University</div>
-      <h3>Peer Tutor &amp; More</h3>
-      <p>Peer tutor, lab work, research. Learned as much from explaining concepts to others as from the coursework itself. Built habits of clarity and rigor that carry forward.</p>
-      <span class="card-arrow">View roles →</span>
+    <a class="card" href="controls.html">
+      <div class="card-tag">Robotics &amp; Controls</div>
+      <h3>Robot Dynamics, Control Theory &amp; Optimal Control</h3>
+      <p>RDA (screw theory, Jacobians, SE(3)) → MCT (PID, Kalman filters, EKF SLAM, Webots P1–P5) → OCRL (iLQR, trajectory optimization, NN policies). The progression from kinematics to learning-based control.</p>
+      <span class="card-arrow">Explore coursework →</span>
     </a>
+
+    <a class="card" href="fundamentals.html">
+      <div class="card-tag">Regulatory &amp; Medical Device</div>
+      <h3>FEA, Biomechanics &amp; Device Regulation</h3>
+      <p>2D FEA solver for implant stress analysis, ISO 7206 fatigue standards, FDA 510(k) regulatory bootcamp (Class III hip implant), toxicological risk assessment, and gait biomechanics fundamentals.</p>
+      <span class="card-arrow">Explore coursework →</span>
+    </a>
+
   </div>
 </section>
 

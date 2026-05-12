@@ -3,162 +3,537 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>GRU vs Embed-RUL — Fawaz Mallick</title>
+  <title>AI for RUL Estimation — Fawaz Mallick</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #e0e0e0; color: #333; }
-    header { text-align: center; background: #000; color: white; padding: 20px 0; }
-    header h1 { margin: 0; font-size: 2rem; }
-    header p { margin: 6px 0 0; color: #aaa; font-size: 0.9rem; }
-    .back { display: inline-block; margin: 18px 0 0 24px; color: #00509e; text-decoration: none; font-size: 0.9rem; }
-    .back:hover { text-decoration: underline; }
-    .container { max-width: 1000px; margin: 20px auto 60px; padding: 30px 36px; background: white; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-    h2 { color: #00509e; margin-top: 36px; margin-bottom: 10px; font-size: 1.3rem; }
-    h3 { color: #333; margin-top: 24px; margin-bottom: 8px; font-size: 1.05rem; }
-    p { margin-bottom: 14px; line-height: 1.65; }
-    .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
-    .tag { background: #eaf4ff; color: #00509e; border: 1px solid #b3d4f0; border-radius: 4px; padding: 3px 10px; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
-    table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 0.9rem; }
-    th { background: #00509e; color: white; padding: 9px 14px; text-align: left; }
-    td { padding: 8px 14px; border-bottom: 1px solid #ddd; }
-    tr:last-child td { border-bottom: none; }
-    tr:nth-child(even) td { background: #f5f9ff; }
-    .note { background: #f0f7ff; border-left: 4px solid #00509e; padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; font-size: 0.88rem; color: #444; }
-    .warn { background: #fff8e1; border-left: 4px solid #f9a825; padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; font-size: 0.88rem; color: #555; }
-    .arch-box { background: #f5f9ff; border: 1px solid #cce0f5; border-radius: 8px; padding: 16px 20px; margin: 12px 0 20px; }
-    .arch-box h4 { margin: 0 0 8px; color: #00509e; font-size: 0.95rem; }
-    .arch-box ul { margin: 0; padding-left: 20px; font-size: 0.88rem; line-height: 1.7; color: #444; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --accent: #00d4ff; --accent-dim: #0099cc; --accent-light: rgba(0,212,255,0.12);
+      --bg: #0a0e27; --card: #0f1429; --card-hover: #151d3a; --border: #1a2240;
+      --text: #e8ecf1; --text-dim: #a8b2c1; --muted: #6b7684; --nav-h: 64px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100; height: var(--nav-h);
+      background: rgba(10,14,39,0.92); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; padding: 0 40px;
+    }
+    nav a.logo { color: var(--text); text-decoration: none; font-weight: 600; font-size: 0.95rem; }
+    nav a.back { color: var(--accent); text-decoration: none; font-size: .85rem; font-weight: 500; transition: opacity .25s; }
+    nav a.back:hover { opacity: .7; }
+
+    /* Sticky section nav */
+    .section-nav {
+      position: sticky; top: var(--nav-h); z-index: 90;
+      background: rgba(10,14,39,0.96); border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 0; overflow-x: auto; padding: 0 40px;
+      scrollbar-width: none;
+    }
+    .section-nav::-webkit-scrollbar { display: none; }
+    .section-nav a {
+      color: var(--muted); text-decoration: none; font-size: 0.8rem; font-weight: 500;
+      padding: 14px 18px; white-space: nowrap; border-bottom: 2px solid transparent;
+      transition: color .2s, border-color .2s;
+    }
+    .section-nav a:hover, .section-nav a.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    .container { max-width: 960px; margin: 0 auto; padding: 60px 24px 100px; }
+
+    /* Page header */
+    .page-header { margin-bottom: 60px; }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    .tag { background: var(--accent-light); color: var(--accent); border: 1px solid rgba(0,212,255,0.25);
+           border-radius: 4px; padding: 3px 10px; font-size: 0.72rem; font-weight: 700;
+           text-transform: uppercase; letter-spacing: 0.08em; }
+    .page-header h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; color: #fff;
+                      margin-bottom: 10px; letter-spacing: -.02em; line-height: 1.2; }
+    .page-header .subtitle { font-size: 1rem; color: var(--accent); font-weight: 500; margin-bottom: 24px; }
+
+    /* Abstract */
+    .abstract {
+      background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+      padding: 24px 28px; margin-bottom: 16px;
+    }
+    .abstract-label { font-size: 0.72rem; font-weight: 700; letter-spacing: .1em;
+                      text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .abstract p { font-size: 0.97rem; color: var(--text-dim); line-height: 1.8; margin: 0; }
+
+    /* Sections */
+    section { margin-bottom: 90px; scroll-margin-top: calc(var(--nav-h) + 50px); }
+    h2 { font-size: 1.7rem; font-weight: 700; color: #fff; margin-bottom: 20px;
+         padding-bottom: 12px; border-bottom: 2px solid var(--border); }
+    h3 { font-size: 1.1rem; font-weight: 600; color: var(--accent); margin-top: 32px; margin-bottom: 12px; }
+    h4 { font-size: 1rem; font-weight: 600; color: #fff; margin-bottom: 8px; margin-top: 20px; }
+    p { font-size: 0.97rem; color: var(--text-dim); line-height: 1.8; margin-bottom: 14px; }
+    p strong { color: var(--text); }
+    a { color: var(--accent); text-decoration: none; transition: opacity .25s; }
+    a:hover { opacity: .8; }
+    ul { list-style: none; padding: 0; margin: 12px 0; }
+    ul li { margin-bottom: 8px; padding-left: 22px; position: relative; font-size: .95rem; color: var(--text-dim); }
+    ul li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-weight: 600; }
+
+    /* Callout boxes */
+    .box-problem { background: rgba(220,38,38,0.07); border-left: 4px solid #dc2626;
+                   padding: 18px 20px; margin: 20px 0; border-radius: 0 6px 6px 0; }
+    .box-method  { background: rgba(59,130,246,0.07); border-left: 4px solid #3b82f6;
+                   padding: 18px 20px; margin: 20px 0; border-radius: 0 6px 6px 0; }
+    .box-result  { background: rgba(34,197,94,0.07); border-left: 4px solid #22c55e;
+                   padding: 18px 20px; margin: 20px 0; border-radius: 0 6px 6px 0; }
+    .box-warn    { background: rgba(251,191,36,0.07); border-left: 4px solid #fbbf24;
+                   padding: 18px 20px; margin: 20px 0; border-radius: 0 6px 6px 0; }
+    .box-problem p, .box-method p, .box-result p, .box-warn p { margin-bottom: 8px; }
+    .box-problem p:last-child, .box-method p:last-child, .box-result p:last-child, .box-warn p:last-child { margin-bottom: 0; }
+
+    /* Tables */
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.88rem; }
+    th { background: var(--card); color: var(--accent); padding: 10px 14px; text-align: left;
+         border: 1px solid var(--border); font-weight: 600; font-size: 0.82rem; }
+    td { padding: 9px 14px; border: 1px solid var(--border); color: var(--text-dim); }
+    tr:nth-child(even) td { background: rgba(0,212,255,0.03); }
+    td.best { color: #22c55e; font-weight: 700; }
+    td.na { color: var(--muted); font-style: italic; }
+
+    /* Figures */
+    figure { margin: 32px 0; }
+    figure img { max-width: 100%; border-radius: 8px; border: 1px solid var(--border);
+                 display: block; transition: border-color .25s; }
+    figure img:hover { border-color: var(--accent); }
+    figcaption { font-size: 0.86rem; color: var(--muted); margin-top: 10px;
+                 font-style: italic; text-align: center; line-height: 1.6; }
+    .fig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 32px 0; }
+    @media (max-width: 680px) { .fig-grid { grid-template-columns: 1fr; } }
+
+    /* Equation */
+    .eq { background: var(--card); border: 1px solid var(--border); border-radius: 6px;
+          padding: 14px 20px; font-family: 'Georgia', serif; font-style: italic;
+          font-size: 1rem; color: var(--text); margin: 16px 0; text-align: center; }
+
+    /* Architecture spec */
+    .arch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 24px 0; }
+    @media (max-width: 680px) { .arch-grid { grid-template-columns: 1fr; } }
+    .arch-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; }
+    .arch-card h4 { color: var(--accent); margin-top: 0; margin-bottom: 12px; font-size: 0.95rem; }
+    .arch-card ul { margin: 0; }
+
+    /* References */
+    .references ol { padding-left: 20px; }
+    .references li { font-size: 0.88rem; color: var(--text-dim); margin-bottom: 10px; line-height: 1.6; }
+
+    /* PDF button */
+    .btn-pdf {
+      display: inline-block; margin-top: 20px;
+      background: var(--accent); color: #000; padding: 10px 24px;
+      border-radius: 6px; font-weight: 700; font-size: 0.88rem;
+      text-decoration: none; transition: opacity .25s;
+    }
+    .btn-pdf:hover { opacity: .85; }
+
+    footer { border-top: 1px solid var(--border); text-align: center; padding: 32px 20px;
+             color: var(--muted); font-size: .85rem; }
+    footer a { color: var(--accent); }
+
+    @media (max-width: 768px) { nav { padding: 0 20px; } .section-nav { padding: 0 20px; } .container { padding: 40px 16px 80px; } }
   </style>
 </head>
 <body>
 
-<header>
-  <h1>GRU Baseline vs Embed-RUL</h1>
-  <p>Intro to Deep Learning — Carnegie Mellon University</p>
-</header>
+<nav>
+  <a class="logo" href="index.html">Fawaz Mallick</a>
+  <a class="back" href="index.html">← Back to Portfolio</a>
+</nav>
 
-<a class="back" href="index.html">← Back to Portfolio</a>
+<div class="section-nav">
+  <a href="#abstract">Abstract</a>
+  <a href="#introduction">Introduction</a>
+  <a href="#dataset">Dataset</a>
+  <a href="#methods">Methods</a>
+  <a href="#results">Results</a>
+  <a href="#statistics">Statistics</a>
+  <a href="#conclusion">Conclusion</a>
+  <a href="#references">References</a>
+</div>
 
 <div class="container">
 
-  <div class="tag-row">
-    <span class="tag">PyTorch</span>
-    <span class="tag">GRU</span>
-    <span class="tag">Deep Learning</span>
-    <span class="tag">RUL Prediction</span>
-    <span class="tag">C-MAPSS</span>
-    <span class="tag">PCA</span>
-    <span class="tag">t-SNE</span>
-    <span class="tag">Kaggle GPU</span>
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="tag-row">
+      <span class="tag">PyTorch</span>
+      <span class="tag">GRU</span>
+      <span class="tag">Deep Learning</span>
+      <span class="tag">RUL Prediction</span>
+      <span class="tag">C-MAPSS</span>
+      <span class="tag">PCA</span>
+      <span class="tag">t-SNE</span>
+      <span class="tag">CMU · Intro to Deep Learning</span>
+    </div>
+    <h1>AI for Remaining Useful Life Estimation</h1>
+    <p class="subtitle">GRU Baseline vs. Embed-RUL Autoencoder — NASA C-MAPSS Turbofan Dataset</p>
   </div>
 
-  <h2>Overview</h2>
-  <p>
-    This project implements and compares two architectures for Remaining Useful Life (RUL) prediction
-    on the NASA C-MAPSS turbofan engine degradation dataset. A GRU-based baseline is compared against
-    Embed-RUL, a similarity-based method using an encoder-decoder architecture and a learned health
-    index. Both models were trained on the FD001 subset and then evaluated on all four C-MAPSS
-    subsets (FD001–FD004) to assess cross-condition generalization.
-  </p>
-
-  <h2>Dataset</h2>
-  <p>
-    The NASA C-MAPSS dataset contains run-to-failure trajectories for turbofan engines across four
-    operating conditions and fault modes. Each engine's sensor readings are recorded from initial
-    deployment until failure. FD001 (single operating condition, single fault mode) was used for
-    training and as the primary evaluation benchmark; FD002–FD004 introduce additional operating
-    conditions and fault modes.
-  </p>
-  <table>
-    <tr><th>Subset</th><th>Training Engines</th><th>Training Rows</th><th>Operating Conditions</th><th>Fault Modes</th></tr>
-    <tr><td>FD001</td><td>100</td><td>20,631</td><td>1</td><td>1</td></tr>
-    <tr><td>FD002</td><td>260</td><td>—</td><td>6</td><td>1</td></tr>
-    <tr><td>FD003</td><td>100</td><td>—</td><td>1</td><td>2</td></tr>
-    <tr><td>FD004</td><td>248</td><td>—</td><td>6</td><td>2</td></tr>
-  </table>
-  <p>
-    Preprocessing used PCA (15 components, retaining 100% of variance on FD001) and MinMaxScaler
-    normalization. Delta features (cycle-to-cycle differences) were also included for the Embed-RUL
-    model.
-  </p>
-
-  <h2>Architectures</h2>
-
-  <div class="arch-box">
-    <h4>RUL_GRU — GRU Baseline</h4>
-    <ul>
-      <li>GRU layers followed by a fully connected regression head</li>
-      <li>Trained with an asymmetric scoring loss that penalizes late predictions more heavily than early ones</li>
-      <li>Straightforward sequence-to-scalar prediction</li>
-    </ul>
+  <!-- ABSTRACT -->
+  <div class="abstract" id="abstract">
+    <div class="abstract-label">Abstract</div>
+    <p>
+      This project implements and compares two deep learning architectures for Remaining Useful Life (RUL)
+      prediction on the NASA C-MAPSS turbofan engine degradation dataset. A two-layer GRU baseline trained
+      with an asymmetric scoring loss achieves <strong>RMSE 13.17 cycles</strong> on the FD001 in-distribution
+      test set. Embed-RUL — an encoder-decoder architecture with a learned Health Indicator — achieves
+      RMSE 64.02 on FD001 but fails entirely on multi-condition subsets (FD002, FD004) where test engine
+      lifetimes exceed all training references. t-SNE visualizations confirm that distribution shift drives
+      embedding-space failure. Statistical testing (paired t-tests, p &lt; 10⁻⁶) confirms GRU significantly
+      outperforms Embed-RUL on all comparable subsets.
+    </p>
   </div>
 
-  <div class="arch-box">
-    <h4>Embed-RUL — Encoder-Decoder with Health Index</h4>
-    <ul>
-      <li>Encoder (GRUCell) maps engine trajectory to an embedding</li>
-      <li>Decoder reconstructs the trajectory from the embedding</li>
-      <li>A health index (HI) curve is learned that maps RUL onto a [0,1] degradation signal</li>
-      <li>RUL estimation uses similarity between the test engine embedding and training engine embeddings at matching health index values</li>
-      <li>Masking and delta features used to handle variable-length sequences</li>
-    </ul>
-  </div>
+  <!-- 1. INTRODUCTION -->
+  <section id="introduction">
+    <h2>1. Introduction</h2>
 
-  <h2>Results</h2>
-  <p>
-    Both models were trained on FD001 only and evaluated on all four subsets. GRU RMSE is reported
-    for all engines; Embed-RUL reports RMSE only over engines for which a valid prediction could be
-    made (sufficient embedding similarity found).
-  </p>
+    <div class="box-problem">
+      <p><strong>Problem:</strong> Turbofan engines degrade continuously from first flight to failure.
+      Unplanned failures cost airlines an estimated 10× more than scheduled maintenance and carry safety risks.
+      Predictive maintenance requires estimating the Remaining Useful Life (RUL) — how many flight cycles
+      remain before a failure threshold is crossed — from real-time sensor data.</p>
+    </div>
 
-  <h3>GRU Baseline</h3>
-  <table>
-    <tr><th>Subset</th><th>RMSE</th><th>Notes</th></tr>
-    <tr><td>FD001 (in-distribution)</td><td>13.17</td><td>Strong in-distribution performance</td></tr>
-    <tr><td>FD002</td><td>118.54</td><td>Large distribution shift (6 operating conditions)</td></tr>
-    <tr><td>FD003</td><td>42.06</td><td>Moderate shift (2 fault modes)</td></tr>
-    <tr><td>FD004</td><td>124.53</td><td>Large distribution shift</td></tr>
-  </table>
+    <p>
+      The NASA C-MAPSS (Commercial Modular Aero-Propulsion System Simulation) dataset [1] provides
+      run-to-failure trajectories for hundreds of simulated turbofan engines, with 21 sensor channels
+      recorded per cycle. The challenge is multivariate time-series regression: given a window of recent
+      sensor readings, predict the scalar RUL.
+    </p>
+    <p>
+      Two architectures are evaluated: a GRU baseline trained end-to-end with a domain-appropriate
+      asymmetric loss, and Embed-RUL [2], a similarity-based method that learns engine embeddings and
+      estimates RUL by matching against a library of reference Health Indicator (HI) curves.
+    </p>
+    <p>
+      A key design choice is the <strong>asymmetric scoring loss</strong>: in safety-critical applications,
+      predicting too-late (underestimating remaining life) is worse than predicting too-early. The loss
+      penalizes overprediction (dᵢ ≥ 0) more heavily than underprediction:
+    </p>
+    <div class="eq">
+      L = (1/N) Σ { exp(−dᵢ/13) − 1 &nbsp;if&nbsp; dᵢ &lt; 0 ; &nbsp; exp(dᵢ/10) − 1 &nbsp;if&nbsp; dᵢ ≥ 0 }
+    </div>
+    <p style="font-size:0.88rem; color:var(--muted); text-align:center; margin-top:-8px;">
+      where dᵢ = ŷᵢ − yᵢ (predicted minus true RUL). Overprediction penalty exponent 1/10 &gt; underprediction exponent 1/13.
+    </p>
+  </section>
 
-  <h3>Embed-RUL</h3>
-  <table>
-    <tr><th>Subset</th><th>RMSE</th><th>Valid Predictions</th></tr>
-    <tr><td>FD001</td><td>64.02</td><td>100 / 100</td></tr>
-    <tr><td>FD002</td><td>—</td><td>0 / 260 (no valid matches)</td></tr>
-    <tr><td>FD003</td><td>70.25</td><td>65 / 100</td></tr>
-    <tr><td>FD004</td><td>—</td><td>0 / 248 (no valid matches)</td></tr>
-  </table>
+  <!-- 2. DATASET -->
+  <section id="dataset">
+    <h2>2. Dataset</h2>
 
-  <div class="warn">
-    Embed-RUL produced no valid predictions on FD002 and FD004. The similarity-based retrieval step
-    requires embedding matches within a threshold; when the test set distribution diverges
-    significantly from FD001 training data, no matches are found.
-  </div>
+    <p>
+      C-MAPSS contains four subsets (FD001–FD004) spanning different operating conditions and fault modes.
+      Models are trained exclusively on <strong>FD001</strong> (80 engines train, 20 validation) and evaluated
+      on all four subsets to assess generalization.
+    </p>
 
-  <h3>Statistical Comparison (FD001 &amp; FD003)</h3>
-  <p>
-    A paired t-test comparing GRU vs Embed-RUL on FD001 (100 valid engines) and FD003 (65 valid
-    engines) showed that GRU significantly outperforms Embed-RUL on both subsets
-    (p &lt; 0.000001 in both cases).
-  </p>
+    <table>
+      <tr>
+        <th>Subset</th><th>Training Engines</th><th>Training Rows</th>
+        <th>Operating Conditions</th><th>Fault Modes</th>
+      </tr>
+      <tr><td>FD001</td><td>100</td><td>20,631</td><td>1</td><td>1</td></tr>
+      <tr><td>FD002</td><td>260</td><td>—</td><td>6</td><td>1</td></tr>
+      <tr><td>FD003</td><td>100</td><td>—</td><td>1</td><td>2</td></tr>
+      <tr><td>FD004</td><td>248</td><td>—</td><td>6</td><td>2</td></tr>
+    </table>
 
-  <h2>Visualizations</h2>
-  <p>
-    The project included t-SNE visualizations of encoder embeddings across training and test
-    engines, and health index (HI) curve plots showing the learned degradation signal over engine
-    life. Both help illustrate why the similarity-based approach breaks down under distribution shift.
-  </p>
+    <div class="box-method">
+      <p><strong>Preprocessing:</strong></p>
+      <ul>
+        <li>Sensor channels 5–26 (21 channels) normalized with MinMaxScaler fit on FD001 training set</li>
+        <li>PCA with p = 15 components — retains <strong>100% of variance</strong> on FD001 training data</li>
+        <li>GRU: sliding window of 25 cycles; RUL clipped at 125 cycles</li>
+        <li>Embed-RUL: window W = 30 cycles; input augmented with masking vector mₜ and delta vector δₜ → 45-dim input [xₜ; mₜ; δₜ]</li>
+        <li>Training split: 80 engines / 20 engines (80/20)</li>
+      </ul>
+    </div>
 
-  <h2>Environment</h2>
-  <table>
-    <tr><th>Detail</th><th>Value</th></tr>
-    <tr><td>Framework</td><td>PyTorch</td></tr>
-    <tr><td>Platform</td><td>Kaggle (2× GPU, CUDA)</td></tr>
-    <tr><td>Preprocessing</td><td>PCA (15 components), MinMaxScaler, delta features</td></tr>
-    <tr><td>Loss</td><td>Asymmetric scoring loss (GRU); reconstruction + HI loss (Embed-RUL)</td></tr>
-  </table>
+    <figure>
+      <img src="images/fig_fd001.png" alt="FD001 sensor degradation trajectories">
+      <figcaption>
+        Figure 1: FD001 training data — sensor signal degradation trajectories for all 100 turbofan engines
+        over operational cycle count. Signals show diverse onset times and degradation rates, motivating a
+        learned health index rather than hand-crafted thresholds.
+      </figcaption>
+    </figure>
+  </section>
 
-  <a href="Deep_Learning_Class (1).pdf" target="_blank" style="display:inline-block; margin-top:10px; background:#00509e; color:white; padding:9px 20px; border-radius:5px; text-decoration:none; font-size:0.9rem;">View Full Report (PDF)</a>
+  <!-- 3. METHODS -->
+  <section id="methods">
+    <h2>3. Methods</h2>
 
-</div>
+    <div class="arch-grid">
+      <div class="arch-card">
+        <h4>GRU Baseline</h4>
+        <ul>
+          <li>2-layer GRU, hidden size 64</li>
+          <li>Sequence length: 25 cycles</li>
+          <li>Output: scalar RUL (fully connected)</li>
+          <li>Optimizer: Adam, lr = 5×10⁻⁴</li>
+          <li>Batch size: 32, Epochs: 100</li>
+          <li>LR scheduler: ReduceLROnPlateau (factor 0.5, patience 10)</li>
+          <li>Loss: asymmetric scoring (see Introduction)</li>
+          <li>Final train loss: 2.2111 | val: 2.2872</li>
+        </ul>
+      </div>
+      <div class="arch-card">
+        <h4>Embed-RUL</h4>
+        <ul>
+          <li>Encoder: GRUCell, hidden C_L = 55</li>
+          <li>Decoder: GRUCell, output dim = 15 (PCA space)</li>
+          <li>Window W = 30; input: [xₜ; mₜ; δₜ] (45-dim)</li>
+          <li>Optimizer: Adam, lr = 1×10⁻³</li>
+          <li>Loss: masked reconstruction L_recon = Σ||(xₜ,ᵢ − x̂ₜ,ᵢ)·mₜ,ᵢ||²</li>
+          <li>Reference set Z_norm: 9,906 embeddings (first 75% of 80 training engines)</li>
+          <li>RUL via similarity: λ = 0.005, α = 0.95, R_max = 120</li>
+          <li>Best val loss: 72.18 (selected for inference)</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Health Indicator (HI)</h3>
+    <p>
+      The HI maps each engine's embedding trajectory onto a [0, 1] degradation signal by computing
+      the distance from the embedding to a reference set of "normal-state" embeddings (Z_norm, first 25%
+      of engine life). The HI increases monotonically from near-zero (healthy) toward its maximum (near-failure),
+      providing an interpretable degradation signal without labeled RUL targets during encoder training.
+    </p>
+
+    <h3>RUL Estimation via Similarity Matching</h3>
+    <p>
+      At test time, the encoder embeds the test engine's trajectory. The resulting HI curve is compared
+      against all 80 reference HI curves using exponential similarity weighting (λ = 0.005). A valid
+      prediction requires that the test curve length does not exceed the reference curve length
+      (t_D + T ≤ T_ref) — a constraint that fails entirely for longer-lived FD002/FD004 engines.
+    </p>
+
+    <figure>
+      <img src="images/fig_hi_curves.png" alt="Health Indicator curves for 80 training engines">
+      <figcaption>
+        Figure 2: Learned Health Indicator (HI) curves for Embed-RUL encoder across all 80 FD001 training
+        engines. Each curve increases monotonically from near-zero (healthy engine) toward its peak value
+        (near-failure). The diversity of curve shapes reflects different engine degradation patterns and
+        motivates the similarity-based RUL estimation approach.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- 4. RESULTS -->
+  <section id="results">
+    <h2>4. Results</h2>
+
+    <p>
+      Both models were trained exclusively on FD001 and evaluated on all four subsets. The GRU produces
+      a prediction for every test engine; Embed-RUL is limited to engines where a valid embedding match exists.
+    </p>
+
+    <div class="fig-grid">
+      <figure>
+        <img src="images/fig_rul_estimation.png" alt="GRU RUL prediction vs ground truth">
+        <figcaption>
+          Figure 3: GRU predicted vs. ground-truth RUL on the FD001 test set.
+          RMSE = 13.17 cycles; 60% of predictions fall within ±10 cycles of ground truth.
+          The model captures the general degradation trend but shows increased scatter near end-of-life.
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="images/fig_tsne.png" alt="t-SNE visualization of encoder embeddings">
+        <figcaption>
+          Figure 4: t-SNE visualization of Embed-RUL encoder embeddings. Normal-state windows
+          (first 25% of engine life, blue) cluster separately from degraded windows (last 25%, red),
+          confirming the encoder has learned a degradation-sensitive representation.
+          FD002/FD004 test embeddings would lie outside this training distribution.
+        </figcaption>
+      </figure>
+    </div>
+
+    <h3>Comprehensive Performance Table</h3>
+    <table>
+      <tr>
+        <th>Subset</th><th>Model</th><th>RMSE</th><th>MAE</th>
+        <th>A(%) ±10 cyc</th><th>FPR (%)</th><th>FNR (%)</th>
+        <th>Mean Error</th><th>Valid Preds</th>
+      </tr>
+      <!-- FD001 -->
+      <tr>
+        <td rowspan="2"><strong>FD001</strong><br><small style="color:var(--muted)">1 cond, 1 fault</small></td>
+        <td>GRU</td>
+        <td class="best">13.17</td><td>9.79</td><td class="best">60.0%</td>
+        <td>25.0%</td><td>15.0%</td><td>−1.86</td><td>100/100</td>
+      </tr>
+      <tr>
+        <td>Embed-RUL</td>
+        <td>64.02</td><td>52.33</td><td>23.0%</td>
+        <td>73.0%</td><td>4.0%</td><td>−49.75</td><td>100/100</td>
+      </tr>
+      <!-- FD002 -->
+      <tr>
+        <td rowspan="2"><strong>FD002</strong><br><small style="color:var(--muted)">6 cond, 1 fault</small></td>
+        <td>GRU</td>
+        <td>118.54</td><td>99.81</td><td>6.6%</td>
+        <td>93.4%</td><td>0.0%</td><td>−99.80</td><td>256/256</td>
+      </tr>
+      <tr>
+        <td>Embed-RUL</td>
+        <td class="na">—</td><td class="na">—</td><td class="na">—</td>
+        <td class="na">—</td><td class="na">—</td><td class="na">—</td>
+        <td style="color:#dc2626; font-weight:700;">0/256</td>
+      </tr>
+      <!-- FD003 -->
+      <tr>
+        <td rowspan="2"><strong>FD003</strong><br><small style="color:var(--muted)">1 cond, 2 faults</small></td>
+        <td>GRU</td>
+        <td class="best">42.06</td><td class="best">28.94</td><td class="best">34.0%</td>
+        <td>25.0%</td><td>41.0%</td><td>+16.57</td><td>100/100</td>
+      </tr>
+      <tr>
+        <td>Embed-RUL</td>
+        <td>70.25</td><td>58.71</td><td>13.8%</td>
+        <td>84.6%</td><td>1.5%</td><td>−57.42</td><td>65/100</td>
+      </tr>
+      <!-- FD004 -->
+      <tr>
+        <td rowspan="2"><strong>FD004</strong><br><small style="color:var(--muted)">6 cond, 2 faults</small></td>
+        <td>GRU</td>
+        <td>124.53</td><td>108.16</td><td>6.6%</td>
+        <td>93.4%</td><td>0.0%</td><td>−108.16</td><td>241/241</td>
+      </tr>
+      <tr>
+        <td>Embed-RUL</td>
+        <td class="na">—</td><td class="na">—</td><td class="na">—</td>
+        <td class="na">—</td><td class="na">—</td><td class="na">—</td>
+        <td style="color:#dc2626; font-weight:700;">0/241</td>
+      </tr>
+    </table>
+
+    <div class="box-warn">
+      <p><strong>Embed-RUL failure on FD002/FD004:</strong> The similarity-based RUL estimator requires
+      that the test engine's operational lifetime does not exceed any reference curve in the training set
+      (t_D + T ≤ T_ref). FD002 and FD004 engines operate under 6 conditions and run significantly longer
+      than FD001 training engines — no valid reference match is found for any of the 497 test engines in
+      these subsets. This is a fundamental algorithmic limitation, not a generalization failure of the encoder itself.</p>
+    </div>
+
+    <div class="box-result">
+      <p><strong>GRU cross-condition breakdown:</strong> The GRU produces predictions for all engines but
+      shows catastrophic distribution shift on FD002/FD004 (mean error −99 to −108 cycles, 93% FPR).
+      On FD003 (same operating condition, different fault), RMSE degrades from 13 to 42 — reflecting a
+      moderate fault-mode shift that the model partially handles.</p>
+    </div>
+  </section>
+
+  <!-- 5. STATISTICAL ANALYSIS -->
+  <section id="statistics">
+    <h2>5. Statistical Analysis</h2>
+
+    <p>
+      On subsets where both models produce valid predictions (FD001 and FD003), a paired t-test on
+      absolute prediction errors tests whether the difference in performance is statistically significant.
+    </p>
+
+    <table>
+      <tr>
+        <th>Subset</th><th>Comparison</th><th>t-statistic</th><th>p-value</th>
+        <th>n (pairs)</th><th>Conclusion</th>
+      </tr>
+      <tr>
+        <td>FD001</td>
+        <td>GRU vs. Embed-RUL |error|</td>
+        <td>−12.95</td>
+        <td class="best">&lt; 10⁻⁶</td>
+        <td>100</td>
+        <td>GRU significantly lower error</td>
+      </tr>
+      <tr>
+        <td>FD003</td>
+        <td>GRU vs. Embed-RUL |error|</td>
+        <td>−7.47</td>
+        <td class="best">&lt; 10⁻⁶</td>
+        <td>65</td>
+        <td>GRU significantly lower error</td>
+      </tr>
+    </table>
+
+    <p>
+      Both tests reject the null hypothesis (equal errors) at α = 0.001. Despite GRU's worse timeliness
+      score S on FD003 (S = 334,233 vs. Embed-RUL S = 105,570), the GRU's absolute RMSE advantage is
+      statistically decisive — and its 100% coverage (vs. 65/100 for Embed-RUL on FD003) is a practical
+      requirement for deployment.
+    </p>
+  </section>
+
+  <!-- 6. CONCLUSION -->
+  <section id="conclusion">
+    <h2>6. Conclusion</h2>
+
+    <p>
+      The GRU baseline demonstrates strong in-distribution performance (RMSE 13.17 on FD001) but fails
+      to generalize to multi-condition subsets — a known limitation of supervised RUL models trained on
+      a single operating regime. Embed-RUL's learned embeddings are interpretable and show clear
+      degradation structure in t-SNE space, but the similarity-based RUL estimator introduces a hard
+      constraint (test lifetime ≤ training reference) that prevents deployment on longer-running engines.
+    </p>
+    <p>
+      Future directions include domain adaptation for multi-condition generalization, attention-based
+      sequence models, and hybrid approaches that combine the GRU's prediction coverage with Embed-RUL's
+      interpretable Health Indicator representation.
+    </p>
+
+    <a class="btn-pdf" href="Deep_Learning_Class (1).pdf" target="_blank">📄 View Full Report (PDF)</a>
+  </section>
+
+  <!-- REFERENCES -->
+  <section id="references" class="references">
+    <h2>References</h2>
+    <ol>
+      <li>
+        Saxena, A., Goebel, K., Simon, D., &amp; Eklund, N. (2008).
+        <em>Damage propagation modeling for aircraft engine run-to-failure simulation.</em>
+        International Conference on Prognostics and Health Management (PHM). IEEE.
+      </li>
+      <li>
+        Biswas, S., Subramanian, A., &amp; Meckesheimer, M. (2023).
+        <em>Embed-RUL: Non-Parametric Remaining Useful Life Estimation Using Embeddings.</em>
+        arXiv preprint.
+      </li>
+      <li>
+        Cho, K., van Merriënboer, B., Gulcehre, C., Bahdanau, D., Bougares, F., Schwenk, H., &amp; Bengio, Y. (2014).
+        <em>Learning Phrase Representations using RNN Encoder–Decoder for Statistical Machine Translation.</em>
+        EMNLP 2014.
+      </li>
+    </ol>
+  </section>
+
+</div><!-- /container -->
+
+<footer>
+  <p>&copy; 2026 Fawaz Mallick. All rights reserved.</p>
+  <p style="margin-top:10px;"><a href="mailto:fawazmallick9@gmail.com">fawazmallick9@gmail.com</a> · <a href="https://www.linkedin.com/in/fawaz-mallick/" target="_blank">LinkedIn</a></p>
+</footer>
+
+<script>
+  // Highlight active section in section-nav
+  const secLinks = document.querySelectorAll('.section-nav a');
+  const sections = document.querySelectorAll('section[id]');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        secLinks.forEach(l => l.classList.remove('active'));
+        const a = document.querySelector(`.section-nav a[href="#${e.target.id}"]`);
+        if (a) { a.classList.add('active'); a.scrollIntoView({inline:'center', behavior:'smooth'}); }
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+
 </body>
 </html>

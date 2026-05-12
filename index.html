@@ -322,28 +322,28 @@
 <div id="hero">
   <img src="images/profile.png" alt="Fawaz Mallick">
   <h1>Fawaz Mallick</h1>
-  <p class="sub">Robotics Engineer | AI/ML | CMU Mechanical Engineering</p>
-  <p class="tagline">Building intelligent systems that interact with people — from surgical robots to prosthetic limbs. Driven by the belief that good engineering changes lives.</p>
+  <p class="sub">MS Mechanical Engineering · Carnegie Mellon University</p>
+  <p class="tagline">Graduate researcher at CMU building systems that work alongside people — from real-time prosthetic intent prediction to wearable exoskeleton sensing. Previously BS Biomedical Engineering, Rowan University (Cum Laude).</p>
   <div class="scroll-hint">scroll</div>
 </div>
 
 <!-- STORY SECTION -->
 <section id="story">
-  <h2 class="section-title">The Journey</h2>
+  <h2 class="section-title">Background</h2>
   <p>
-    It started sophomore year. I had a simple question: <em>"How do we help robots navigate complex spaces?"</em>
+    I completed my BS in Biomedical Engineering at Rowan University (Cum Laude, GPA 3.56/4.0, Dean's List) in May 2025, and I'm currently pursuing an MS in Mechanical Engineering at Carnegie Mellon University (QPA 3.34/4.0, expected May 2027). My focus is human-centered robotics — systems that work in direct contact with people and need to be safe, reliable, and aware of human intent.
   </p>
   <p>
-    That curiosity led me to my first research project — a 6-DOF surgical robot designed to assist in femur fracture realignment. I had no background in kinematics or configuration spaces. I learned fast. That steep learning curve, that combination of intense focus and perpetual confusion, taught me something fundamental: the best problems are the ones that seem impossible until you break them down.
+    My research path started at Rowan. As a Research Associate at the Robossis Lab (Cooper Medical Center, PI: Dr. Mohammed Abedin-Nasab), I developed an A* path planning algorithm with Bézier smoothing for 6-DOF femur fracture realignment, achieving 3.0 mm / 1.5° precision in simulation. That project built the foundation in kinematics and configuration-space planning that everything since has drawn on.
   </p>
   <p>
-    That project changed my trajectory. It showed me that robotics and control systems weren't abstract mathematics — they were solutions to real-world problems. It led me to CMU. It shaped every project since.
+    From there I moved to wearable robotics. Back at Rowan (PI: Dr. Mitja Trkov), I co-designed an FSR-instrumented thigh brace for measuring human-exoskeleton interaction forces and modeled the contact dynamics in OpenSim. That work was published at IFAC PapersOnLine 2025.
   </p>
   <p>
-    Now, I focus on robotics that interacts directly with people. Prosthetic limbs that understand user intent. Wearable exoskeletons that prevent falls. Surgical systems that enhance human precision. The challenge isn't just solving the math — it's understanding humans, building reliable systems, and creating something that meaningfully improves lives.
+    Now at CMU I'm a Graduate Research Assistant in Dr. Hartmut Geyer's Neuromechanical Systems Lab, working on real-time foot placement prediction for prosthetic limb control. I extended a Bayesian IMU-based predictor with three contributions — real-time online validation at 100 Hz, two novel inter-step features from ZUPT-INS dead-reckoning, and a probabilistic landing update — achieving 29.3 cm RMSE with 376 ms of prediction lead time on 108 over-ground steps.
   </p>
   <p style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 0.95rem;">
-    <strong>What you'll find here:</strong> My research projects (from surgical robotics to gait prediction), the technical skills I've developed (control theory, machine learning, robotics fundamentals), and the leadership roles that shaped how I approach problems.
+    <strong>Tools I work with:</strong> MATLAB / Simulink, Python (PyTorch, NumPy, Pandas, Scikit-learn), OpenSim, SolidWorks. Coursework spans robot dynamics, control theory, optimal control &amp; RL, machine learning, deep learning, and medical device regulation.
   </p>
 </section>
 
@@ -400,10 +400,10 @@
       <span class="card-arrow">Read the paper →</span>
     </a>
 
-    <a class="card" href="bayes.html">
-      <div class="card-tag">Bayesian Inference · IMU · In Progress</div>
-      <h3>Optimal State Estimator</h3>
-      <p>Probabilistic foot placement prediction during walking using sequential Bayesian updates over a spatial grid. Part of ongoing research toward publication. RMSE ~9.7 cm across 11,761 treadmill steps.</p>
+    <a class="card" href="prosthetics.html">
+      <div class="card-tag">Bayesian Inference · IMU · Real-Time</div>
+      <h3>Real-Time Foot Placement Prediction</h3>
+      <p>Sequential Bayesian grid predictor extended with ZUPT-INS inter-step features and a 9th-observation landing update. 108 over-ground steps, RMSE = 29.3 cm, 376 ms lead time, &lt;10 ms per step.</p>
       <span class="card-arrow">Read the paper →</span>
     </a>
 
@@ -437,9 +437,9 @@
   <div class="card-grid">
 
     <a class="card" href="ml_skills.html">
-      <div class="card-tag">AI &amp; Machine Learning</div>
-      <h3>Intro to Deep Learning</h3>
-      <p>MLPs → CNNs → RNNs/LSTMs → optimization → RL policy gradients. 13-module course at CMU. Applied to time-series prediction, generative modeling, and control policy learning.</p>
+      <div class="card-tag">Two Courses · Consecutive Semesters</div>
+      <h3>Machine Learning &amp; Deep Learning</h3>
+      <p>Machine Learning &amp; AI for Engineers (classical ML → GRU/LSTM → RUL prediction on NASA C-MAPSS) + Intro to Deep Learning (transformer for Burgers PDE, MAE/ViT for advection, β-VAE for airfoils).</p>
       <span class="card-arrow">Explore coursework →</span>
     </a>
 

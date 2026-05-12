@@ -421,6 +421,105 @@
   </div>
 </section>
 
+<!-- DEEP LEARNING (separate course, following semester) -->
+<section>
+  <h2>Deep Learning — A Separate Course</h2>
+  <p>
+    <strong>AI &amp; Machine Learning</strong> and <strong>Deep Learning</strong> are two distinct graduate courses
+    taken in consecutive semesters at CMU. The AI/ML course (above) covers classical foundations through
+    sequence models and generative basics. Deep Learning goes deeper: the three capstone homeworks below
+    each required implementing a non-trivial architecture from scratch and applying it to a PDE or
+    engineering dataset.
+  </p>
+
+  <div class="hw-grid">
+    <div class="hw-card">
+      <div class="hw-tag">HW7 · Deep Learning</div>
+      <h4>Decoder-Only Transformer for the 1D Burgers PDE</h4>
+      <p>
+        Implemented scaled dot-product attention in NumPy, then built a full decoder-only transformer
+        in PyTorch to solve the <strong>1D Burgers equation</strong> — a nonlinear PDE that develops
+        sharp shock discontinuities. The model autoregressively generates the solution field one time
+        step at a time, conditioned on previous solution values.
+      </p>
+      <p>
+        Key implementation: causal masking prevents the model from attending to future time steps
+        during autoregressive generation. Positional encodings encode the spatial grid.
+        Trained with MSE loss against ground-truth numerical solutions.
+      </p>
+      <p class="metric">Architecture: Decoder-only transformer · Numpy attention kernel · PyTorch training</p>
+    </div>
+
+    <div class="hw-card">
+      <div class="hw-tag">HW8 · Deep Learning</div>
+      <h4>Masked Autoencoder (ViT) for 1D Advection PDE</h4>
+      <p>
+        Implemented a <strong>Masked Autoencoder (MAE)</strong> with a Vision Transformer encoder and
+        lightweight decoder for self-supervised learning on the 1D Advection equation. During training,
+        75% of input patches are masked; the model learns to reconstruct the missing solution field.
+      </p>
+      <p>
+        The t-SNE visualization of learned latent embeddings reveals that the model <em>self-organizes
+        by wave speed</em> without ever seeing wave speed labels — purely from reconstruction loss.
+        <strong>Validation MSE = 0.0409</strong> (target threshold &lt; 0.05, achieves full marks).
+      </p>
+      <p class="metric">Valid MSE = 0.0409 · Latent space self-organizes by wave speed</p>
+    </div>
+
+    <div class="hw-card">
+      <div class="hw-tag">HW9 · Deep Learning</div>
+      <h4>β-VAE on the UIUC Airfoil Database</h4>
+      <p>
+        Trained a <strong>β-Variational Autoencoder</strong> on the UIUC airfoil shape database.
+        The encoder maps airfoil coordinates to a Gaussian latent distribution; the decoder
+        reconstructs (or generates) aerodynamic profiles. The β coefficient controls the
+        KL divergence weight in the ELBO loss, trading reconstruction fidelity for disentanglement.
+      </p>
+      <p>
+        By sampling from the learned latent space, the model generates <strong>novel aerodynamic
+        profiles</strong> — smooth, physically plausible airfoil shapes not present in the training set.
+        The reparameterization trick enables end-to-end gradient flow through the stochastic sampling.
+      </p>
+      <p class="metric">Generates novel aerodynamic profiles · ELBO = reconstruction + β·KL</p>
+    </div>
+  </div>
+
+  <h3>Example Works — Selected Figures from Deep Learning Assignments</h3>
+  <p style="font-size:0.9rem; color:var(--muted); margin-bottom:24px;">
+    Figures below are extracted directly from the homework notebooks. All implementations are independent coursework.
+  </p>
+
+  <div class="image-grid">
+    <figure>
+      <img src="images/hw7_cell19_out0.png" alt="HW7 — Transformer ground-truth vs. predicted Burgers solution">
+      <figcaption style="font-size:0.83rem; color:var(--muted); margin-top:8px; font-style:italic; text-align:center; line-height:1.5;">
+        Fig. HW7: Decoder-only transformer on 1D Burgers equation — ground truth (top), autoregressive prediction (middle), and absolute error (bottom). The model captures the shock front location despite no explicit physics constraint.
+      </figcaption>
+    </figure>
+    <figure>
+      <img src="images/hw8_cell19_out0.png" alt="HW8 — MAE masked reconstruction of 1D Advection PDE solutions">
+      <figcaption style="font-size:0.83rem; color:var(--muted); margin-top:8px; font-style:italic; text-align:center; line-height:1.5;">
+        Fig. HW8: Masked Autoencoder reconstruction — 4×3 grid of 1D Advection PDE solutions. Left column: original; center: masked input (75% masked); right: ViT encoder-decoder reconstruction. Valid MSE = 0.0409.
+      </figcaption>
+    </figure>
+  </div>
+
+  <div class="image-grid">
+    <figure>
+      <img src="images/hw8_cell24_out1.png" alt="HW8 — t-SNE of MAE latent embeddings self-organizing by wave speed">
+      <figcaption style="font-size:0.83rem; color:var(--muted); margin-top:8px; font-style:italic; text-align:center; line-height:1.5;">
+        Fig. HW8: t-SNE of MAE latent embeddings colored by advection wave speed. The latent space self-organizes by wave speed — entirely emergent from reconstruction loss alone, with no wave speed labels during training.
+      </figcaption>
+    </figure>
+    <figure>
+      <img src="images/hw9_cell20_out0.png" alt="HW9 — β-VAE generated aerodynamic profiles from UIUC airfoil database">
+      <figcaption style="font-size:0.83rem; color:var(--muted); margin-top:8px; font-style:italic; text-align:center; line-height:1.5;">
+        Fig. HW9: Novel airfoil profiles generated by sampling from the β-VAE latent space. Shapes are smooth and aerodynamically plausible — none are copies of training examples. Generated by decoding random draws from 𝒩(0,I).
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
 <!-- APPLIED TO REAL PROBLEMS -->
 <section>
   <h2>Applied to Real Problems</h2>
@@ -437,7 +536,7 @@
   </p>
 
   <div class="highlight-box">
-    <p><strong>Current results:</strong> Offline evaluation on motion capture + IMU data (11,761 steps, 8 subjects, 8 treadmill speeds) shows RMSE ~9.7 cm Euclidean foot placement error. The Bayesian framework outperforms a pure likelihood estimate at low speeds where gait is most periodic; at high speeds, speed-dependent stride length variability drives anterior-posterior error up to ~14 cm while medial-lateral error remains consistently low (~3 cm).</p>
+    <p><strong>Current results:</strong> Real-time evaluation on 108 over-ground walking steps from a live heel-mounted HWT906 IMU (100 Hz, &lt;10 ms per-step inference) achieves <strong>RMSE<sub>|d|</sub> = 29.3 cm</strong> (best configuration: subject-specific IMU 8-feature + landing update), with predictions issued <strong>376 ms before heel-strike</strong> — more than 2× the prosthetic ankle actuation budget. Subject-specific IMU training on free-walking data (no lab equipment) reduces placement error by <strong>46%</strong> over out-of-domain motion-capture models. The system represents the first real-time online validation of this Bayesian framework.</p>
   </div>
 
   <p>

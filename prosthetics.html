@@ -269,21 +269,23 @@
 
     <div class="fig-grid">
       <figure>
-        <img src="images/sample_step_posteriors.png" alt="Sequential posterior distributions">
+        <img src="images/fig_training.png" alt="Training foot placement distribution">
         <figcaption>
-          Figure 1: Sequential posterior distributions at selected steps for a representative trial.
-          Each frame shows the probability map over the foot placement grid. As gait history
-          accumulates, the posterior sharpens — demonstrating that sequential context improves
-          prediction confidence over time.
+          Figure 1: Training foot placement distribution (n = 9,279 steps, 8-feature model).
+          Left: scatter of AP vs. ML foot placement positions — the treadmill constraint holds
+          ML near zero while AP spans ~50–250 cm across speeds. Right: step length (AP, mean
+          165 cm) and step width (ML, mean ≈ 0.2 cm) distributions confirm normal treadmill
+          gait biomechanics used as ground truth for Bayesian likelihood training.
         </figcaption>
       </figure>
       <figure>
-        <img src="images/bayes_visualization.png" alt="Bayesian update visualization">
+        <img src="images/fig_gamma.png" alt="Per-feature likelihood residual standard deviations">
         <figcaption>
-          Figure 2: Bayesian update for a single step. Left: prior distribution (Gaussian
-          centered at mean of previous 2 placements). Center: likelihood from IMU feature models.
-          Right: posterior (prior × likelihood, normalized). The predicted position is the
-          posterior mode.
+          Figure 2: Per-feature likelihood model residual standard deviations (γ_i) across four
+          model configurations. IMU-derived models (red: IMU-6, green: IMU-8) achieve residuals
+          comparable to VICON ground-truth models (blue: VICON-6, teal: VICON-8), validating that
+          inertial-only sensing provides sufficient feature quality for foot placement likelihood
+          estimation without optical motion capture.
         </figcaption>
       </figure>
     </div>
@@ -325,12 +327,14 @@
     </table>
 
     <figure>
-      <img src="images/AB13_scatter.png" alt="Predicted vs actual foot placements for AB13">
+      <img src="images/fig_results.png" alt="Foot placement prediction RMSE across all 8 configurations">
       <figcaption>
-        Figure 3: Predicted (×) vs. actual (●) foot placements for subject AB13 across all trials.
-        The anterior-posterior axis (x, stride length ~0.78 m mean) shows substantially greater
-        prediction variance than the medial-lateral axis (y, stride width ≈ 0). Speed-dependent
-        clustering is visible — faster trials produce longer, more spread strides.
+        Figure 3: Foot placement prediction RMSE across all 8 model configurations (n = 108 steps).
+        VICON-trained models (left) use optical motion-capture features; IMU-trained models (right)
+        use only inertial sensor features available on a real prosthetic device. The best IMU-only
+        configuration (IMU 8-feat + inter-step features) achieves RMSE_d = 29.3 cm, demonstrating
+        that wearable-sensor-only prediction is feasible — a necessary condition for real-time
+        prosthetic deployment without a lab environment.
       </figcaption>
     </figure>
 

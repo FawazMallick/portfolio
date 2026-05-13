@@ -186,7 +186,7 @@
       impedance and trajectory <em>before</em> heel-strike; reactive ground-contact strategies sacrifice push-off
       energy and impair stability&nbsp;[2]. Foot placement prediction during the swing phase is therefore a central
       problem in wearable robotics&nbsp;[1]. Lower-limb amputees fall at nearly twice the rate of age-matched controls,
-      often during transitional locomotion tasks — a predictive controller that anticipates landing position could
+      often during transitional locomotion tasks a predictive controller that anticipates landing position could
       enable pre-emptive impedance adjustments and reduce falls.</p>
     </div>
 
@@ -244,7 +244,7 @@
       We retain the six swing-phase features of Chen et al.&nbsp;[9] (f<sub>A</sub>–f<sub>F</sub>) and add
       two novel <strong>inter-step features</strong>: x<sub>g,prev</sub> and y<sub>g,prev</sub>, the AP and ML
       foot placements of the <em>immediately preceding step</em> estimated from IMU dead-reckoning.
-      No laboratory, motion-capture system, or additional sensor is required — these values are computed
+      No laboratory, motion-capture system, or additional sensor is required these values are computed
       entirely from the ongoing ZUPT-INS trajectory.
     </p>
 
@@ -264,7 +264,7 @@
     <h3>B. Modified Prior Distribution</h3>
     <p>
       Unlike Chen et al., who centre their prior on the mean of the two most recent <em>measured</em> placements,
-      our prior anchors on the single most recent <em>predicted</em> centroid — compatible with real-time
+      our prior anchors on the single most recent <em>predicted</em> centroid, compatible with real-time
       deployment where ground-truth positions are unavailable. At the start of each swing phase:
     </p>
     <div class="eq">
@@ -301,7 +301,7 @@
           Fig. 3. IMU-8 training foot placements (n = 9,279 steps after 1-σ lateral and previous-step
           outlier filters). Left: scatter of AP vs. ML foot placement positions. Right: step length (AP,
           mean 165 cm, σ = 30 cm) and step width (ML, mean 0.2 cm, σ = 2 cm) distributions.
-          Training data collected over 96 free-walking sessions — no treadmill or motion capture.
+          Training data collected over 96 free-walking sessions, no treadmill or motion capture.
         </figcaption>
       </figure>
       <figure>
@@ -350,7 +350,7 @@
       Features f<sub>D</sub>–f<sub>F</sub> require the vertical apex to have passed (mid-swing).
       All six original features plus the two inter-step features are available at approximately
       <strong>50% of the swing phase</strong>, providing <strong>≈376 ms of prediction lead time</strong>
-      before heel-strike — more than 2× the prosthetic ankle actuation budget (~150 ms).
+      before heel-strike, more than 2× the prosthetic ankle actuation budget (~150 ms).
     </p>
   </section>
 
@@ -386,7 +386,7 @@
       <p><strong>Protocol:</strong> A single real-time evaluation session of 121 steps of level-ground
       over-ground walking was recorded. After quality filtering: 111 steps remain; the first 3 (warm-up)
       are excluded, leaving <strong>n = 108 evaluation steps</strong>. The Bayesian grid predictor runs
-      live at 100 Hz on the raw IMU stream — no post-processing.</p>
+      live at 100 Hz on the raw IMU stream, no post-processing.</p>
       <p><strong>Configurations tested:</strong> 8 total, crossing training source (VICON / IMU) ×
       feature set (6-feat / 8-feat) × landing update (±). All eight are evaluated on the same 108 steps.</p>
     </div>
@@ -452,16 +452,16 @@
       <tr><td>Chen et al. grid-map [9]</td><td>~150 ms</td></tr>
       <tr><td>Prosthetic ankle actuation budget</td><td>~150 ms</td></tr>
     </table>
-    <p class="table-caption">Table IV. Online timing — 108-step session. Prediction lead time (376 ms) exceeds the prosthetic actuation budget by more than 2×. Per-step inference at &lt;10 ms is a 15× speedup over the MATLAB implementation of Chen et al. [9].</p>
+    <p class="table-caption">Table IV. Online timing, 108-step session. Prediction lead time (376 ms) exceeds the prosthetic actuation budget by more than 2×. Per-step inference at &lt;10 ms is a 15× speedup over the MATLAB implementation of Chen et al. [9].</p>
 
     <div class="box-result">
       <p><strong>Key findings:</strong></p>
       <ul>
         <li><strong>Domain gap (7× error increase):</strong> VICON-trained models achieve &lt;7 cm on the treadmill but degrade to ≈54 cm RMSE<sub>|d|</sub> on free walking, driven by differences in constrained vs. variable-speed kinematics, spontaneous direction changes, and footwear-surface dynamics</li>
-        <li><strong>IMU subject-specific training closes the gap:</strong> Training on 96 free-walking sessions (no lab equipment) reduces free-walking error to 29.3 cm — a 46% reduction over VICON models</li>
+        <li><strong>IMU subject-specific training closes the gap:</strong> Training on 96 free-walking sessions (no lab equipment) reduces free-walking error to 29.3 cm a 46% reduction over VICON models</li>
         <li><strong>Landing update corrects lateral drift:</strong> For IMU Variant 1, the 9th observation reduces RMSE<sub>|d|</sub> by 4.6 cm (−12.7%), driven primarily by lateral correction (ΔRMSE<sub>y</sub> = −12.6 cm). The ZUPT-INS ML dead-reckoning is more reliable (σ<sub>pp,y</sub> = 16.7 cm) than AP (σ<sub>pp,x</sub> = 77.5 cm)</li>
         <li><strong>Inter-step features require the lateral filter:</strong> Without the 1-σ lateral filter, γ<sub>y<sub>g,prev</sub></sub> = 0.130 (turn-contaminated, noisy); after filtering it drops to 0.035, validating the inter-step feature approach</li>
-        <li><strong>376 ms lead time:</strong> Predictions are emitted at ≈52% of the swing phase — well within the ~150 ms actuation budget of powered prosthetic ankles</li>
+        <li><strong>376 ms lead time:</strong> Predictions are emitted at ≈52% of the swing phase, well within the ~150 ms actuation budget of powered prosthetic ankles</li>
         <li><strong>&lt;10 ms per step:</strong> 15× faster than Chen et al.'s MATLAB implementation, enabling real-time embedded deployment</li>
       </ul>
     </div>
@@ -500,7 +500,7 @@
       This is ongoing work. Current active areas of investigation include:
     </p>
     <ul>
-      <li><strong>Neural network architectures:</strong> Benchmarking LSTM, temporal CNN, and transformer-based sequence models against the Bayesian baseline — exploring whether learned representations capture placement patterns that the hand-engineered features miss</li>
+      <li><strong>Neural network architectures:</strong> Benchmarking LSTM, temporal CNN, and transformer-based sequence models against the Bayesian baseline, exploring whether learned representations capture placement patterns that the hand-engineered features miss</li>
       <li><strong>Hip-only intent detection:</strong> Deriving equivalent swing-phase features from a hip- or thigh-mounted IMU to avoid the circular-sensing problem for amputee users (prosthetic limb sensors reflect device output, not user intent)</li>
       <li><strong>Multi-subject validation:</strong> Validating against optical motion capture across multiple subjects to obtain absolute error bounds beyond single-subject evaluation</li>
       <li><strong>Embedded deployment:</strong> Evaluating latency and power budget on microcontroller platforms typical of powered prosthetic knees and ankles</li>

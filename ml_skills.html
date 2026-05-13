@@ -137,7 +137,7 @@
   <h1>AI & Machine Learning</h1>
   <p class="subtitle">From Classical Models → Real-World Engineering Applications</p>
   <p class="intro">
-    I didn't start with neural networks. I started with understanding <em>why</em> models work — gradient descent on a logistic regression, the geometry of support vectors, the math behind decision trees. That foundation made everything that came after stick. This page traces that arc: from implementing ML from scratch in coursework to exploring ML/AI models for predicting human intent for prosthetic leg control in my current research.
+    I didn't start with neural networks. I started with understanding why models work gradient descent on a logistic regression, the geometry of support vectors, the math behind decision trees. That foundation made everything that came after stick. This page traces that arc: from implementing ML from scratch in coursework to exploring ML/AI models for predicting human intent for prosthetic leg control in my current research.
   </p>
 </div>
 
@@ -145,7 +145,7 @@
 <section>
   <h2>The Learning Arc</h2>
   <p>
-    Machine Learning &amp; AI for Engineers covered 13 modules of classical and modern ML — from linear models to sequence models. Every algorithm was implemented from scratch before using a library. Representative topics:
+    Machine Learning &amp; AI for Engineers covered 13 modules of classical and modern ML, from linear models to sequence models. Every algorithm was implemented from scratch before using a library. Representative topics:
   </p>
   <div class="course-grid">
     <div class="course-card">
@@ -211,7 +211,7 @@
       <div class="hw-tag">Module 5</div>
       <h4>Decision Tree vs Random Forest</h4>
       <p>
-        Trained and compared a depth-10 decision tree against a 100-estimator random forest on the <strong>UCI Cylinder Bands dataset</strong> — 39 features, binary classification. Analyzed why bootstrap aggregation reduces variance: decorrelated trees average out individual biases.
+        Trained and compared a depth-10 decision tree against a 100-estimator random forest on the <strong>UCI Cylinder Bands dataset</strong> 39 features, binary classification. Analyzed why bootstrap aggregation reduces variance: decorrelated trees average out individual biases.
       </p>
       <p class="metric">Random Forest: measurably higher generalization vs. single tree</p>
     </div>
@@ -229,7 +229,7 @@
       <div class="hw-tag">Module 9–11</div>
       <h4>Sequence Models: RNNs, LSTMs, Attention</h4>
       <p>
-        Implemented vanilla RNN backpropagation through time, then LSTM with all four gate equations from scratch. Studied vanishing gradients experimentally — recorded gradient norms across sequence depths 10, 50, 100. Also implemented scaled dot-product attention.
+        Implemented vanilla RNN backpropagation through time, then LSTM with all four gate equations from scratch. Studied vanishing gradients experimentally recorded gradient norms across sequence depths 10, 50, 100. Also implemented scaled dot-product attention.
       </p>
       <p class="metric">Gradient norms visualized across depths — collapse point confirmed</p>
     </div>
@@ -294,7 +294,7 @@
       </p>
       <p>
         By sampling from the learned latent space, the model generates <strong>novel aerodynamic
-        profiles</strong> — smooth, physically plausible airfoil shapes not present in the training set.
+        profiles</strong> smooth, physically plausible airfoil shapes not present in the training set.
         The reparameterization trick enables end-to-end gradient flow through the stochastic sampling.
       </p>
       <p class="metric">Generates novel aerodynamic profiles · ELBO = reconstruction + β·KL</p>
@@ -341,7 +341,7 @@
 <section>
   <h2>Applied to Real Problems</h2>
   <p>
-    Beyond coursework, I've applied ML methods to engineering domains that I care about — starting with turbofan RUL prediction and extending into human gait analysis. Both are harder than clean benchmark datasets: real-world noise, inter-subject variability, and stakes that matter.
+    Beyond coursework, I've applied ML methods to engineering domains that I care about, starting with turbofan RUL prediction and extending into human gait analysis. Both are harder than clean benchmark datasets: real-world noise, inter-subject variability, and stakes that matter.
   </p>
 
   <h3>Foot Placement Prediction (Current RA Research)</h3>
@@ -353,7 +353,7 @@
   </p>
 
   <div class="highlight-box">
-    <p><strong>Current results:</strong> Real-time evaluation on 108 over-ground walking steps from a live heel-mounted HWT906 IMU (100 Hz, &lt;10 ms per-step inference) achieves <strong>RMSE<sub>|d|</sub> = 29.3 cm</strong>, with predictions issued <strong>376 ms before heel-strike</strong> — more than 2× the prosthetic ankle actuation budget. Subject-specific IMU training on free-walking data reduces placement error by <strong>46%</strong> over out-of-domain motion-capture models.</p>
+    <p><strong>Current results:</strong> Real-time evaluation on 108 over-ground walking steps from a live heel-mounted HWT906 IMU (100 Hz, &lt;10 ms per-step inference) achieves <strong>RMSE<sub>|d|</sub> = 29.3 cm</strong>, with predictions issued <strong>376 ms before heel-strike</strong>, more than 2× the prosthetic ankle actuation budget. Subject-specific IMU training on free-walking data reduces placement error by <strong>46%</strong> over out-of-domain motion-capture models.</p>
   </div>
 
   <p>
@@ -368,7 +368,7 @@
     The thread across all of this work is the same: <em>building models that are right for their domain</em>, not just models that score well on a benchmark. A model that gives uncertain predictions on a hard case is more useful than one that confidently outputs the wrong answer.
   </p>
   <p>
-    I want to keep working at the intersection of ML and physical systems — where models have to interact with sensors, bodies, and environments that don't cooperate. The engineering constraints make the problems harder and the solutions more meaningful.
+    I want to keep working at the intersection of ML and physical systems, where models have to interact with sensors, bodies, and environments that don't cooperate. The engineering constraints make the problems harder and the solutions more meaningful.
   </p>
 </section>
 

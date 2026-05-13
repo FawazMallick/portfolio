@@ -152,7 +152,7 @@
   <div class="abstract" id="abstract">
     <div class="abstract-label">Abstract</div>
     <p>
-      The two-wheeled inverted pendulum (TWIP) — a classic underactuated system — serves as a testbed for
+      The two-wheeled inverted pendulum (TWIP), a classic underactuated system that serves as a testbed for
       progressively more powerful control strategies. Starting from a linearized model, an LQR controller
       is designed and a Kalman filter is added for noisy state estimation. Moving to the nonlinear dynamics,
       an iterative LQR (iLQR) achieves large-angle trajectory optimization (drag-race to φ* = 2π rad in
@@ -222,7 +222,7 @@
     <p>
       The Linear Quadratic Regulator minimizes the infinite-horizon cost J = ∫(xᵀQx + uᵀRu)dt by
       solving the continuous Algebraic Riccati Equation (CARE) for the optimal feedback gain K.
-      Cost matrices are designed using the "Bryson rule" — each diagonal entry is 1/max_value²:
+      Cost matrices are designed using the "Bryson rule", each diagonal entry is 1/max_value²:
     </p>
 
     <div class="box-method">
@@ -316,8 +316,8 @@
 
     <div class="box-problem">
       <p><strong>Limitation of linear LQR:</strong> The LQR is derived from the linearized dynamics at
-      θ = 0. For large-angle maneuvers — such as a "drag race" where the wheel must rotate a full 2π
-      radians — the linearization is invalid and the LQR controller fails. A nonlinear trajectory
+      θ = 0. For large-angle maneuvers such as a "drag race" where the wheel must rotate a full 2π
+      radians, the linearization is invalid and the LQR controller fails. A nonlinear trajectory
       optimizer is required.</p>
     </div>
 
@@ -404,7 +404,7 @@
     <h2>5. Neural Network Policy</h2>
 
     <div class="box-problem">
-      <p><strong>Motivation:</strong> Can a small neural network — trained purely from data — match
+      <p><strong>Motivation:</strong> Can a small neural network trained purely from data match
       or exceed the performance of the analytically derived linear controller? This question is
       central to learning-based control: replacing hand-derived controllers with learned policies
       that may generalize better to nonlinear regimes.</p>
@@ -441,7 +441,7 @@
     <p>
       The pre-trained network is fine-tuned by directly maximizing survival time using L-BFGS-B
       with parameter bounds [−10, 10] (max 5,000 iterations). The cost function is negative
-      survival time — the optimizer drives the policy to keep the robot balanced as long as possible.
+      survival time, the optimizer drives the policy to keep the robot balanced as long as possible.
     </p>
 
     <h3>Performance Comparison</h3>
@@ -502,7 +502,7 @@
         <img src="images/part1a_banana.png" alt="Rosenbrock function">
         <figcaption>
           Figure 11: 4D Rosenbrock function landscape (projected). The global minimum at
-          x* = [1,1,1,1] lies in a narrow curved valley — challenging for both neural
+          x* = [1,1,1,1] lies in a narrow curved valley, challenging for both neural
           surrogates and gradient-free optimizers with limited samples.
         </figcaption>
       </figure>
@@ -535,7 +535,7 @@
       The TWIP demonstrates the value of iterative model improvement: linear tools (LQR, Kalman) are
       precise and efficient in the small-angle regime, while nonlinear tools (iLQR, NN) unlock the
       full operating envelope. Imitation learning provides a strong initialization that dramatically
-      accelerates policy optimization — a pattern central to modern robot learning systems.
+      accelerates policy optimization, a pattern central to modern robot learning systems.
     </p>
   </section>
 

@@ -157,7 +157,7 @@
     <p>
       This page covers three graduate courses forming the core of my controls and robotics foundation
       at CMU. <strong>Robot Dynamics &amp; Analysis (RDA)</strong> developed rigorous mathematical
-      tools — screw theory, SE(3), product of exponentials, Jacobians, and constrained dynamics —
+      tools: screw theory, SE(3), product of exponentials, Jacobians, and constrained dynamics,
       applied to multi-DOF manipulators. <strong>Modern Control Theory (MCT)</strong> moved from
       theory to simulation, implementing PID, LQR, A* planning, and EKF SLAM in Webots across
       five progressive projects. <strong>Optimal Control &amp; Reinforcement Learning (OCRL)</strong>
@@ -212,8 +212,8 @@
   <section id="mct">
     <h2>2. Modern Control Theory (MCT) — Webots Projects</h2>
     <p>
-      MCT applied state-space control, planning, and estimation in Webots — a 3D robot simulation
-      environment — across five progressive projects. Each project built on the previous, from
+      MCT applied state-space control, planning, and estimation in Webots, a 3D robot simulation
+      environment across five progressive projects. Each project built on the previous, from
       basic PID control to full SLAM.
     </p>
 
@@ -222,7 +222,7 @@
         <div class="proj-label">Project 1</div>
         <div class="proj-title">Vehicle Path Tracking — Tesla Model 3 Bicycle Model</div>
         <p>Implemented longitudinal PID speed control (target: 5.0 m/s) with rolling resistance
-        feedforward (F_roll = 0.019·m·g). Lateral control via pure pursuit — steering toward a
+        feedforward (F_roll = 0.019·m·g). Lateral control via pure pursuit steering toward a
         look-ahead point 40 waypoints ahead on the reference path.</p>
         <p>Vehicle parameters: m=1,888.6 kg, I<sub>z</sub>=25,854 kg·m², l<sub>f</sub>=1.55 m,
         l<sub>r</sub>=1.39 m (bicycle model approximation).</p>
@@ -235,7 +235,7 @@
         <p>Generated optimal vehicle trajectories for constrained maneuvers (lane change and
         parallel parking) using polynomial trajectory planning with boundary conditions on
         position, velocity, and acceleration at initial and final states.</p>
-        <p>Compared greedy vs. optimal controllers — the optimal approach satisfied comfort
+        <p>Compared greedy vs. optimal controllers, the optimal approach satisfied comfort
         constraints (bounded jerk) that the reactive controller violated.</p>
         <div class="proj-tech">Tools: Python · Webots · Polynomial Trajectory · scipy.linalg</div>
       </div>

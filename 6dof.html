@@ -177,7 +177,7 @@
       k<sub>τ</sub>=0.1 Nm/°) guides the operator's Sigma.7 haptic controller along the planned
       trajectory in real time. Experimental evaluation on a midshaft femur fracture scenario
       demonstrates ≤3.0 mm translational and ≤1.5° rotational accuracy, with planning time under
-      2 seconds — representing a >90% improvement over traditional manual reduction methods [1].
+      2 seconds, representing a >90% improvement over traditional manual reduction methods [1].
     </p>
   </div>
 
@@ -187,8 +187,8 @@
 
     <div class="box-problem">
       <p><strong>Clinical Problem:</strong> Femur fractures account for approximately 280,000
-      hospitalizations annually in the United States [2]. Intramedullary nailing — the standard
-      treatment — requires manual traction and rotation of the distal bone fragment to restore
+      hospitalizations annually in the United States [2]. Intramedullary nailing the standard
+      treatment requires manual traction and rotation of the distal bone fragment to restore
       anatomical alignment before fixation. This process is imprecise, reliant on fluoroscopic
       X-ray visualization (operator radiation exposure), and physically exhausting for the surgical
       team during lengthy cases.</p>
@@ -268,7 +268,7 @@
       Standard A* operates on a discretized graph; the challenge here is scaling it to a
       6-dimensional state space (x, y, z, α, β, γ) with resolution sufficient for surgical
       accuracy. The modified version uses a 1 mm translation grid and 1° rotation grid,
-      giving approximately 100×100×100×360×360×360 reachable states — only a small fraction
+      giving approximately 100×100×100×360×360×360 reachable states only a small fraction
       of which are ever expanded in practice due to the heuristic.
     </p>
 
@@ -409,7 +409,7 @@
       <p><strong>Key findings:</strong> The path planning algorithm successfully generated collision-free
       6D trajectories for the evaluated fracture configuration, with planning times consistently
       under 2 seconds. The system achieved ≤3.0 mm translational accuracy and ≤1.5° rotational
-      accuracy at final reduction — exceeding the clinical target of 5 mm / 5° for intramedullary
+      accuracy at final reduction exceeding the clinical target of 5 mm / 5° for intramedullary
       nailing.</p>
     </div>
 

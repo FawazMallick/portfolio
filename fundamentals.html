@@ -154,7 +154,6 @@
       <span class="tag">ISO 13485</span>
       <span class="tag">FDA 510(k)</span>
       <span class="tag">Biomechanics</span>
-      <span class="tag">OpenSim</span>
     </div>
     <h1>Regulatory &amp; Medical Device</h1>
     <p class="subtitle">Finite Element Analysis · Medical Device Regulation · Biomechanics &amp; Gait</p>
@@ -163,15 +162,14 @@
   <div class="abstract">
     <div class="abstract-label">Course Overview</div>
     <p>
-      This page covers the biomedical engineering foundation courses at Rowan University that
-      directly inform my wearable robotics research. <strong>Finite Element Analysis</strong>
-      developed the tools to evaluate structural integrity of device components from first
-      principles, applying ISO 7206 fatigue standards to implant simulation. The
-      <strong>Medical Device Regulatory Bootcamp</strong> simulated a Class III device startup
+      This page covers three separate undergraduate courses at Rowan University.
+      <strong>Finite Element Analysis</strong> covered structural simulation from first principles,
+      including mesh generation, global stiffness assembly, and implant fatigue analysis per ISO 7206.
+      The <strong>Medical Device Regulatory Bootcamp</strong> simulated a Class III device startup
       through FDA 510(k) submission — producing SOPs, CAPA forms, design history files, and
-      ISO 13485 audit documentation. <strong>Biomechanics &amp; Gait Analysis</strong> provided
-      the movement science grounding that connects sensor signals to human intent — the domain
-      knowledge underlying both the exoskeleton and prosthetics research projects.
+      ISO 13485 audit documentation. <strong>Biomechanics &amp; Gait Analysis</strong> covered
+      the mechanics of human movement: gait cycle phases, joint kinetics, ground reaction forces,
+      and inverse dynamics.
     </p>
   </div>
 
@@ -182,10 +180,10 @@
     <h3>1.1 Course Overview</h3>
     <p>
       FEA coursework developed the mathematical and computational foundation for structural
-      analysis of medical device components. Rather than relying on commercial solvers as black
-      boxes, the course required building the FEA pipeline from first principles — from mesh
-      generation through global stiffness assembly and stress recovery — giving insight into what
-      software like ANSYS and Abaqus are actually computing.
+      analysis of medical device components. The course required building the FEA pipeline from
+      first principles — from mesh generation through global stiffness assembly and stress recovery
+      — and applying it using <strong>SolidWorks Simulation (Active Simulation)</strong> alongside
+      custom MATLAB solvers, giving insight into what the software is actually computing.
     </p>
 
     <div class="domain-grid">
@@ -300,10 +298,10 @@
 
     <h3>2.1 Overview</h3>
     <p>
-      The Medical Device Regulatory Bootcamp was a capstone course that simulated the full lifecycle
-      of a Class III medical device startup pursuing FDA 510(k) clearance for a hip implant. Teams
-      operated as if they were a real medical device company — responsible for the entire quality
-      system and regulatory dossier from concept through mock submission.
+      The Medical Device Regulatory Bootcamp simulated the full lifecycle of a Class III medical
+      device startup pursuing FDA 510(k) clearance for a hip implant. Teams operated as if they
+      were a real medical device company — responsible for the entire quality system and regulatory
+      dossier from concept through mock submission.
     </p>
 
     <div class="box-method">
@@ -403,12 +401,11 @@
   <section id="biomech">
     <h2>3. Biomechanics &amp; Gait Analysis</h2>
 
-    <h3>3.1 Why Biomechanics Underlies My Robotics Work</h3>
+    <h3>3.1 Course Overview</h3>
     <p>
-      You cannot design a wearable device for a human without understanding how that human moves.
-      The exoskeleton project required knowing what happens at the hip joint during a slip
-      perturbation. The prosthetics research required understanding how gait phase maps onto
-      IMU sensor signals. These are not optional extras — they are core design constraints.
+      Biomechanics &amp; Gait Analysis covered the mechanics of human movement: how forces are
+      distributed across joints during walking, how muscles coordinate to produce stable locomotion,
+      and how gait can be quantified from kinematic and kinetic measurements.
     </p>
 
     <h3>3.2 Normal Gait Cycle</h3>
@@ -438,46 +435,17 @@
 
     <h3>3.3 Joint Mechanics &amp; Ground Reaction Forces</h3>
     <ul>
-      <li><strong>Ground Reaction Forces (GRF):</strong> the ground's reaction to body weight and dynamic loading. The characteristic double-bump GRF profile (loading peak ~1.2 BW, push-off peak ~1.1 BW) is used to validate OpenSim simulations against force plate measurements</li>
-      <li><strong>Hip abductor function:</strong> during single-leg stance, the hip abductors (gluteus medius/minimus) prevent pelvic drop on the swing side. Perturbation of this mechanism is the target of the exoskeleton actuator</li>
-      <li><strong>Inverse dynamics:</strong> from GRF and kinematics, compute joint moments. Used to set torque targets for exoskeleton actuation and validate OpenSim simulation magnitudes</li>
+      <li><strong>Ground Reaction Forces (GRF):</strong> the ground's reaction to body weight and dynamic loading. The characteristic double-bump GRF profile (loading peak ~1.2 BW, push-off peak ~1.1 BW) reflects the loading and push-off peaks of normal gait</li>
+      <li><strong>Hip abductor function:</strong> during single-leg stance, the hip abductors (gluteus medius/minimus) prevent pelvic drop on the swing side</li>
+      <li><strong>Inverse dynamics:</strong> from GRF and kinematics, compute joint moments — the standard method for estimating in vivo joint loading</li>
       <li><strong>EMG patterns:</strong> timing of key muscle activation relative to gait events (e.g., tibialis anterior peaks at heel strike; soleus peaks at push-off). Used to interpret IMU signals in context of neuromuscular control</li>
     </ul>
 
-    <h3>3.4 OpenSim — Musculoskeletal Simulation</h3>
-    <p>
-      OpenSim (Stanford) provides validated musculoskeletal models for forward and inverse dynamics
-      simulation. For the exoskeleton project, a full-body gait model was used to:
-    </p>
-    <ul>
-      <li>Simulate exoskeleton contact forces using elastic foundation contact (stiffness 60,000 N/m; damping 3,000 N·s/m)</li>
-      <li>Convert BNO055 IMU quaternion streams to joint angles as simulation inputs</li>
-      <li>Validate simulated F1 module loads against FSR measurements (≈85% accuracy on peak timing)</li>
-      <li>Identify the <strong>100–200 ms response window</strong> during early swing in which perturbation correction is both possible and beneficial</li>
-    </ul>
-
-    <figure>
-      <img src="images/best_result_walk_sim.jpg" alt="OpenSim best-match walking simulation result">
-      <figcaption>
-        Figure 3: Best-match OpenSim simulation result for a 5-stride walking trial. Simulated F1
-        module load (hip flexion direction) shows comparable timing to FSR measurements, with
-        magnitude differences attributed to soft-tissue compliance and individual subject variation.
-        Simulation validated at ≈85% accuracy.
-      </figcaption>
-    </figure>
-
-    <div class="crosslink">
-      <span>OpenSim simulation methodology, elastic foundation contact parameters, and validation results are detailed on the exoskeleton research page.</span>
-      <a href="exoskeleton.html">Exoskeleton Research →</a>
-    </div>
-
     <div class="box-insight">
-      <p><strong>Biomechanics as a design constraint:</strong> The 100–200 ms perturbation correction
-      window identified in OpenSim directly set the latency requirement for the FSR detection
-      algorithm (observed: &lt;150 ms response time). Similarly, understanding that foot placement
-      during swing is determined by terminal swing kinematics — not earlier — defined the feature
-      extraction window for the prosthetics research. Domain knowledge shapes what the algorithm
-      must do before you write a single line of code.</p>
+      <p><strong>Key takeaway:</strong> Biomechanics provides a quantitative framework for human
+      movement — joint moments, GRF profiles, and muscle timing patterns that can be measured,
+      modeled, and reasoned about. Understanding these relationships is foundational to any
+      engineering work that involves or interacts with the human body.</p>
     </div>
   </section>
 

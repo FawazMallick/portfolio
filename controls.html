@@ -170,134 +170,42 @@
   <section id="rda">
     <h2>1. Robot Dynamics &amp; Analysis (RDA)</h2>
     <p>
-      RDA builds the mathematical machinery for describing and analyzing rigid body motion, from
-      a single joint to a 6-DOF manipulator. The course works in SE(3) — the Lie group of rigid
-      body transformations — rather than Euler angles, which avoids singularities and provides
-      a unified framework for position and orientation.
+      RDA builds the mathematical machinery for rigid body motion — from a single joint to a
+      6-DOF manipulator — working in SE(3) and screw theory rather than Euler angles.
     </p>
 
-    <h3>1.1 Screw Theory Toolkit</h3>
-    <p>
-      The foundational tools translate between different representations of rigid body velocity
-      and pose:
-    </p>
-    <div class="box-method">
-      <p><strong>Key functions implemented:</strong></p>
-      <ul>
-        <li><strong>twist2rbvel.m</strong> — converts a 6-vector twist ξ = [v; ω] to its
-            4×4 matrix representation <code>ξ̂</code> in se(3) (the Lie algebra), enabling
-            matrix exponentials via <code>expm(ξ̂·θ)</code></li>
-        <li><strong>rbvel2twist.m</strong> — inverse map: extracts the twist vector from a
-            4×4 matrix; used to compute Jacobian columns from differentiated FK</li>
-        <li><strong>tform2adjoint.m</strong> — computes the 6×6 Adjoint Ad<sub>g</sub>
-            of a homogeneous transformation g ∈ SE(3), enabling wrench and velocity
-            transformations between frames</li>
-        <li><strong>angvel2skew.m / skew2angvel.m</strong> — convert between angular velocity
-            3-vectors and their 3×3 skew-symmetric matrix representations (elements of so(3))</li>
-      </ul>
+    <div class="project-grid">
+      <div class="proj-card">
+        <div class="proj-label">HW1–HW2</div>
+        <div class="proj-title">Screw Theory &amp; SE(3) Toolkit</div>
+        <p>Implemented twist2rbvel, rbvel2twist, tform2adjoint, and skew-symmetric conversions from scratch. Forward kinematics via matrix exponentials expm(ξ̂·θ).</p>
+        <div class="proj-tech">MATLAB · se(3) · so(3) · Lie algebra</div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-label">HW4</div>
+        <div class="proj-title">6-DOF Manipulator — FK &amp; Spatial Jacobian</div>
+        <p>Product-of-exponentials FK for a PUMA-style arm. Spatial Jacobian computed via direct differentiation and Adjoint method — verified to agree symbolically.</p>
+        <div class="proj-tech">MATLAB · PoE · Adjoint · DH convention</div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-label">HW4</div>
+        <div class="proj-title">2-Link Planar Arm — Singularity Analysis</div>
+        <p>Derived spatial and body Jacobians. Identified singularities at θ₂ = 0° (fully extended) and θ₂ = 180° (fully folded) where the Jacobian loses rank.</p>
+        <div class="proj-tech">MATLAB · Jacobian · Singularities</div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-label">HW5</div>
+        <div class="proj-title">Planar Grasping &amp; Form Closure</div>
+        <p>Constructed grasp map for a 2-contact planar grasp with Coulomb friction. Verified form closure by checking rank of reduced grasp map. Analyzed null-space internal force modes.</p>
+        <div class="proj-tech">MATLAB · Grasp Map · Wrench Basis</div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-label">HW5–HW6</div>
+        <div class="proj-title">Constrained Dynamics</div>
+        <p>Solved the block-structured contact dynamics system for joint accelerations and contact forces under sticking vs. sliding assumptions.</p>
+        <div class="proj-tech">MATLAB · Contact Mechanics · Lagrange Multipliers</div>
+      </div>
     </div>
-
-    <h3>1.2 6-DOF Manipulator — HW4 Part 1</h3>
-    <p>
-      A 6-DOF industrial manipulator (PUMA-style, 3 shoulder joints + 3 wrist joints) was analyzed
-      using both the Denavit-Hartenberg (DH) convention and the product of exponentials (PoE)
-      formulation, and results verified to match symbolically.
-    </p>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th>Frame Offset</th><th>Symbol</th><th>Value (mm)</th><th>Description</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Link 2 x-offset</td><td>l<sub>x2</sub></td><td class="hi">320</td><td>Shoulder to elbow, x-dir</td></tr>
-          <tr><td>Link 5 x-offset</td><td>l<sub>x5</sub></td><td class="hi">887</td><td>Elbow to wrist, x-dir</td></tr>
-          <tr><td>Link 2 z-offset</td><td>l<sub>z2</sub></td><td class="hi">680</td><td>Base to shoulder, z-dir</td></tr>
-          <tr><td>Link 3 z-offset</td><td>l<sub>z3</sub></td><td class="hi">975</td><td>Shoulder to elbow, z-dir</td></tr>
-          <tr><td>Tool x-offset</td><td>l<sub>x6</sub></td><td>200</td><td>Wrist to end-effector</td></tr>
-          <tr><td>Link 4 z-offset</td><td>l<sub>z4</sub></td><td>200</td><td>Elbow segment, z-dir</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <p>
-      At the home configuration (all joint angles zero), the end-effector sits at
-      <strong>p = (1407, 0, 1855) mm</strong>. The spatial Jacobian J<sub>s</sub> (6×6) was computed
-      two ways — via direct differentiation of the FK and via the adjoint method — and verified
-      to agree symbolically.
-    </p>
-
-    <div class="box-method">
-      <p><strong>Product of Exponentials formulation:</strong> The forward kinematics is expressed
-      as a chain of matrix exponentials of joint twists:</p>
-    </div>
-
-    <div class="eq">
-      g<sub>st</sub>(q) = e<sup>ξ̂₁q₁</sup> · e<sup>ξ̂₂q₂</sup> · e<sup>ξ̂₃q₃</sup> · e<sup>ξ̂₄q₄</sup> · e<sup>ξ̂₅q₅</sup> · e<sup>ξ̂₆q₆</sup> · g<sub>st</sub>(0)
-    </div>
-
-    <p>
-      The Adjoint-based Jacobian computes each column as the adjoint-transported joint twist
-      at the current configuration, avoiding repeated symbolic differentiation:
-    </p>
-
-    <div class="eq">
-      J<sub>s,i</sub> = Ad<sub>g₁₂...i</sub>(q) · ξ<sub>i</sub>
-    </div>
-
-    <h3>1.3 2-Link Planar Arm — HW4 Part 2</h3>
-
-    <p>
-      A 2-link planar arm (lengths l₁, l₂) was used to derive and compare the spatial and body
-      Jacobians, and to identify manipulator singularities.
-    </p>
-    <ul>
-      <li><strong>Spatial Jacobian J<sub>s</sub></strong> (6×2): columns express joint velocities
-          in the spatial (fixed world) frame</li>
-      <li><strong>Body Jacobian J<sub>b</sub></strong> (6×2): related by
-          J<sub>b</sub> = Ad<sub>g<sub>st</sub>⁻¹</sub> · J<sub>s</sub>, expressing the same
-          velocities in the end-effector body frame</li>
-      <li><strong>Singularity:</strong> the arm loses a degree of freedom when θ₂ = 0° (fully
-          extended) or θ₂ = 180° (fully folded) — the Jacobian loses rank and the manipulator
-          cannot generate velocity radially inward or outward</li>
-    </ul>
-
-    <h3>1.4 Planar Grasping — HW5</h3>
-    <p>
-      Grasping theory was applied to a planar object gripped at two contact points with Coulomb
-      friction (friction coefficient μ<sub>f</sub>).
-    </p>
-    <div class="box-method">
-      <p><strong>Grasp map construction:</strong></p>
-      <ul>
-        <li>Contact frames rotated from object frame via rotation matrices R<sub>oc1</sub>, R<sub>oc2</sub></li>
-        <li>Each grasp block: G<sub>i</sub> = Ad<sup>T</sup><sub>i</sub> · B<sub>ci</sub>, where B<sub>ci</sub> ∈ ℝ<sup>6×2</sup> is the contact wrench basis (normal + tangential friction)</li>
-        <li>Full grasp map: G = [G₁ G₂] ∈ ℝ<sup>6×4</sup></li>
-        <li>Reduced grasp map G<sub>p</sub> (forces + yaw) has rank 3 → form-closure satisfied for friction ≥ 0</li>
-      </ul>
-    </div>
-    <p>
-      The null space of G (dim = 1) represents internal force modes — contact forces that cancel
-      at the object level but can be used to squeeze the grasp and increase friction headroom
-      without disturbing object equilibrium.
-    </p>
-
-    <h3>1.5 Constrained Dynamics</h3>
-    <p>
-      Contact mechanics and constrained dynamics were analyzed via block-structured linear systems.
-      When a manipulator makes contact with a rigid environment, the constrained equations of
-      motion take the form:
-    </p>
-    <div class="eq">
-      ⎡ M &nbsp; −Aᵀ ⎤ ⎡ q̈ ⎤ &nbsp; ⎡ τ − C(q,q̇)q̇ ⎤
-      <br>
-      ⎣ A &nbsp; &nbsp; 0 &nbsp; ⎦ ⎣ λ ⎦ = ⎣ &nbsp; &nbsp; 0 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ⎦
-    </div>
-    <p>
-      where A is the constraint Jacobian, λ are the Lagrange multiplier contact forces, and M
-      is the mass matrix. This system was solved numerically for acceleration and contact force,
-      and the results compared for different contact mode assumptions (sticking vs. sliding).
-    </p>
   </section>
 
   <!-- 2. Modern Control Theory -->
@@ -357,59 +265,50 @@
     <figure>
       <img src="images/fmallick_P1.png" alt="MCT Project 1 — Tesla Model 3 bicycle model tracking in Webots">
       <figcaption>
-        Figure 1: MCT Project 1 — Tesla Model 3 bicycle model tracking a reference trajectory in Webots.
-        The PID longitudinal controller maintains target speed (5.0 m/s) with rolling resistance feedforward
-        (F<sub>roll</sub> = 0.019·m·g). The pure pursuit lateral controller steers toward a look-ahead point
-        40 waypoints ahead on the path. Cross-track error converges to near zero on straight segments.
+        Figure 1: MCT Project 1 — Tesla Model 3 bicycle model path tracking in Webots. PID longitudinal
+        control (5.0 m/s target) with rolling resistance feedforward; pure pursuit lateral control with
+        40-waypoint look-ahead.
       </figcaption>
     </figure>
-
-    <h3>EKF SLAM — State &amp; Measurement Model Detail</h3>
-    <div class="box-method">
-      <p><strong>State vector:</strong> μ = [X, Y, ψ, x<sub>L,1</sub>, y<sub>L,1</sub>, …, x<sub>L,n</sub>, y<sub>L,n</sub>]<sup>T</sup> ∈ ℝ<sup>3+2n</sup></p>
-      <p><strong>Motion model:</strong></p>
-    </div>
-    <div class="eq">
-      ⎡ X<sub>t+1</sub> ⎤ &nbsp; ⎡ X<sub>t</sub> + Δt(ẋ cosψ − ẏ sinψ) ⎤
-      <br>
-      ⎢ Y<sub>t+1</sub> ⎥ = ⎢ Y<sub>t</sub> + Δt(ẋ sinψ + ẏ cosψ) ⎥
-      <br>
-      ⎣ ψ<sub>t+1</sub> ⎦ &nbsp; ⎣ &nbsp; &nbsp; &nbsp; &nbsp; ψ<sub>t</sub> + Δt·ψ̇ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ⎦
-    </div>
-    <div class="box-method">
-      <p><strong>Measurement model:</strong> range + bearing from robot to each observed landmark; Jacobian H<sub>t</sub> linearizes h(x) at current estimate for the Kalman update step.</p>
-      <p><strong>Covariance propagation:</strong> Σ<sub>t|t−1</sub> = F·Σ<sub>t−1</sub>·F<sup>T</sup> + W, where W is the process noise covariance and F = ∂f/∂x evaluated at μ<sub>t−1</sub>.</p>
-    </div>
   </section>
 
   <!-- 3. Optimal Control & RL -->
   <section id="ocrl">
     <h2>3. Optimal Control &amp; Reinforcement Learning (OCRL)</h2>
     <p>
-      OCRL advanced from state-space design into nonlinear trajectory optimization and neural
-      network policy learning. The centerpiece project applied four control frameworks
-      progressively to a Two-Wheeled Inverted Pendulum (TWIP) — a canonical underactuated
-      system where classical methods fail for large-angle maneuvers.
+      OCRL covered nonlinear trajectory optimization and neural network policy learning, applied
+      progressively to a Two-Wheeled Inverted Pendulum (TWIP).
     </p>
 
-    <div class="box-result">
-      <p><strong>Key results from the TWIP project:</strong></p>
-      <ul>
-        <li>LQR stabilization: K = [−0.7958, −0.7138, −51.7877, −4.6309], converging from θ₀=0.1 rad within 5 s</li>
-        <li>Kalman Filter: estimated state converges to truth within ~2 s under sensor noise (σ²_θ = 0.5 rad²)</li>
-        <li>iLQR drag-race: target φ* = 2π rad achieved in ~3.0 s; converged in 7 iterations</li>
-        <li>Neural network policy (4→2→1, 13 params): fine-tuned to 42 ms balance time — 7× longer than linear gains</li>
-      </ul>
+    <div class="project-grid">
+      <div class="proj-card">
+        <div class="proj-label">HW1</div>
+        <div class="proj-title">LQR Stabilization + Kalman Filter</div>
+        <p>Designed LQR gains for the TWIP linearized about the upright equilibrium. Kalman filter estimated state under sensor noise (σ²_θ = 0.5 rad²) — converges to truth within ~2 s.</p>
+        <div class="proj-tech">Python · LQR · Kalman Filter</div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-label">HW1</div>
+        <div class="proj-title">iLQR Trajectory Optimization</div>
+        <p>Nonlinear trajectory optimization via iterative LQR. Drag-race: TWIP reaches φ* = 2π rad in ~3.0 s, converging in 7 backward-forward pass iterations.</p>
+        <div class="proj-tech">Python · iLQR · Trajectory Optimization</div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-label">HW1</div>
+        <div class="proj-title">Neural Network Policy</div>
+        <p>Small feedforward policy (4→2→1, 13 params) trained to balance the TWIP — fine-tuned to 42 ms balance time, 7× longer than linear gains alone.</p>
+        <div class="proj-tech">Python · Policy Learning · Neural Network</div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-label">HW2</div>
+        <div class="proj-title">Surrogate Optimization &amp; Policy Gradients</div>
+        <p>Neural network surrogate for the 4D Rosenbrock function. Policy gradient methods (REINFORCE) studied for sample efficiency vs. asymptotic performance tradeoffs.</p>
+        <div class="proj-tech">Python · Surrogate Model · REINFORCE</div>
+      </div>
     </div>
 
-    <p>
-      The course also covered surrogate-based optimization (neural network surrogate for the
-      4D Rosenbrock function), policy gradient methods, and the trade-off between sample efficiency
-      and asymptotic performance in model-free RL.
-    </p>
-
     <div class="crosslink">
-      <span>The TWIP project is documented in full as an interactive conference paper — system parameters, linearization, LQR design, Kalman filter, iLQR convergence, and NN policy results.</span>
+      <span>The TWIP project is documented in full — system parameters, linearization, LQR design, Kalman filter, iLQR convergence, and NN policy results.</span>
       <a href="dynamics_skills.html">TWIP Project Page →</a>
     </div>
   </section>

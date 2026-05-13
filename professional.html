@@ -178,10 +178,10 @@
 
     <h3>Current Focus Areas</h3>
     <ul>
-      <li>Feature selection: evaluating hip/knee angles and angular velocities as inputs to intent classifiers across 8 treadmill speeds</li>
-      <li>Architecture benchmarking: LSTM vs. temporal CNN vs. Bayesian sequential estimators for immediate foot placement prediction</li>
+      <li>Feature selection: evaluating kinematic and inertial features as inputs to intent models across multiple walking speeds</li>
+      <li>Architecture benchmarking: exploring LSTM, temporal CNN, and Bayesian sequential estimators for foot placement prediction</li>
+      <li>Hip-only sensing: investigating whether intent can be reliably detected from a hip- or thigh-mounted IMU alone, avoiding the circular-sensing problem for prosthetic limb users</li>
       <li>Latency analysis: quantifying inference time vs. prediction horizon trade-offs for embedded real-time control</li>
-      <li>Dataset: 11,761 labeled steps from 8 able-bodied subjects (Geyer lab treadmill protocol)</li>
     </ul>
 
     <div class="crosslink">
@@ -236,12 +236,15 @@
     </ul>
 
     <div class="box-insight">
-      <p><strong>Engineering mindset applied to community:</strong> Designing a thriving residential
-      community requires the same feedback loops as any control system — you set a target state
-      (belonging, safety, engagement), measure the gap (surveys, direct conversations), and tune
-      your interventions accordingly. The 86% satisfaction figure is a data point, not an
-      endpoint.</p>
+      <p><strong>Community &amp; student development:</strong> Supporting first-year students through
+      the transition to university life is fundamentally about process — building trust, creating
+      consistent routines, and knowing when a student needs space versus active support. The 86%
+      satisfaction and 85% staff-approachability figures reflect the team's focus on fostering a
+      residential culture where students feel safe and connected.</p>
     </div>
+    <p style="font-size:0.9rem; color:var(--text-dim); margin-top:8px;">
+      <a href="https://www.cmu.edu/housing/about/staff/index.html" target="_blank">CMU Residential Education Staff →</a>
+    </p>
   </section>
 
   <hr class="role-divider">
@@ -265,10 +268,11 @@
 
     <h3>Contributions</h3>
     <ul>
-      <li><strong>Sensor integration:</strong> designed PLA housings for eight Interlink FSR-406 sensors arranged in two rows; calibrated sensors to R²=0.9972 using an exponential model across the full 0–20 N range</li>
+      <li><strong>Sensor integration:</strong> contributed to the design of FSR-406 sensor housings and brace components; calibrated sensors to R²=0.9972 using an exponential model across the full 0–20 N range</li>
       <li><strong>OpenSim simulation:</strong> modeled human–exoskeleton contact dynamics using elastic foundation force contact (stiffness 60,000 N/m; damping 3,000 N·s/m); achieved ≈85% validation accuracy against experimental force measurements</li>
       <li><strong>IMU integration:</strong> interfaced BNO055 IMU (100 Hz) with Arduino Uno (150 Hz) for kinematic capture to inform musculoskeletal simulation inputs</li>
-      <li><strong>CAD &amp; prototyping:</strong> produced SolidWorks CAD models; 3D-printed custom brace components and sensor housings</li>
+      <li><strong>CAD &amp; prototyping:</strong> used SolidWorks CAD to help prototype parts for the exoskeleton; contributed to brainstorming and iterative design of brace components</li>
+      <li><strong>Regulatory &amp; risk analysis:</strong> investigated relevant regulatory standards and contributed to the risk mitigation analysis for the wearable device</li>
       <li><strong>Publication:</strong> co-authored peer-reviewed IFAC PapersOnLine paper (2025); DOI: 10.1016/j.ifacol.2025.12.262</li>
     </ul>
 
@@ -277,7 +281,7 @@
     </div>
 
     <div class="crosslink">
-      <span>Full device design, FSR calibration, OpenSim results, and FMEA hazard analysis documented on the research page.</span>
+      <span>Full device design, FSR calibration, OpenSim results, and risk analysis documented on the research page.</span>
       <a href="exoskeleton.html">Exoskeleton Research →</a>
     </div>
   </section>
@@ -303,10 +307,9 @@
 
     <h3>Technical Work</h3>
     <ul>
-      <li><strong>Modified A* planner:</strong> implemented a 6D A* algorithm (three translational + three rotational DOF) in MATLAB with Euclidean G+H cost; resolution: 1 mm translation, 1° rotation</li>
-      <li><strong>Bézier smoothing:</strong> post-processed discrete A* waypoints with Bernstein polynomial Bézier curves to produce C¹-continuous robot trajectories</li>
-      <li><strong>Haptic guidance:</strong> spring-damper force model (k<sub>f</sub>=2,000 N/m; k<sub>τ</sub>=0.1 Nm/°) coupled to Sigma.7 haptic controller for surgeon guidance</li>
-      <li><strong>Validation:</strong> midshaft femur fracture scenario — displaced by (−30, +30, +50) mm and (10°, 5°, 15°); achieved ≤3.0 mm / ≤1.5° final reduction accuracy</li>
+      <li><strong>Algorithm development:</strong> aided in the development and implementation of a robotics-aligned path-finding algorithm in MATLAB for 6D configuration space (three translational + three rotational DOF)</li>
+      <li><strong>Simulation &amp; benchmarking:</strong> implemented and tested the algorithm on a midshaft femur fracture scenario — achieving ≤3.0 mm / ≤1.5° final reduction accuracy in simulation</li>
+      <li><strong>Validation support:</strong> contributed to simulation testing and result analysis on the Robossis RSS platform at Cooper University Hospital</li>
     </ul>
 
     <div class="metric-row">

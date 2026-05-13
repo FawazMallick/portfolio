@@ -137,7 +137,7 @@
   <h1>AI & Machine Learning</h1>
   <p class="subtitle">From Classical Models → Deep Learning → Real-World Engineering Applications</p>
   <p class="intro">
-    I didn't start with neural networks. I started with understanding <em>why</em> models work — gradient descent on a logistic regression, the geometry of support vectors, the math behind decision trees. That foundation made everything that came after stick. This page traces that arc: from implementing ML from scratch in coursework, to training dual-GPU deep learning models on NASA jet engine datasets, to applying probabilistic ML to human gait in my current research.
+    I didn't start with neural networks. I started with understanding <em>why</em> models work — gradient descent on a logistic regression, the geometry of support vectors, the math behind decision trees. That foundation made everything that came after stick. This page traces that arc: from implementing ML from scratch in coursework, to training deep learning models on engineering datasets, to exploring ML/AI models for predicting human intent for prosthetic leg control in my current research.
   </p>
 </div>
 
@@ -145,7 +145,7 @@
 <section>
   <h2>The Learning Arc</h2>
   <p>
-    The course ran 13 modules, each building on the last. No black boxes — every algorithm was implemented from scratch before we were allowed to use a library.
+    Machine Learning &amp; AI for Engineers covered 13 modules of classical and modern ML — from linear models to sequence models. Every algorithm was implemented from scratch before using a library. Representative topics:
   </p>
   <div class="course-grid">
     <div class="course-card">
@@ -160,264 +160,136 @@
     </div>
     <div class="course-card">
       <div class="tag">M4–M5</div>
-      <h4>Kernel Methods & Trees</h4>
+      <h4>SVMs &amp; Trees</h4>
       <p>Soft-margin SVM via quadratic programming, decision trees, random forests, ensemble methods.</p>
     </div>
     <div class="course-card">
       <div class="tag">M6–M8</div>
       <h4>Neural Networks</h4>
-      <p>MLP backpropagation from scratch, CNNs for image tasks, regularization, batch normalization.</p>
+      <p>MLP backpropagation from scratch, regularization, batch normalization. Applied to classification tasks.</p>
     </div>
     <div class="course-card">
       <div class="tag">M9–M11</div>
       <h4>Sequence Models</h4>
-      <p>RNNs, LSTMs, GRUs for time-series. Attention mechanisms, transformers, positional encoding.</p>
+      <p>RNNs, LSTMs, GRUs for time-series prediction. Attention mechanisms and positional encoding.</p>
     </div>
     <div class="course-card">
       <div class="tag">M12–M13</div>
-      <h4>Generative & Advanced</h4>
-      <p>VAEs, GANs, reinforcement learning foundations, policy gradients. Final project synthesis.</p>
+      <h4>Probabilistic Models</h4>
+      <p>Bayesian inference, variational methods, unsupervised learning. Final project synthesis applying models to engineering data.</p>
     </div>
   </div>
-</section>
-
-<!-- FEATURED PROJECT: RUL -->
-<section>
-  <h2>Featured Project: Turbofan Engine RUL Prediction</h2>
-
-  <div class="highlight-box">
-    <p><strong>The Question:</strong> Can we predict when a jet engine will fail — before it does? Given multivariate sensor data from hundreds of engines across thousands of flight cycles, predict each engine's <em>Remaining Useful Life (RUL)</em> with enough accuracy to act on.</p>
-  </div>
-
-  <h3>The Problem: Why RUL Matters</h3>
-  <p>
-    Turbofan engines degrade gradually. If you wait for failure, you get a catastrophic event. If you replace parts too early, you waste money. The goal is to predict — precisely — how many flight cycles remain before an engine needs maintenance. This is a safety-critical regression problem on noisy, multivariate time-series data.
-  </p>
-  <p>
-    I worked with the <strong>NASA C-MAPSS dataset</strong> — a benchmark for RUL prediction research. It simulates four fleets of 100–259 engines per fleet, with 21 sensor channels per time step, under varying operating conditions (one vs. multiple flight regimes and fault modes). Training was done on FD001 (single condition, 100 engines); generalization was tested on FD002–FD004 (multi-condition).
-  </p>
-
-  <h3>Dataset at a Glance</h3>
-  <ul>
-    <li><strong>Training data (FD001):</strong> 20,631 time steps across 100 engines, 21 sensor channels</li>
-    <li><strong>Test sets:</strong> FD001–FD004, ranging from 100 to 259 engines, single and multi-condition</li>
-    <li><strong>Target:</strong> Cycles-to-failure for each engine at last observed time step</li>
-    <li><strong>Challenge:</strong> FD002 and FD004 have six operating conditions — true generalization test</li>
-    <li><strong>Infrastructure:</strong> Trained on Kaggle (2× NVIDIA GPU), ~100 epochs each model</li>
-  </ul>
-
-  <figure style="margin: 32px auto; max-width: 680px;">
-    <img src="images/fig_fd001.png" alt="FD001 training data — sensor signal degradation trajectories" style="width:100%; border-radius:8px; border:1px solid var(--border);">
-    <figcaption style="font-size:0.86rem; color:var(--muted); margin-top:10px; font-style:italic; text-align:center; line-height:1.6;">
-      Figure 1: FD001 training data — sensor signal degradation trajectories for 100 turbofan engines
-      over operational cycle count. Gradual drift in key channels (e.g., exhaust temperature, fan speed)
-      indicates progressive engine wear.
-    </figcaption>
-  </figure>
-
-  <h3>Two Approaches: Baseline GRU vs Embed-RUL</h3>
-  <p>
-    Rather than just training one model, I implemented and compared two architecturally distinct approaches: a straightforward sequence-to-scalar GRU, and a paper-based encoder-decoder system with a custom health index formulation.
-  </p>
-
-  <div class="arch-flow">
-    <div class="arch-block">Raw Sensor Data<div class="arch-sub">21 channels × T steps</div></div>
-    <div class="arch-arrow">→</div>
-    <div class="arch-block">MinMax Scaling<div class="arch-sub">per-sensor normalization</div></div>
-    <div class="arch-arrow">→</div>
-    <div class="arch-block">Sliding Window<div class="arch-sub">seq_len = 25 (GRU) / 30 (AE)</div></div>
-    <div class="arch-arrow">→</div>
-    <div class="arch-block"><strong>Model</strong><div class="arch-sub">GRU or Embed-RUL</div></div>
-    <div class="arch-arrow">→</div>
-    <div class="arch-block">RUL Estimate<div class="arch-sub">cycles remaining</div></div>
-  </div>
-
-  <h4>Approach 1: Baseline GRU</h4>
-  <p>
-    A clean two-layer GRU that reads a sliding window of sensor observations and outputs a single RUL prediction. Trained end-to-end with a custom <strong>asymmetric scoring loss</strong> — the standard in RUL literature, which penalizes late predictions (missing imminent failure) more heavily than early ones.
-  </p>
-
-
-  <h4>Approach 2: Embed-RUL (Encoder-Decoder Autoencoder)</h4>
-  <p>
-    A more complex, paper-inspired architecture. An encoder compresses each sensor window into a learned embedding space. A decoder reconstructs the window from that embedding — the autoencoder bottleneck forces the encoder to capture health-relevant structure. The embedding is then used to compute a <strong>Health Index (HI)</strong> curve per engine, which drives RUL estimation via a similarity-based matching algorithm across the training fleet.
-  </p>
-  <p>
-    The key insight: normal operating embeddings cluster together (near the learned <em>Z_norm</em> reference), while degraded embeddings drift away. Distance from Z_norm becomes a continuous degradation signal.
-  </p>
-
-
-  <h3>Visualization: Learned Embedding Space</h3>
-  <p>
-    The t-SNE plot below validates the encoder's core claim: <strong>embeddings from healthy engines cluster separately from degraded ones</strong> — the encoder has learned a meaningful health representation purely from reconstruction loss, with no RUL labels used during autoencoder training.
-  </p>
-
-  <div class="image-grid">
-    <figure>
-      <img src="images/fig_tsne.png" alt="t-SNE of Encoder Embeddings — Normal vs Degraded">
-      <figcaption style="font-size:0.83rem; color:var(--muted); margin-top:8px; font-style:italic; text-align:center; line-height:1.5;">
-        Figure 2: t-SNE of encoder embeddings. Normal-state windows cluster separately from degraded
-        windows, validating the encoder's health-sensitive representation.
-      </figcaption>
-    </figure>
-    <figure>
-      <img src="images/fig_hi_curves.png" alt="Health Index Curves — Sample Training Engines">
-      <figcaption style="font-size:0.83rem; color:var(--muted); margin-top:8px; font-style:italic; text-align:center; line-height:1.5;">
-        Figure 3: Learned Health Index (HI) curves for Embed-RUL across FD001 training engines.
-        HI increases monotonically from near-zero (healthy) toward peak (near failure).
-      </figcaption>
-    </figure>
-  </div>
-
-  <h3>Results</h3>
-  <p>
-    Both models were trained on FD001 and evaluated across all four test sets. Key findings:
-  </p>
-
-  <table class="results-table">
-    <thead>
-      <tr>
-        <th>Dataset</th>
-        <th>Condition</th>
-        <th>GRU RMSE</th>
-        <th>GRU A(%)</th>
-        <th>Embed-RUL RMSE</th>
-        <th>Note</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>FD001</td>
-        <td>Single</td>
-        <td class="good">13.17</td>
-        <td class="good">60%</td>
-        <td class="warn">64.02</td>
-        <td>GRU wins; Embed shows degradation signal</td>
-      </tr>
-      <tr>
-        <td>FD002</td>
-        <td>Multi (6)</td>
-        <td class="warn">118.5</td>
-        <td>6.6%</td>
-        <td>—</td>
-        <td>Both struggle; distribution shift</td>
-      </tr>
-      <tr>
-        <td>FD003</td>
-        <td>Single</td>
-        <td class="good">42.06</td>
-        <td>34%</td>
-        <td class="warn">70.25</td>
-        <td>GRU generalizes; Embed HI curves diverge</td>
-      </tr>
-      <tr>
-        <td>FD004</td>
-        <td>Multi (6)</td>
-        <td class="warn">124.5</td>
-        <td>6.6%</td>
-        <td>—</td>
-        <td>Multi-condition unseen at train time</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <div class="highlight-box">
-    <p><strong>Key Insight:</strong> The GRU baseline dominates on accuracy (RMSE 13.17 on FD001, paired t-test p &lt; 0.0001). But its failure on multi-condition datasets reveals a fundamental limitation: a discriminative model trained end-to-end on one condition can't generalize without retraining. The Embed-RUL approach, while less accurate when it works, offers <em>interpretability</em> — the Health Index curves and t-SNE embeddings make it possible to see <em>why</em> the model predicts what it predicts, which matters in safety-critical deployment.</p>
-  </div>
-
-  <figure style="margin: 32px auto; max-width: 680px;">
-    <img src="images/fig_rul_estimation.png" alt="GRU predicted vs ground-truth RUL on FD001 test set" style="width:100%; border-radius:8px; border:1px solid var(--border);">
-    <figcaption style="font-size:0.86rem; color:var(--muted); margin-top:10px; font-style:italic; text-align:center; line-height:1.6;">
-      Figure 4: GRU predicted vs. ground-truth RUL on the FD001 test set. RMSE = 13.17 cycles;
-      60% of predictions fall within ±10 cycles of ground truth. Larger errors occur at low RUL
-      values where the degradation signal is most variable.
-    </figcaption>
-  </figure>
-
-  <p>
-    <strong>Takeaway:</strong> This project taught me that choosing a model architecture is an engineering decision, not just a performance optimization. Accuracy and interpretability trade off. Multi-condition generalization requires either domain adaptation or richer training data — not a bigger model.
-  </p>
 </section>
 
 <!-- COURSEWORK HIGHLIGHTS -->
 <section>
-  <h2>Coursework Highlights</h2>
+  <h2>Coursework Highlights — ML &amp; AI for Engineers</h2>
   <p>
-    Across 13 modules, some assignments stood out for their depth. Each required implementing the algorithm from first principles — no sklearn wrappers until after proving you understood the math.
+    Selected assignments from the 13-module general AI/ML course. Each algorithm implemented from scratch before using a library.
   </p>
 
   <div class="hw-grid">
     <div class="hw-card">
-      <div class="hw-tag">Module 3 · HW1</div>
+      <div class="hw-tag">Module 3</div>
       <h4>Logistic Regression + Polynomial Feature Mapping</h4>
       <p>
-        Projectile hit/miss classification with a <strong>nonlinear decision boundary</strong>. Built a feature map that expands 2D inputs to 45 features through all 8th-order polynomial terms, then trained a logistic regression classifier with gradient descent.
-      </p>
-      <p>
-        The challenge: the raw input space has no linear separator. The feature mapping creates a rich enough function class that gradient descent finds a clean boundary. Implemented sigmoid, cross-entropy loss, its gradient, and the full training loop from scratch.
+        Projectile hit/miss classification with a <strong>nonlinear decision boundary</strong>. Built a feature map expanding 2D inputs to 45 features via 8th-order polynomial terms, then trained with gradient descent from scratch.
       </p>
       <p class="metric">Result: &gt;95% classification accuracy on held-out test set</p>
     </div>
 
     <div class="hw-card">
-      <div class="hw-tag">Module 4 · HW1</div>
+      <div class="hw-tag">Module 4</div>
       <h4>Soft Margin SVM via Quadratic Programming</h4>
       <p>
-        Implemented a soft-margin SVM classifier by directly solving the quadratic programming dual problem using <strong>cvxopt</strong>. Manually constructed the P, q, G, h constraint matrices from scratch.
+        Implemented a soft-margin SVM by directly solving the QP dual problem with <strong>cvxopt</strong>. Manually constructed the P, q, G, h constraint matrices; swept regularization parameter C to observe the hard-margin vs. soft-margin trade-off.
       </p>
-      <p>
-        The interesting part: sweeping over the regularization parameter C to watch how the margin and misclassification rate trade off. As C → 0, the classifier becomes increasingly tolerant of margin violations; as C → ∞, it approaches the hard-margin solution.
-      </p>
-      <p class="metric">Solved QP directly — no sklearn SVC wrapper</p>
+      <p class="metric">QP solved directly — no sklearn SVC wrapper</p>
     </div>
 
     <div class="hw-card">
-      <div class="hw-tag">Module 5 · HW1</div>
+      <div class="hw-tag">Module 5</div>
       <h4>Decision Tree vs Random Forest</h4>
       <p>
-        Trained and compared a depth-10 decision tree against a 100-estimator random forest on the <strong>UCI Cylinder Bands dataset</strong> — 39 features, binary classification for rotogravure printer defects.
+        Trained and compared a depth-10 decision tree against a 100-estimator random forest on the <strong>UCI Cylinder Bands dataset</strong> — 39 features, binary classification. Analyzed why bootstrap aggregation reduces variance: decorrelated trees average out individual biases.
       </p>
-      <p>
-        The decision tree achieved near-perfect training accuracy but lower test accuracy — classic overfitting. The random forest's ensemble averaging reduced variance and generalized substantially better. Wrote a clear analysis of why bootstrap aggregation works: decorrelated trees average out individual biases.
-      </p>
-      <p class="metric">Random Forest: measurably higher test accuracy vs. single tree</p>
-    </div>
-
-    <div class="hw-card">
-      <div class="hw-tag">Module 9–11</div>
-      <h4>Sequence Models: RNNs, LSTMs, Attention</h4>
-      <p>
-        Implemented vanilla RNN backpropagation through time (BPTT), then LSTM with all four gate equations from scratch. Studied vanishing gradient problem experimentally — recorded gradient norms across time steps to see exactly where training signal collapses.
-      </p>
-      <p>
-        Attention mechanism implementation: scaled dot-product attention, then multi-head attention. This sequence directly prepared me for the GRU architectures in the RUL project and the encoder design in Embed-RUL.
-      </p>
-      <p class="metric">Gradient norms visualized across sequence depths 10, 50, 100</p>
+      <p class="metric">Random Forest: measurably higher generalization vs. single tree</p>
     </div>
 
     <div class="hw-card">
       <div class="hw-tag">Module 6–8</div>
       <h4>Backpropagation from Scratch</h4>
       <p>
-        Implemented a fully-connected neural network with forward pass and manual backpropagation — computing weight gradients by hand via the chain rule, with no autograd. Then added batch normalization and dropout, verified numerically with gradient checking.
-      </p>
-      <p>
-        This exercise was harder than it sounds. Every matrix dimension mismatch is a bug in your math, not a bug in your code. Getting it right meant I actually understood what PyTorch's <code>.backward()</code> does under the hood.
+        Fully-connected network with manual backpropagation — chain rule by hand, no autograd. Added batch normalization and dropout; verified correctness numerically with gradient checking.
       </p>
       <p class="metric">Gradient check: numerical ≈ analytical to within 1e-7</p>
     </div>
 
     <div class="hw-card">
-      <div class="hw-tag">Module 12–13</div>
-      <h4>VAEs and Generative Models</h4>
+      <div class="hw-tag">Module 9–11</div>
+      <h4>Sequence Models: RNNs, LSTMs, Attention</h4>
       <p>
-        Implemented a Variational Autoencoder (VAE) with the reparameterization trick. Minimized the ELBO loss combining reconstruction error with KL divergence. Generated new samples by sampling from the learned latent distribution.
+        Implemented vanilla RNN backpropagation through time, then LSTM with all four gate equations from scratch. Studied vanishing gradients experimentally — recorded gradient norms across sequence depths 10, 50, 100. Also implemented scaled dot-product attention.
       </p>
-      <p>
-        This module connected directly to my research: the Embed-RUL encoder-decoder architecture is essentially a non-variational autoencoder applied to time-series. Understanding VAEs first made the Embed-RUL paper's design choices much clearer.
-      </p>
-      <p class="metric">Generated interpolations in learned latent space</p>
+      <p class="metric">Gradient norms visualized across depths — collapse point confirmed</p>
     </div>
+
+    <div class="hw-card">
+      <div class="hw-tag">Applied Project</div>
+      <h4>Anatomical Landmark Detection on X-Ray Images</h4>
+      <p>
+        Applied supervised learning to medical image data — predicting the pixel location of anatomical landmarks (joint midpoints) from X-ray images. Annotated training data through a custom labeling pipeline, then trained and evaluated a regression model across multiple cross-validation folds.
+      </p>
+      <p>
+        Representative per-image errors ranged from 7–17 px, consistent with the ambiguity in landmark definition on radiographs.
+      </p>
+      <p class="metric">Cross-fold evaluation on multi-view X-ray dataset</p>
+    </div>
+
+    <div class="hw-card">
+      <div class="hw-tag">Applied Project · Final</div>
+      <h4>Turbofan RUL: GRU vs Embed-RUL</h4>
+      <p>
+        Compared a baseline GRU (RMSE 13.17 on FD001) against an Embed-RUL encoder-decoder autoencoder on the NASA C-MAPSS dataset. The key result from Embed-RUL: the encoder learned to <strong>separate healthy from degraded engine embeddings without any RUL labels</strong> — purely from reconstruction loss.
+      </p>
+      <p>
+        t-SNE of the learned embedding space confirmed clean separation of normal vs. degraded engine states. S-scores (asymmetric scoring) favored the GRU for accuracy but Embed-RUL provided interpretable health trajectories useful for safety-critical monitoring.
+      </p>
+      <p class="metric">Embed-RUL: unsupervised health representation · GRU RMSE 13.17</p>
+    </div>
+  </div>
+
+  <h3>Course Highlight Figures</h3>
+  <p style="font-size:0.9rem; color:var(--muted); margin-bottom:20px;">
+    Selected outputs from the general ML/AI course assignments.
+  </p>
+  <div class="image-grid">
+    <figure>
+      <img src="images/AI (1).png" alt="X-ray fracture image used in landmark detection homework">
+      <figcaption style="font-size:0.83rem; color:var(--muted); margin-top:8px; font-style:italic; text-align:center; line-height:1.5;">
+        X-ray image from the landmark detection dataset. The regression model predicts the 2D pixel location of anatomical landmarks from these radiograph inputs.
+      </figcaption>
+    </figure>
+    <figure>
+      <img src="images/AI (3).png" alt="Predicted vs actual landmark locations on X-ray images">
+      <figcaption style="font-size:0.83rem; color:var(--muted); margin-top:8px; font-style:italic; text-align:center; line-height:1.5;">
+        Predicted (×) vs. actual (○) anatomical landmark locations across four held-out test images. Per-image pixel errors range from 7–17 px across folds and views.
+      </figcaption>
+    </figure>
+  </div>
+  <div class="image-grid">
+    <figure>
+      <img src="images/fig_tsne.png" alt="t-SNE of Embed-RUL encoder embeddings">
+      <figcaption style="font-size:0.83rem; color:var(--muted); margin-top:8px; font-style:italic; text-align:center; line-height:1.5;">
+        t-SNE of Embed-RUL encoder embeddings. Healthy-state engine windows cluster separately from degraded windows — this separation emerged from reconstruction loss alone, with no RUL labels provided during autoencoder training.
+      </figcaption>
+    </figure>
+    <figure>
+      <img src="images/fig_hi_curves.png" alt="Embed-RUL Health Index curves">
+      <figcaption style="font-size:0.83rem; color:var(--muted); margin-top:8px; font-style:italic; text-align:center; line-height:1.5;">
+        Embed-RUL learned Health Index (HI) curves across FD001 training engines. HI increases monotonically from near-zero (healthy) toward peak (near failure), providing an interpretable degradation signal without supervision.
+      </figcaption>
+    </figure>
   </div>
 </section>
 
@@ -527,23 +399,20 @@
     Beyond coursework, I've applied ML methods to engineering domains that I care about — starting with turbofan RUL prediction and extending into human gait analysis. Both are harder than clean benchmark datasets: real-world noise, inter-subject variability, and stakes that matter.
   </p>
 
-  <h3>Bayesian Gait Prediction (Current RA Research)</h3>
+  <h3>Foot Placement Prediction (Current RA Research)</h3>
   <p>
-    My current research at CMU applies probabilistic ML — specifically Bayesian inference — to predict where a prosthetic leg user will place their foot next. Unlike the turbofan problem (clean, single-domain data), gait data is messy: sensor drift, inter-subject variability, latency constraints.
+    My current research at CMU explores ML/AI models for predicting human intent for prosthetic leg control — specifically predicting where the foot will land before it does, from a single heel-mounted IMU. Unlike clean benchmark datasets, gait data is messy: sensor drift, inter-subject variability, and tight latency constraints for embedded deployment.
   </p>
   <p>
-    Why Bayesian? Because uncertainty quantification matters. In a safety-critical prosthetic control system, knowing "I'm 95% confident" is fundamentally different from "I'm 60% confident." A discriminative regression model gives a point estimate; a Bayesian model gives a distribution.
+    The current evaluation uses a Bayesian sequential framework, but the active direction is benchmarking this against learned approaches — LSTMs, temporal CNNs — and exploring whether intent can be detected from hip-only sensing rather than a foot-mounted sensor.
   </p>
 
   <div class="highlight-box">
-    <p><strong>Current results:</strong> Real-time evaluation on 108 over-ground walking steps from a live heel-mounted HWT906 IMU (100 Hz, &lt;10 ms per-step inference) achieves <strong>RMSE<sub>|d|</sub> = 29.3 cm</strong> (best configuration: subject-specific IMU 8-feature + landing update), with predictions issued <strong>376 ms before heel-strike</strong> — more than 2× the prosthetic ankle actuation budget. Subject-specific IMU training on free-walking data (no lab equipment) reduces placement error by <strong>46%</strong> over out-of-domain motion-capture models. The system represents the first real-time online validation of this Bayesian framework.</p>
+    <p><strong>Current results:</strong> Real-time evaluation on 108 over-ground walking steps from a live heel-mounted HWT906 IMU (100 Hz, &lt;10 ms per-step inference) achieves <strong>RMSE<sub>|d|</sub> = 29.3 cm</strong>, with predictions issued <strong>376 ms before heel-strike</strong> — more than 2× the prosthetic ankle actuation budget. Subject-specific IMU training on free-walking data reduces placement error by <strong>46%</strong> over out-of-domain motion-capture models.</p>
   </div>
 
   <p>
-    <a href="prosthetics.html">→ Read the full prosthetics research page</a> for the complete Bayesian framework, dataset description, per-trial results, and future directions.
-  </p>
-  <p>
-    <a href="rul.html">→ Read the full RUL project page</a> for complete metrics, GRU vs Embed-RUL comparison, statistical analysis, and architecture details.
+    <a href="prosthetics.html">→ Read the full prosthetics research page</a> for the complete framework, dataset description, per-trial results, and active exploration directions.
   </p>
 </section>
 

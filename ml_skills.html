@@ -135,9 +135,9 @@
 <!-- HEADER -->
 <div class="page-header">
   <h1>AI & Machine Learning</h1>
-  <p class="subtitle">From Classical Models → Deep Learning → Real-World Engineering Applications</p>
+  <p class="subtitle">From Classical Models → Real-World Engineering Applications</p>
   <p class="intro">
-    I didn't start with neural networks. I started with understanding <em>why</em> models work — gradient descent on a logistic regression, the geometry of support vectors, the math behind decision trees. That foundation made everything that came after stick. This page traces that arc: from implementing ML from scratch in coursework, to training deep learning models on engineering datasets, to exploring ML/AI models for predicting human intent for prosthetic leg control in my current research.
+    I didn't start with neural networks. I started with understanding <em>why</em> models work — gradient descent on a logistic regression, the geometry of support vectors, the math behind decision trees. That foundation made everything that came after stick. This page traces that arc: from implementing ML from scratch in coursework to exploring ML/AI models for predicting human intent for prosthetic leg control in my current research.
   </p>
 </div>
 
@@ -234,163 +234,9 @@
       <p class="metric">Gradient norms visualized across depths — collapse point confirmed</p>
     </div>
 
-    <div class="hw-card">
-      <div class="hw-tag">Applied Project</div>
-      <h4>Anatomical Landmark Detection on X-Ray Images</h4>
-      <p>
-        Applied supervised learning to medical image data — predicting the pixel location of anatomical landmarks (joint midpoints) from X-ray images. Annotated training data through a custom labeling pipeline, then trained and evaluated a regression model across multiple cross-validation folds.
-      </p>
-      <p>
-        Representative per-image errors ranged from 7–17 px, consistent with the ambiguity in landmark definition on radiographs.
-      </p>
-      <p class="metric">Cross-fold evaluation on multi-view X-ray dataset</p>
-    </div>
-
-    <div class="hw-card">
-      <div class="hw-tag">Applied Project · Final</div>
-      <h4>Turbofan RUL: GRU vs Embed-RUL</h4>
-      <p>
-        Compared a baseline GRU (RMSE 13.17 on FD001) against an Embed-RUL encoder-decoder autoencoder on the NASA C-MAPSS dataset. The key result from Embed-RUL: the encoder learned to <strong>separate healthy from degraded engine embeddings without any RUL labels</strong> — purely from reconstruction loss.
-      </p>
-      <p>
-        t-SNE of the learned embedding space confirmed clean separation of normal vs. degraded engine states. S-scores (asymmetric scoring) favored the GRU for accuracy but Embed-RUL provided interpretable health trajectories useful for safety-critical monitoring.
-      </p>
-      <p class="metric">Embed-RUL: unsupervised health representation · GRU RMSE 13.17</p>
-    </div>
-  </div>
-
-  <h3>Course Highlight Figures</h3>
-  <p style="font-size:0.9rem; color:var(--muted); margin-bottom:20px;">
-    Selected outputs from the general ML/AI course assignments.
-  </p>
-  <div class="image-grid">
-    <figure>
-      <img src="images/AI (1).png" alt="X-ray fracture image used in landmark detection homework">
-      <figcaption style="font-size:0.83rem; color:var(--muted); margin-top:8px; font-style:italic; text-align:center; line-height:1.5;">
-        X-ray image from the landmark detection dataset. The regression model predicts the 2D pixel location of anatomical landmarks from these radiograph inputs.
-      </figcaption>
-    </figure>
-    <figure>
-      <img src="images/AI (3).png" alt="Predicted vs actual landmark locations on X-ray images">
-      <figcaption style="font-size:0.83rem; color:var(--muted); margin-top:8px; font-style:italic; text-align:center; line-height:1.5;">
-        Predicted (×) vs. actual (○) anatomical landmark locations across four held-out test images. Per-image pixel errors range from 7–17 px across folds and views.
-      </figcaption>
-    </figure>
-  </div>
-  <div class="image-grid">
-    <figure>
-      <img src="images/fig_tsne.png" alt="t-SNE of Embed-RUL encoder embeddings">
-      <figcaption style="font-size:0.83rem; color:var(--muted); margin-top:8px; font-style:italic; text-align:center; line-height:1.5;">
-        t-SNE of Embed-RUL encoder embeddings. Healthy-state engine windows cluster separately from degraded windows — this separation emerged from reconstruction loss alone, with no RUL labels provided during autoencoder training.
-      </figcaption>
-    </figure>
-    <figure>
-      <img src="images/fig_hi_curves.png" alt="Embed-RUL Health Index curves">
-      <figcaption style="font-size:0.83rem; color:var(--muted); margin-top:8px; font-style:italic; text-align:center; line-height:1.5;">
-        Embed-RUL learned Health Index (HI) curves across FD001 training engines. HI increases monotonically from near-zero (healthy) toward peak (near failure), providing an interpretable degradation signal without supervision.
-      </figcaption>
-    </figure>
   </div>
 </section>
 
-<!-- DEEP LEARNING (separate course, following semester) -->
-<section>
-  <h2>Deep Learning — A Separate Course</h2>
-  <p>
-    <strong>AI &amp; Machine Learning</strong> and <strong>Deep Learning</strong> are two distinct graduate courses
-    taken in consecutive semesters at CMU. The AI/ML course (above) covers classical foundations through
-    sequence models and generative basics. Deep Learning goes deeper: the three capstone homeworks below
-    each required implementing a non-trivial architecture from scratch and applying it to a PDE or
-    engineering dataset.
-  </p>
-
-  <div class="hw-grid">
-    <div class="hw-card">
-      <div class="hw-tag">HW7 · Deep Learning</div>
-      <h4>Decoder-Only Transformer for the 1D Burgers PDE</h4>
-      <p>
-        Implemented scaled dot-product attention in NumPy, then built a full decoder-only transformer
-        in PyTorch to solve the <strong>1D Burgers equation</strong> — a nonlinear PDE that develops
-        sharp shock discontinuities. The model autoregressively generates the solution field one time
-        step at a time, conditioned on previous solution values.
-      </p>
-      <p>
-        Key implementation: causal masking prevents the model from attending to future time steps
-        during autoregressive generation. Positional encodings encode the spatial grid.
-        Trained with MSE loss against ground-truth numerical solutions.
-      </p>
-      <p class="metric">Architecture: Decoder-only transformer · Numpy attention kernel · PyTorch training</p>
-    </div>
-
-    <div class="hw-card">
-      <div class="hw-tag">HW8 · Deep Learning</div>
-      <h4>Masked Autoencoder (ViT) for 1D Advection PDE</h4>
-      <p>
-        Implemented a <strong>Masked Autoencoder (MAE)</strong> with a Vision Transformer encoder and
-        lightweight decoder for self-supervised learning on the 1D Advection equation. During training,
-        75% of input patches are masked; the model learns to reconstruct the missing solution field.
-      </p>
-      <p>
-        The t-SNE visualization of learned latent embeddings reveals that the model <em>self-organizes
-        by wave speed</em> without ever seeing wave speed labels — purely from reconstruction loss.
-        <strong>Validation MSE = 0.0409</strong> (target threshold &lt; 0.05, achieves full marks).
-      </p>
-      <p class="metric">Valid MSE = 0.0409 · Latent space self-organizes by wave speed</p>
-    </div>
-
-    <div class="hw-card">
-      <div class="hw-tag">HW9 · Deep Learning</div>
-      <h4>β-VAE on the UIUC Airfoil Database</h4>
-      <p>
-        Trained a <strong>β-Variational Autoencoder</strong> on the UIUC airfoil shape database.
-        The encoder maps airfoil coordinates to a Gaussian latent distribution; the decoder
-        reconstructs (or generates) aerodynamic profiles. The β coefficient controls the
-        KL divergence weight in the ELBO loss, trading reconstruction fidelity for disentanglement.
-      </p>
-      <p>
-        By sampling from the learned latent space, the model generates <strong>novel aerodynamic
-        profiles</strong> — smooth, physically plausible airfoil shapes not present in the training set.
-        The reparameterization trick enables end-to-end gradient flow through the stochastic sampling.
-      </p>
-      <p class="metric">Generates novel aerodynamic profiles · ELBO = reconstruction + β·KL</p>
-    </div>
-  </div>
-
-  <h3>Example Works — Selected Figures from Deep Learning Assignments</h3>
-  <p style="font-size:0.9rem; color:var(--muted); margin-bottom:24px;">
-    Figures below are extracted directly from the homework notebooks. All implementations are independent coursework.
-  </p>
-
-  <div class="image-grid">
-    <figure>
-      <img src="images/hw7_cell19_out0.png" alt="HW7 — Transformer ground-truth vs. predicted Burgers solution">
-      <figcaption style="font-size:0.83rem; color:var(--muted); margin-top:8px; font-style:italic; text-align:center; line-height:1.5;">
-        Fig. HW7: Decoder-only transformer on 1D Burgers equation — ground truth (top), autoregressive prediction (middle), and absolute error (bottom). The model captures the shock front location despite no explicit physics constraint.
-      </figcaption>
-    </figure>
-    <figure>
-      <img src="images/hw8_cell19_out0.png" alt="HW8 — MAE masked reconstruction of 1D Advection PDE solutions">
-      <figcaption style="font-size:0.83rem; color:var(--muted); margin-top:8px; font-style:italic; text-align:center; line-height:1.5;">
-        Fig. HW8: Masked Autoencoder reconstruction — 4×3 grid of 1D Advection PDE solutions. Left column: original; center: masked input (75% masked); right: ViT encoder-decoder reconstruction. Valid MSE = 0.0409.
-      </figcaption>
-    </figure>
-  </div>
-
-  <div class="image-grid">
-    <figure>
-      <img src="images/hw8_cell24_out1.png" alt="HW8 — t-SNE of MAE latent embeddings self-organizing by wave speed">
-      <figcaption style="font-size:0.83rem; color:var(--muted); margin-top:8px; font-style:italic; text-align:center; line-height:1.5;">
-        Fig. HW8: t-SNE of MAE latent embeddings colored by advection wave speed. The latent space self-organizes by wave speed — entirely emergent from reconstruction loss alone, with no wave speed labels during training.
-      </figcaption>
-    </figure>
-    <figure>
-      <img src="images/hw9_cell20_out0.png" alt="HW9 — β-VAE generated aerodynamic profiles from UIUC airfoil database">
-      <figcaption style="font-size:0.83rem; color:var(--muted); margin-top:8px; font-style:italic; text-align:center; line-height:1.5;">
-        Fig. HW9: Novel airfoil profiles generated by sampling from the β-VAE latent space. Shapes are smooth and aerodynamically plausible — none are copies of training examples. Generated by decoding random draws from 𝒩(0,I).
-      </figcaption>
-    </figure>
-  </div>
-</section>
 
 <!-- APPLIED TO REAL PROBLEMS -->
 <section>
@@ -420,7 +266,7 @@
 <section>
   <h2>What This Builds Toward</h2>
   <p>
-    The thread across all of this work is the same: <em>building models that are right for their domain</em>, not just models that score well on a benchmark. A GRU that achieves RMSE 13 on FD001 is impressive — until you realize it fails completely on FD002. A Bayesian model that gives uncertain predictions on a hard case is more useful than a neural network that confidently outputs the wrong answer.
+    The thread across all of this work is the same: <em>building models that are right for their domain</em>, not just models that score well on a benchmark. A model that gives uncertain predictions on a hard case is more useful than one that confidently outputs the wrong answer.
   </p>
   <p>
     I want to keep working at the intersection of ML and physical systems — where models have to interact with sensors, bodies, and environments that don't cooperate. The engineering constraints make the problems harder and the solutions more meaningful.

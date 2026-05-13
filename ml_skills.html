@@ -255,7 +255,7 @@
       <h4>Decoder-Only Transformer for the 1D Burgers PDE</h4>
       <p>
         Implemented scaled dot-product attention in NumPy, then built a full decoder-only transformer
-        in PyTorch to solve the <strong>1D Burgers equation</strong> — a nonlinear PDE that develops
+        in PyTorch to solve the <strong>1D Burgers equation</strong> a nonlinear PDE that develops
         sharp shock discontinuities. The model autoregressively generates the solution field one time
         step at a time, conditioned on previous solution values.
       </p>
@@ -277,7 +277,7 @@
       </p>
       <p>
         The t-SNE visualization of learned latent embeddings reveals that the model <em>self-organizes
-        by wave speed</em> without ever seeing wave speed labels — purely from reconstruction loss.
+        by wave speed</em> without ever seeing wave speed labels purely from reconstruction loss.
         <strong>Validation MSE = 0.0409</strong> (target threshold &lt; 0.05, achieves full marks).
       </p>
       <p class="metric">Valid MSE = 0.0409 · Latent space self-organizes by wave speed</p>
@@ -346,10 +346,10 @@
 
   <h3>Foot Placement Prediction (Current RA Research)</h3>
   <p>
-    My current research at CMU explores ML/AI models for predicting human intent for prosthetic leg control — specifically predicting where the foot will land before it does, from a single heel-mounted IMU. Unlike clean benchmark datasets, gait data is messy: sensor drift, inter-subject variability, and tight latency constraints for embedded deployment.
+    My current research at CMU explores ML/AI models for predicting human intent for prosthetic leg control, specifically predicting where the foot will land before it does, from a single heel-mounted IMU. Unlike clean benchmark datasets, gait data is messy: sensor drift, inter-subject variability, and tight latency constraints for embedded deployment.
   </p>
   <p>
-    The current evaluation uses a Bayesian sequential framework, but the active direction is benchmarking this against learned approaches — LSTMs, temporal CNNs — and exploring whether intent can be detected from hip-only sensing rather than a foot-mounted sensor.
+    The current evaluation uses a Bayesian sequential framework, but the active direction is benchmarking this against learned approaches like LSTMs, temporal CNNs and exploring whether intent can be detected from hip-only sensing rather than a foot-mounted sensor.
   </p>
 
   <div class="highlight-box">

@@ -181,7 +181,7 @@
       This project implements and compares two deep learning architectures for Remaining Useful Life (RUL)
       prediction on the NASA C-MAPSS turbofan engine degradation dataset. A two-layer GRU baseline trained
       with an asymmetric scoring loss achieves <strong>RMSE 13.17 cycles</strong> on the FD001 in-distribution
-      test set. Embed-RUL — an encoder-decoder architecture with a learned Health Indicator — achieves
+      test set. Embed-RUL, an encoder-decoder architecture with a learned Health Indicator achieves
       RMSE 64.02 on FD001 but fails entirely on multi-condition subsets (FD002, FD004) where test engine
       lifetimes exceed all training references. t-SNE visualizations confirm that distribution shift drives
       embedding-space failure. Statistical testing (paired t-tests, p &lt; 10⁻⁶) confirms GRU significantly
@@ -197,7 +197,7 @@
       <p><strong>Problem:</strong> Turbofan engines degrade continuously from first flight to failure.
       Unplanned failures cost airlines an estimated 10× more than scheduled maintenance and carry safety risks.
       Predictive maintenance requires estimating the Remaining Useful Life (RUL) — how many flight cycles
-      remain before a failure threshold is crossed — from real-time sensor data.</p>
+      remain before a failure threshold is crossed from real-time sensor data.</p>
     </div>
 
     <p>
@@ -312,7 +312,7 @@
       At test time, the encoder embeds the test engine's trajectory. The resulting HI curve is compared
       against all 80 reference HI curves using exponential similarity weighting (λ = 0.005). A valid
       prediction requires that the test curve length does not exceed the reference curve length
-      (t_D + T ≤ T_ref) — a constraint that fails entirely for longer-lived FD002/FD004 engines.
+      (t_D + T ≤ T_ref) a constraint that fails entirely for longer-lived FD002/FD004 engines.
     </p>
 
     <figure>
@@ -418,14 +418,14 @@
       <p><strong>Embed-RUL failure on FD002/FD004:</strong> The similarity-based RUL estimator requires
       that the test engine's operational lifetime does not exceed any reference curve in the training set
       (t_D + T ≤ T_ref). FD002 and FD004 engines operate under 6 conditions and run significantly longer
-      than FD001 training engines — no valid reference match is found for any of the 497 test engines in
+      than FD001 training engines no valid reference match is found for any of the 497 test engines in
       these subsets. This is a fundamental algorithmic limitation, not a generalization failure of the encoder itself.</p>
     </div>
 
     <div class="box-result">
       <p><strong>GRU cross-condition breakdown:</strong> The GRU produces predictions for all engines but
       shows catastrophic distribution shift on FD002/FD004 (mean error −99 to −108 cycles, 93% FPR).
-      On FD003 (same operating condition, different fault), RMSE degrades from 13 to 42 — reflecting a
+      On FD003 (same operating condition, different fault), RMSE degrades from 13 to 42 reflecting a
       moderate fault-mode shift that the model partially handles.</p>
     </div>
   </section>
@@ -465,7 +465,7 @@
     <p>
       Both tests reject the null hypothesis (equal errors) at α = 0.001. Despite GRU's worse timeliness
       score S on FD003 (S = 334,233 vs. Embed-RUL S = 105,570), the GRU's absolute RMSE advantage is
-      statistically decisive — and its 100% coverage (vs. 65/100 for Embed-RUL on FD003) is a practical
+      statistically decisive and its 100% coverage (vs. 65/100 for Embed-RUL on FD003) is a practical
       requirement for deployment.
     </p>
   </section>
@@ -476,7 +476,7 @@
 
     <p>
       The GRU baseline demonstrates strong in-distribution performance (RMSE 13.17 on FD001) but fails
-      to generalize to multi-condition subsets — a known limitation of supervised RUL models trained on
+      to generalize to multi-condition subsets a known limitation of supervised RUL models trained on
       a single operating regime. Embed-RUL's learned embeddings are interpretable and show clear
       degradation structure in t-SNE space, but the similarity-based RUL estimator introduces a hard
       constraint (test lifetime ≤ training reference) that prevents deployment on longer-running engines.

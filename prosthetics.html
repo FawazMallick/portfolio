@@ -164,13 +164,11 @@
     <div class="abstract-label">Abstract</div>
     <p>
       Accurate early prediction of foot placement is critical for proactive control of powered lower-limb prostheses
-      and exoskeletons. This work evaluates a Bayesian foot placement predictor — based on the framework of
-      Chen et al.&nbsp;[9] — in a <strong>real-time online setting</strong> for the first time, with predictions
+      and exoskeletons. This work evaluates a Bayesian foot placement predictor based on the framework of
+      Chen et al.&nbsp;[9] in a <strong>real-time online setting</strong> for the first time, with predictions
       delivered at <strong>100 Hz with &lt;10 ms latency</strong> from a live heel-mounted IMU stream.
-      The evaluation extends to two additional <strong>inter-step features</strong> (x<sub>g,prev</sub>,&nbsp;y<sub>g,prev</sub>)
-      trained subject-specifically from <strong>IMU dead-reckoning, requiring no motion-capture laboratory</strong>,
-      and a <strong>probabilistic landing update</strong> that treats the ZUPT-INS dead-reckoned heel position
-      as a 9th Bayesian observation at each heel-strike.
+      The evaluation extends to three additional features (not disclosed here)
+      trained subject-specifically from <strong>IMU dead-reckoning, requiring no motion-capture laboratory</strong>.
       Evaluated on <strong>108 over-ground walking steps</strong>, the best configuration achieves
       <strong>RMSE<sub>|d|</sub> = 29.3 cm</strong> with predictions issued <strong>376 ms before heel-strike</strong>.
       Subject-specific IMU training reduces placement error by <strong>46%</strong> over out-of-domain motion-capture models.
@@ -202,7 +200,7 @@
       the most IMU-compatible approach: a Bayesian predictor using six swing-phase features from a heel-mounted IMU
       that sequentially updates a 2-D foot placement grid. Xiong et al.&nbsp;[10] extended it to complex terrains.
       <strong>Prior work evaluates either online reactive strategies or offline predictive strategies on stored
-      trajectories.</strong> This work is the first to evaluate the Bayesian framework in real time on live hardware,
+      trajectories.</strong> This work evaluates the Bayesian framework in real time on live hardware,
       closing the gap between offline prediction and practical deployment.
     </p>
   </section>
@@ -230,7 +228,7 @@
     </div>
     <p>
       The predicted placement is the weighted centroid of the final posterior. Each grid evaluation takes
-      ≈150 ms per step in MATLAB as reported by Chen et al.&nbsp;[9] — too slow for real-time prosthesis control.
+      ≈150 ms per step in MATLAB as reported by Chen et al.&nbsp;[9] too slow for real-time prosthesis control.
       This paper achieves &lt;10 ms per step.
     </p>
   </section>
@@ -242,8 +240,7 @@
     <h3>A. Extended Feature Set (8 Features)</h3>
     <p>
       We retain the six swing-phase features of Chen et al.&nbsp;[9] (f<sub>A</sub>–f<sub>F</sub>) and add
-      two novel <strong>inter-step features</strong>: x<sub>g,prev</sub> and y<sub>g,prev</sub>, the AP and ML
-      foot placements of the <em>immediately preceding step</em> estimated from IMU dead-reckoning.
+      three novel <strong>inter-step features</strong>, two of which are used in the sequential update, which can be estimated from IMU dead-reckoning.
       No laboratory, motion-capture system, or additional sensor is required these values are computed
       entirely from the ongoing ZUPT-INS trajectory.
     </p>
@@ -256,10 +253,10 @@
       <tr><td>f<sub>D</sub></td><td>Peak vertical position</td><td>m</td><td>Chen et al. [9]</td></tr>
       <tr><td>f<sub>E</sub></td><td>AP position at vertical apex</td><td>m</td><td>Chen et al. [9]</td></tr>
       <tr><td>f<sub>F</sub></td><td>ML position at vertical apex</td><td>m</td><td>Chen et al. [9]</td></tr>
-      <tr><td><strong>x<sub>g,prev</sub></strong></td><td><strong>Prev. step AP placement (IMU dead-reckoning)</strong></td><td>m</td><td><strong>Extended</strong></td></tr>
-      <tr><td><strong>y<sub>g,prev</sub></strong></td><td><strong>Prev. step ML placement (IMU dead-reckoning)</strong></td><td>m</td><td><strong>Extended</strong></td></tr>
+      <tr><td><strong>F<sub>7</sub></strong></td><td><strong>From IMU dead-reckoning</strong></td><td>m</td><td><strong>Extended</strong></td></tr>
+      <tr><td><strong>F<sub>8</sub></strong></td><td><strong>From IMU dead-reckoning</strong></td><td>m</td><td><strong>Extended</strong></td></tr>
     </table>
-    <p class="table-caption">Table I. Swing-phase features. f<sub>A</sub>–f<sub>F</sub> replicate Chen et al. [9]; x<sub>g,prev</sub>, y<sub>g,prev</sub> are novel inter-step features requiring no laboratory infrastructure.</p>
+    <p class="table-caption">Table I. Swing-phase features. f<sub>A</sub>–f<sub>F</sub> replicate Chen et al. [9]; F<sub>7</sub>, F<sub>8</sub> are novel inter-step features requiring no laboratory infrastructure.</p>
 
     <h3>B. Modified Prior Distribution</h3>
     <p>
@@ -269,7 +266,7 @@
     </p>
     <div class="eq">
       p<sub>0</sub>(x<sub>g</sub>) ∝ { 1 (k ≤ 1),  1 + (β / √(2π σ<sub>p</sub>)) · exp(−‖x<sub>g</sub> − x̂<sup>(k−1)</sup>‖² / 2σ<sub>p</sub>²)  (k ≥ 2) }
-      <span class="eq-num">(4)</span>
+      <span class="eq-num">(3)</span>
     </div>
     <p>
       where σ<sub>p</sub> = 0.10 m and β = 0.5. For k ≥ 2 in the IMU variant, x̂<sup>(k−1)</sup> is replaced by
@@ -280,18 +277,7 @@
     <h3>C. IMU Landing Probability Update (9th Bayesian Observation)</h3>
     <p>
       At heel-strike, the ZUPT-INS provides a dead-reckoned landing estimate x̂<sub>IMU</sub> ∈ ℝ². We treat
-      this as a <strong>9th Bayesian observation</strong> by evaluating a 2-D Gaussian likelihood over the grid
-      and multiplying into the current posterior:
-    </p>
-    <div class="eq">
-      P<sub>ref</sub>(C) = α · P(x̂<sub>IMU</sub> | C) · P<sub>N</sub>(C),  where  P(x̂<sub>IMU</sub> | C) = 𝒩(C; x̂<sub>IMU</sub>, Σ<sub>pp</sub>)
-      <span class="eq-num">(8–9)</span>
-    </div>
-    <p>
-      The placement noise covariance Σ<sub>pp</sub> = σ<sub>a</sub>² T³/3 · I (σ<sub>a</sub> = 0.028 m/s²,
-      T = swing duration) grows with swing time. The centroid of P<sub>ref</sub> seeds the prior for the next step,
-      coupling successive predictions. This creates a closed-loop correction mechanism: even if the swing-phase
-      prediction has lateral drift, the landing update corrects it before the following step begins.
+      this as a <strong>9th Bayesian observation</strong>:
     </p>
 
     <div class="fig-grid">
@@ -341,7 +327,7 @@
     </div>
     <p>
       The ZUPT-INS dead-reckoned positions serve triple duty: feature extraction during swing, inter-step feature
-      labelling (x<sub>g,prev</sub>, y<sub>g,prev</sub>), and the 9th-observation landing update at heel-strike.
+      labelling (x<sub>g,prev</sub>, y<sub>g,prev</sub>), and the landing update at heel-strike.
     </p>
 
     <h3>Real-Time Feature Extraction Timing</h3>
@@ -363,7 +349,7 @@
       To replicate and extend the offline evaluation of Chen et al.&nbsp;[9], we use the Camargo et al.
       dataset&nbsp;[11]: VICON (200 Hz), IMU, and EMG from 22 able-bodied subjects walking at 0.5–1.85 m/s
       on a treadmill. Subjects AB06–AB12 are used for training (n = 10,323 steps); AB13 is held out for
-      cross-subject evaluation (n = 1,306 steps). This is a purely <em>offline</em> test — features are
+      cross-subject evaluation (n = 1,306 steps). This is a purely <em>offline</em> test, features are
       extracted from stored trajectories and ground-truth labels are VICON marker data.
     </p>
 
@@ -377,8 +363,7 @@
     <p>
       Quality filters retain steps with swing duration &lt; 1.5 s; 0.10 &lt; x<sub>IMU</sub> &lt; 2.50 m;
       |y<sub>IMU</sub>| &lt; 2.00 m → n<sub>6</sub> = 10,916 steps. For the 8-feature model, a 1-σ lateral
-      filter removes turn-contaminated steps → <strong>n<sub>8</sub> = 9,279 steps</strong>. Without this
-      filter, γ<sub>y<sub>g,prev</sub></sub> = 0.130 (unreliable); after filtering it drops to 0.035.
+      filter removes turn-contaminated steps.
     </p>
 
     <h3>C. Real-Time Evaluation Session</h3>
@@ -459,8 +444,8 @@
       <ul>
         <li><strong>Domain gap (7× error increase):</strong> VICON-trained models achieve &lt;7 cm on the treadmill but degrade to ≈54 cm RMSE<sub>|d|</sub> on free walking, driven by differences in constrained vs. variable-speed kinematics, spontaneous direction changes, and footwear-surface dynamics</li>
         <li><strong>IMU subject-specific training closes the gap:</strong> Training on 96 free-walking sessions (no lab equipment) reduces free-walking error to 29.3 cm a 46% reduction over VICON models</li>
-        <li><strong>Landing update corrects lateral drift:</strong> For IMU Variant 1, the 9th observation reduces RMSE<sub>|d|</sub> by 4.6 cm (−12.7%), driven primarily by lateral correction (ΔRMSE<sub>y</sub> = −12.6 cm). The ZUPT-INS ML dead-reckoning is more reliable (σ<sub>pp,y</sub> = 16.7 cm) than AP (σ<sub>pp,x</sub> = 77.5 cm)</li>
-        <li><strong>Inter-step features require the lateral filter:</strong> Without the 1-σ lateral filter, γ<sub>y<sub>g,prev</sub></sub> = 0.130 (turn-contaminated, noisy); after filtering it drops to 0.035, validating the inter-step feature approach</li>
+        <li><strong>Landing update corrects lateral drift:</strong> For IMU Variant 1, the 9th observation reduces RMSE<sub>|d|</sub> by 4.6 cm (−12.7%)</li>
+        <li><strong>Inter-step features require the lateral filter </strong>
         <li><strong>376 ms lead time:</strong> Predictions are emitted at ≈52% of the swing phase, well within the ~150 ms actuation budget of powered prosthetic ankles</li>
         <li><strong>&lt;10 ms per step:</strong> 15× faster than Chen et al.'s MATLAB implementation, enabling real-time embedded deployment</li>
       </ul>
@@ -475,21 +460,18 @@
       The large VICON-to-free-walking domain gap arises because treadmill walking enforces a constrained,
       periodic gait pattern at fixed speeds, while free walking involves variable speed, spontaneous direction
       changes, and different footwear-surface dynamics. Subject-specific IMU training in the deployment
-      environment eliminates this gap <em>without any laboratory infrastructure</em> — the subject simply
+      environment eliminates this gap <em>without any laboratory infrastructure</em> the subject simply
       walks freely in the corridors where the device will be used.
     </p>
     <p>
       The 1-σ lateral filter is a practical necessity when walking sessions contain turns. Turn steps have
-      |y<sub>IMU</sub>| far outside the straight-line distribution, poisoning the inter-step regression for
-      y<sub>g,prev</sub>. Curating a straight-line sub-dataset is sufficient to recover reliable ML inter-step
+      |y<sub>IMU</sub>| far outside the straight-line distribution, poisoning the inter-step regression . Curating a straight-line sub-dataset is sufficient to recover reliable ML inter-step
       features without additional hardware.
     </p>
     <p>
       For real amputee users, foot IMU data originates from the prosthetic limb whose motion is actively
-      controlled by the device — using that signal to predict the placement the device must achieve introduces
-      circular reasoning. A <strong>contralateral hip or thigh IMU</strong> avoids this dependency and may
-      preserve the inter-step correlation structure exploited by x<sub>g,prev</sub> and y<sub>g,prev</sub>.
-      This is the primary direction for future clinical translation.
+      controlled by the device using that signal to predict the placement the device must achieve introduces
+      circular reasoning. A <strong>contralateral hip or thigh IMU</strong> avoids this dependency, and proves to be the primary direction to explore, in order to extend the work on amputee patients
     </p>
   </section>
 

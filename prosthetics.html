@@ -139,10 +139,11 @@
   <div class="notice-pub">
     <div class="icon">⚠️</div>
     <p>
-      <strong>Manuscript — CMU Neuromechanical Systems Lab.</strong>
+      <strong>Manuscript — CMU Graduate Research.</strong>
       This page presents the full content of a technical manuscript written independently by Fawaz Mallick
-      as part of research in Dr. Hartmut Geyer's Neuromechanical Systems Lab at Carnegie Mellon University.
+      as part of ongoing graduate research at Carnegie Mellon University (PI: Dr. Hartmut Geyer).
       The work was evaluated on live IMU hardware in real over-ground walking conditions.
+      This is ongoing work with further testing underway.
     </p>
   </div>
 
@@ -163,13 +164,13 @@
     <div class="abstract-label">Abstract</div>
     <p>
       Accurate early prediction of foot placement is critical for proactive control of powered lower-limb prostheses
-      and exoskeletons. We extend the Bayesian foot placement predictor of Chen et al.&nbsp;[9] with three contributions:
-      (i)&nbsp;the <strong>first real-time online validation</strong> of the framework — predictions delivered at
-      <strong>100 Hz with &lt;10 ms latency</strong> from a live heel-mounted IMU stream, versus offline evaluation
-      in all prior work; (ii)&nbsp;two additional <strong>inter-step features</strong> (x<sub>g,prev</sub>,&nbsp;y<sub>g,prev</sub>)
-      trained subject-specifically from <strong>IMU dead-reckoning, requiring no motion-capture laboratory</strong>;
-      and (iii)&nbsp;a <strong>probabilistic landing update</strong> that treats the ZUPT-INS dead-reckoned heel position
-      as a 9th Bayesian observation at each heel-strike, coupling successive step predictions.
+      and exoskeletons. This work evaluates a Bayesian foot placement predictor — based on the framework of
+      Chen et al.&nbsp;[9] — in a <strong>real-time online setting</strong> for the first time, with predictions
+      delivered at <strong>100 Hz with &lt;10 ms latency</strong> from a live heel-mounted IMU stream.
+      The evaluation extends to two additional <strong>inter-step features</strong> (x<sub>g,prev</sub>,&nbsp;y<sub>g,prev</sub>)
+      trained subject-specifically from <strong>IMU dead-reckoning, requiring no motion-capture laboratory</strong>,
+      and a <strong>probabilistic landing update</strong> that treats the ZUPT-INS dead-reckoned heel position
+      as a 9th Bayesian observation at each heel-strike.
       Evaluated on <strong>108 over-ground walking steps</strong>, the best configuration achieves
       <strong>RMSE<sub>|d|</sub> = 29.3 cm</strong> with predictions issued <strong>376 ms before heel-strike</strong>.
       Subject-specific IMU training reduces placement error by <strong>46%</strong> over out-of-domain motion-capture models.
@@ -200,8 +201,9 @@
       multi-sensor sequences&nbsp;[7], or neuro-fuzzy step-length regressors&nbsp;[8]. Chen et al.&nbsp;[9] proposed
       the most IMU-compatible approach: a Bayesian predictor using six swing-phase features from a heel-mounted IMU
       that sequentially updates a 2-D foot placement grid. Xiong et al.&nbsp;[10] extended it to complex terrains.
-      <strong>All prior work evaluates offline on stored trajectories.</strong> This paper is the first to validate
-      the framework in real-time on live hardware.
+      <strong>Prior work evaluates either online reactive strategies or offline predictive strategies on stored
+      trajectories.</strong> This work is the first to evaluate the Bayesian framework in real time on live hardware,
+      closing the gap between offline prediction and practical deployment.
     </p>
   </section>
 
@@ -254,8 +256,8 @@
       <tr><td>f<sub>D</sub></td><td>Peak vertical position</td><td>m</td><td>Chen et al. [9]</td></tr>
       <tr><td>f<sub>E</sub></td><td>AP position at vertical apex</td><td>m</td><td>Chen et al. [9]</td></tr>
       <tr><td>f<sub>F</sub></td><td>ML position at vertical apex</td><td>m</td><td>Chen et al. [9]</td></tr>
-      <tr><td><strong>x<sub>g,prev</sub></strong></td><td><strong>Prev. step AP placement (IMU dead-reckoning)</strong></td><td>m</td><td><strong>Novel</strong></td></tr>
-      <tr><td><strong>y<sub>g,prev</sub></strong></td><td><strong>Prev. step ML placement (IMU dead-reckoning)</strong></td><td>m</td><td><strong>Novel</strong></td></tr>
+      <tr><td><strong>x<sub>g,prev</sub></strong></td><td><strong>Prev. step AP placement (IMU dead-reckoning)</strong></td><td>m</td><td><strong>Extended</strong></td></tr>
+      <tr><td><strong>y<sub>g,prev</sub></strong></td><td><strong>Prev. step ML placement (IMU dead-reckoning)</strong></td><td>m</td><td><strong>Extended</strong></td></tr>
     </table>
     <p class="table-caption">Table I. Swing-phase features. f<sub>A</sub>–f<sub>F</sub> replicate Chen et al. [9]; x<sub>g,prev</sub>, y<sub>g,prev</sub> are novel inter-step features requiring no laboratory infrastructure.</p>
 
@@ -395,7 +397,7 @@
     <h2>VII. Results</h2>
 
     <div class="metric-row">
-      <div class="metric-card"><div class="num">29.3</div><div class="unit">cm</div><div class="lbl">Best RMSE<sub>|d|</sub> (IMU 8-feat+land)</div></div>
+      <div class="metric-card"><div class="num">29.3</div><div class="unit">cm</div><div class="lbl">Best RMSE<sub>|d|</sub> (IMU Variant 4)</div></div>
       <div class="metric-card"><div class="num">376</div><div class="unit">ms</div><div class="lbl">Prediction lead time before heel-strike</div></div>
       <div class="metric-card"><div class="num">&lt;10</div><div class="unit">ms</div><div class="lbl">Per-step grid inference (vs. ≈150 ms prior art)</div></div>
       <div class="metric-card"><div class="num">46%</div><div class="unit">reduction</div><div class="lbl">IMU vs. VICON-trained error on free walking</div></div>
@@ -404,30 +406,30 @@
     <h3>A. VICON Offline Cross-Validation (Treadmill — Table II)</h3>
     <table>
       <tr><th>Subject</th><th>Model</th><th>n steps</th><th>RMSE<sub>x</sub> (cm)</th><th>RMSE<sub>y</sub> (cm)</th><th>RMSE<sub>|d|</sub> (cm)</th></tr>
-      <tr><td>AB06</td><td>6-feat</td><td>1815</td><td>9.9</td><td>2.2</td><td>8.4</td></tr>
-      <tr><td>AB06</td><td>8-feat</td><td>1815</td><td class="best">5.0</td><td>2.3</td><td class="best">4.4</td></tr>
-      <tr><td>AB07</td><td>6-feat</td><td>1698</td><td>11.5</td><td>3.6</td><td>10.2</td></tr>
-      <tr><td>AB07</td><td>8-feat</td><td>1698</td><td class="best">6.0</td><td>3.6</td><td class="best">6.1</td></tr>
-      <tr><td>AB09</td><td>6-feat</td><td>1604</td><td>10.9</td><td>3.1</td><td>9.8</td></tr>
-      <tr><td>AB09</td><td>8-feat</td><td>1604</td><td class="best">5.2</td><td>3.8</td><td class="best">5.5</td></tr>
-      <tr><td>AB13 †</td><td>6-feat</td><td>1306</td><td>9.7</td><td>3.3</td><td>8.9</td></tr>
-      <tr><td>AB13 †</td><td>8-feat</td><td>1306</td><td class="best">5.8</td><td>3.6</td><td class="best">6.8</td></tr>
+      <tr><td>AB06</td><td>Variant 1</td><td>1815</td><td>9.9</td><td>2.2</td><td>8.4</td></tr>
+      <tr><td>AB06</td><td>Variant 3</td><td>1815</td><td class="best">5.0</td><td>2.3</td><td class="best">4.4</td></tr>
+      <tr><td>AB07</td><td>Variant 1</td><td>1698</td><td>11.5</td><td>3.6</td><td>10.2</td></tr>
+      <tr><td>AB07</td><td>Variant 3</td><td>1698</td><td class="best">6.0</td><td>3.6</td><td class="best">6.1</td></tr>
+      <tr><td>AB09</td><td>Variant 1</td><td>1604</td><td>10.9</td><td>3.1</td><td>9.8</td></tr>
+      <tr><td>AB09</td><td>Variant 3</td><td>1604</td><td class="best">5.2</td><td>3.8</td><td class="best">5.5</td></tr>
+      <tr><td>AB13 †</td><td>Variant 1</td><td>1306</td><td>9.7</td><td>3.3</td><td>8.9</td></tr>
+      <tr><td>AB13 †</td><td>Variant 3</td><td>1306</td><td class="best">5.8</td><td>3.6</td><td class="best">6.8</td></tr>
     </table>
-    <p class="table-caption">Table II. VICON model — per-subject leave-one-out on Camargo treadmill data. † AB13 is cross-subject (unseen during training). 8-feature model reduces AP error ≈45% vs. 6-feature, consistent with Chen et al. [9].</p>
+    <p class="table-caption">Table II. VICON model — per-subject leave-one-out on Camargo treadmill data. † AB13 is cross-subject (unseen during training). Variant 3 reduces AP error ≈45% vs. Variant 1, consistent with Chen et al. [9].</p>
 
     <h3>B. Real-Walking Evaluation — All 8 Configurations (Table III)</h3>
     <table>
-      <tr><th>Train</th><th>Config</th><th>RMSE<sub>x</sub> (cm)</th><th>RMSE<sub>y</sub> (cm)</th><th>RMSE<sub>|d|</sub> (cm)</th><th>Mean |d| (cm)</th></tr>
-      <tr><td rowspan="4">VICON</td><td>6-feat</td><td>50.4</td><td>11.4</td><td>51.7</td><td>44.8</td></tr>
-      <tr><td>6-feat+land</td><td>49.2</td><td>10.5</td><td>50.3</td><td>44.1</td></tr>
-      <tr><td>8-feat</td><td>53.4</td><td>8.8</td><td>54.1</td><td>35.6</td></tr>
-      <tr><td>8-feat+land</td><td>53.1</td><td>8.9</td><td>53.8</td><td>37.2</td></tr>
-      <tr><td rowspan="4">IMU</td><td>6-feat</td><td>28.4</td><td>22.6</td><td>36.3</td><td>32.3</td></tr>
-      <tr><td>6-feat+land</td><td>30.1</td><td>10.0</td><td>31.7</td><td>24.7</td></tr>
-      <tr><td>8-feat</td><td>27.2</td><td>11.7</td><td>29.6</td><td>23.3</td></tr>
-      <tr><td><strong>8-feat+land</strong></td><td class="best">27.0</td><td class="best">11.4</td><td class="best">29.3</td><td class="best">23.3</td></tr>
+      <tr><th>Train</th><th>Variant</th><th>RMSE<sub>x</sub> (cm)</th><th>RMSE<sub>y</sub> (cm)</th><th>RMSE<sub>|d|</sub> (cm)</th><th>Mean |d| (cm)</th></tr>
+      <tr><td rowspan="4">VICON</td><td>Variant 1</td><td>50.4</td><td>11.4</td><td>51.7</td><td>44.8</td></tr>
+      <tr><td>Variant 2</td><td>49.2</td><td>10.5</td><td>50.3</td><td>44.1</td></tr>
+      <tr><td>Variant 3</td><td>53.4</td><td>8.8</td><td>54.1</td><td>35.6</td></tr>
+      <tr><td>Variant 4</td><td>53.1</td><td>8.9</td><td>53.8</td><td>37.2</td></tr>
+      <tr><td rowspan="4">IMU</td><td>Variant 1</td><td>28.4</td><td>22.6</td><td>36.3</td><td>32.3</td></tr>
+      <tr><td>Variant 2</td><td>30.1</td><td>10.0</td><td>31.7</td><td>24.7</td></tr>
+      <tr><td>Variant 3</td><td>27.2</td><td>11.7</td><td>29.6</td><td>23.3</td></tr>
+      <tr><td><strong>Variant 4</strong></td><td class="best">27.0</td><td class="best">11.4</td><td class="best">29.3</td><td class="best">23.3</td></tr>
     </table>
-    <p class="table-caption">Table III. Real-walking prediction error and timing (n = 108 over-ground steps). Best configuration bold/green. VICON-trained models degrade 7× on free walking; IMU training restores accuracy.</p>
+    <p class="table-caption">Table III. Real-walking prediction error (n = 108 over-ground steps). Best configuration bold/green. VICON-trained models degrade 7× on free walking; IMU subject-specific training restores accuracy.</p>
 
     <figure>
       <img src="images/fig_results.png" alt="Foot placement prediction RMSE for all 8 configurations (n=108 steps)">
@@ -436,7 +438,7 @@
         Dashed line separates VICON-trained (left) from IMU-trained (right). VICON models achieve &lt;7 cm
         on the lab treadmill but degrade to ~54 cm RMSE<sub>|d|</sub> on free walking — a 7× domain gap.
         IMU subject-specific training reduces this to 29.3 cm (46% improvement). The best result,
-        IMU 8-feat+land, is labelled at 29.3 cm.
+        IMU Variant 4, is labelled at 29.3 cm.
       </figcaption>
     </figure>
 
@@ -457,8 +459,8 @@
       <ul>
         <li><strong>Domain gap (7× error increase):</strong> VICON-trained models achieve &lt;7 cm on the treadmill but degrade to ≈54 cm RMSE<sub>|d|</sub> on free walking, driven by differences in constrained vs. variable-speed kinematics, spontaneous direction changes, and footwear-surface dynamics</li>
         <li><strong>IMU subject-specific training closes the gap:</strong> Training on 96 free-walking sessions (no lab equipment) reduces free-walking error to 29.3 cm — a 46% reduction over VICON models</li>
-        <li><strong>Landing update corrects lateral drift:</strong> For IMU-6, the 9th observation reduces RMSE<sub>|d|</sub> by 4.6 cm (−12.7%), driven primarily by lateral correction (ΔRMSE<sub>y</sub> = −12.6 cm). The ZUPT-INS ML dead-reckoning is more reliable (σ<sub>pp,y</sub> = 16.7 cm) than AP (σ<sub>pp,x</sub> = 77.5 cm)</li>
-        <li><strong>Inter-step features require the lateral filter:</strong> Without the 1-σ lateral filter, γ<sub>y<sub>g,prev</sub></sub> = 0.130 (turn-contaminated, noisy); after filtering it drops to 0.035, approaching the VICON-8 value of 0.125</li>
+        <li><strong>Landing update corrects lateral drift:</strong> For IMU Variant 1, the 9th observation reduces RMSE<sub>|d|</sub> by 4.6 cm (−12.7%), driven primarily by lateral correction (ΔRMSE<sub>y</sub> = −12.6 cm). The ZUPT-INS ML dead-reckoning is more reliable (σ<sub>pp,y</sub> = 16.7 cm) than AP (σ<sub>pp,x</sub> = 77.5 cm)</li>
+        <li><strong>Inter-step features require the lateral filter:</strong> Without the 1-σ lateral filter, γ<sub>y<sub>g,prev</sub></sub> = 0.130 (turn-contaminated, noisy); after filtering it drops to 0.035, validating the inter-step feature approach</li>
         <li><strong>376 ms lead time:</strong> Predictions are emitted at ≈52% of the swing phase — well within the ~150 ms actuation budget of powered prosthetic ankles</li>
         <li><strong>&lt;10 ms per step:</strong> 15× faster than Chen et al.'s MATLAB implementation, enabling real-time embedded deployment</li>
       </ul>
@@ -493,13 +495,16 @@
 
   <!-- ── FUTURE WORK ───────────────────────────────────────────── -->
   <section id="future">
-    <h2>IX. Future Work</h2>
+    <h2>IX. Active Exploration &amp; Future Work</h2>
+    <p>
+      This is ongoing work. Current active areas of investigation include:
+    </p>
     <ul>
-      <li><strong>Multi-subject IMU validation:</strong> Validate against optical motion capture to obtain absolute error bounds across subjects rather than single-subject evaluation</li>
-      <li><strong>3-D landing targets:</strong> Extend from 2-D foot placement to full 3-D landing target by relating existing swing-phase features to step height</li>
-      <li><strong>Contralateral hip-mounted IMU:</strong> Derive equivalent features from a hip or thigh IMU to avoid the circular-sensing problem for amputee users</li>
-      <li><strong>Embedded deployment:</strong> Evaluate latency and power budget on microcontroller platforms typical of powered prosthetic knees and ankles</li>
-      <li><strong>Deep learning comparison:</strong> Benchmark LSTM and temporal CNN architectures against the Bayesian baseline for sequence-to-sequence foot placement regression</li>
+      <li><strong>Neural network architectures:</strong> Benchmarking LSTM, temporal CNN, and transformer-based sequence models against the Bayesian baseline — exploring whether learned representations capture placement patterns that the hand-engineered features miss</li>
+      <li><strong>Hip-only intent detection:</strong> Deriving equivalent swing-phase features from a hip- or thigh-mounted IMU to avoid the circular-sensing problem for amputee users (prosthetic limb sensors reflect device output, not user intent)</li>
+      <li><strong>Multi-subject validation:</strong> Validating against optical motion capture across multiple subjects to obtain absolute error bounds beyond single-subject evaluation</li>
+      <li><strong>Embedded deployment:</strong> Evaluating latency and power budget on microcontroller platforms typical of powered prosthetic knees and ankles</li>
+      <li><strong>3-D landing targets:</strong> Extending from 2-D foot placement to full 3-D landing target by relating swing-phase features to step height</li>
     </ul>
   </section>
 

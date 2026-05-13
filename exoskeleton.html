@@ -158,9 +158,10 @@
       while maintaining wearability for realistic gait tasks.
     </p>
     <p>
-      The research was conducted at Rowan University under PI Dr. Mitja Trkov, funded by NSF Grant
-      No. 2301816. Fawaz Mallick's contributions include OpenSim simulation development, sensor
-      integration, CAD prototyping, and co-authorship of the published paper.
+      The research was conducted at Rowan University under PI Dr. Mitja Trkov. Fawaz Mallick's
+      contributions include OpenSim simulation development, sensor integration, CAD prototyping,
+      regulatory investigation, and risk mitigation analysis — as well as co-authorship of the
+      published paper.
     </p>
   </section>
 
@@ -193,24 +194,14 @@
       R² = 0.9972 &nbsp;·&nbsp; V = FSR voltage output &nbsp;·&nbsp; F = applied load in Newtons
     </p>
 
-    <div class="fig-grid">
-      <figure>
-        <img src="images/Exoskeleton What.jpg" alt="Instrumented thigh brace">
-        <figcaption>
-          Figure 1: Instrumented thigh brace with 8 FSR-406 modules arranged in two rows.
-          Custom PLA housings (foreground) maintain uniform contact distribution and prevent
-          sensor shear during hip flexion and adduction loading.
-        </figcaption>
-      </figure>
-      <figure>
-        <img src="images/Exoskeleton (1).png" alt="Exoskeleton CAD">
-        <figcaption>
-          Figure 2: Exoskeleton CAD — hip-mounted actuator frame with modular aluminum/ABS
-          construction and integrated brace attachment points. The device design allows the
-          instrumented brace to be swapped between subjects of varying thigh diameters.
-        </figcaption>
-      </figure>
-    </div>
+    <figure>
+      <img src="images/Exoskeleton What.jpg" alt="Subject wearing the wearable exoskeleton with instrumented thigh brace">
+      <figcaption>
+        Figure 1: Subject wearing the wearable exoskeleton with the instrumented thigh brace.
+        The 8 FSR-406 modules are embedded in the thigh cuff in a 4+4 anterior/posterior arrangement,
+        capturing interaction forces during free-walking trials in the laboratory.
+      </figcaption>
+    </figure>
 
     <h3>Static Loading Tests</h3>
     <p>
@@ -260,12 +251,13 @@
         </figcaption>
       </figure>
       <figure>
-        <img src="images/Exoskeleton Result.jpg" alt="FSR forces during walking">
+        <img src="images/Hip Brace (1).png" alt="OpenSim musculoskeletal model with thigh brace contact geometry">
         <figcaption>
-          Figure 4: FSR interaction forces during treadmill walking (5-stride average, 3 subjects).
-          Peak loads of 12–16 N are observed in the F1 (anterior) module, consistent with the hip
-          flexion loading direction identified in static tests. Inter-subject variability reflects
-          differences in thigh diameter (143–199 mm) and body mechanics.
+          Figure 4: OpenSim musculoskeletal model showing the instrumented thigh brace contact
+          geometry. Thigh brace contact regions (labeled) are modeled as flat meshes interfacing
+          with two spherical thigh representations. The hip brace link connects to the actuator
+          frame, and elastic foundation contact (60,000 N/m, 3,000 N·s/m) governs pHEI force
+          estimation during simulated walking.
         </figcaption>
       </figure>
     </div>
@@ -275,29 +267,20 @@
   <section id="risk">
     <h2>4. Risk Analysis &amp; Design Controls</h2>
     <p>
-      As a device intended for human wear, a failure mode and effects analysis (FMEA) was conducted
-      across mechanical, electrical, and user-interface failure domains. Design controls were
-      implemented to reduce residual risk to acceptable levels.
+      As a device intended for human wear, a structured risk analysis was conducted across
+      mechanical, electrical, and user-interface failure domains. Design controls were implemented
+      to reduce residual risk to acceptable levels.
     </p>
 
-    <div class="fig-grid">
-      <figure>
-        <img src="images/Hazard_Reduction_Resized.png" alt="Hazard identification">
-        <figcaption>
-          Figure 5: FMEA-based hazard identification. Risk levels (severity × probability) are
-          evaluated across failure modes including strap failure, sensor detachment, electrical
-          short, and unintended actuation. High-risk items drove targeted design iterations.
-        </figcaption>
-      </figure>
-      <figure>
-        <img src="images/Risk_Mitigation_Resized.png" alt="Risk mitigation matrix">
-        <figcaption>
-          Figure 6: Risk mitigation matrix showing residual risk after implementation of design
-          controls — mechanical safety stops, soft-start actuation logic, emergency release
-          straps, and electrical isolation of the FSR circuit from the actuation power supply.
-        </figcaption>
-      </figure>
-    </div>
+    <figure style="max-width: 680px; margin: 30px auto;">
+      <img src="images/Risk_Mitigation_Resized.png" alt="Risk mitigation matrix">
+      <figcaption>
+        Figure 5: Sample risk mitigation matrix used during the design process. Pre- and post-mitigation
+        risk scores (severity × likelihood) are evaluated across failure categories including
+        moving parts, ergonomic parameters, surface finishes, and mechanical failure modes.
+        High-risk items drove targeted design iterations.
+      </figcaption>
+    </figure>
   </section>
 
   <!-- 5. RESULTS -->
@@ -306,9 +289,8 @@
 
     <div class="metric-row">
       <div class="metric-card"><div class="num">0.9972</div><div class="unit">R²</div><div class="lbl">FSR calibration fit</div></div>
-      <div class="metric-card"><div class="num">12–16</div><div class="unit">N</div><div class="lbl">Peak walking F1 loads</div></div>
-      <div class="metric-card"><div class="num">&lt;150</div><div class="unit">ms</div><div class="lbl">Perturbation detection</div></div>
-      <div class="metric-card"><div class="num">30+</div><div class="unit">min</div><div class="lbl">Worn comfortably</div></div>
+      <div class="metric-card"><div class="num">12–16</div><div class="unit">N</div><div class="lbl">Peak walking F1 loads (anterior module)</div></div>
+      <div class="metric-card"><div class="num">~85%</div><div class="unit">match</div><div class="lbl">OpenSim simulation timing accuracy</div></div>
     </div>
 
     <div class="box-result">
@@ -331,7 +313,7 @@
       <div class="pub-venue">IFAC PapersOnLine · Vol. 59-30, 2025 · pp. 353–358</div>
       <div class="pub-title">Estimating Human-Exoskeleton Interaction Forces Using an Instrumented Thigh Brace and OpenSim</div>
       <div class="pub-authors">Vaibhavsingh Varma · Zachary Roberts · <strong>Fawaz Mallick</strong> · Mitja Trkov<br>
-        Departments of Mechanical and Biomedical Engineering, Rowan University · Funded: NSF Grant No. 2301816
+        Departments of Mechanical and Biomedical Engineering, Rowan University
       </div>
       <a class="doi" href="https://doi.org/10.1016/j.ifacol.2025.12.262" target="_blank">DOI: 10.1016/j.ifacol.2025.12.262 →</a>
     </div>

@@ -52,6 +52,11 @@ ul.plain li { font-size: 0.95rem; color: var(--text-dim); margin-bottom: 6px; }
 figure { margin: 0; }
 figure img { width: 100%; display: block; border: 1px solid var(--border); border-radius: 6px; background: #fff; }
 figure.narrow img { max-width: 560px; margin: 0 auto; }
+figure video { width: 100%; display: block; border: 1px solid var(--border); border-radius: 6px; background: #000; }
+.cats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 6px 28px; margin: 6px 0 10px; }
+.cats h4 { font-size: 0.9rem; margin: 8px 0 4px; }
+.cats ul { margin: 0 0 6px 18px; }
+.cats li { font-size: 0.92rem; color: var(--text-dim); margin-bottom: 4px; }
 figcaption { font-size: 0.85rem; color: var(--text-dim); margin-top: 8px; line-height: 1.5; }
 figcaption strong { color: var(--text); }
 @media (max-width: 720px) { .figs.two, .figs.three { grid-template-columns: 1fr; } }

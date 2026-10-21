@@ -17,7 +17,7 @@
 <div class="container">
 
   <div class="page-header">
-    <div class="kicker">Coursework · Research · Side Projects</div>
+    <div class="kicker">Coursework · Research</div>
     <h1>Technical Stuff</h1>
     <p class="subtitle">Things I have done and learnt through my journey. The nitty gritty that takes time and effort.</p>
   </div>
@@ -27,34 +27,32 @@
     <a href="#ml">Machine Learning &amp; AI</a>
     <a href="#regulatory">Regulatory &amp; Biomedical</a>
     <a href="#sensors">Sensors &amp; Digital Signal Processing</a>
-    <a href="#ros2">ROS2</a>
   </div>
 
   <!-- CONTROLS -->
   <section id="controls">
     <h2>Controls</h2>
     <p>
-      Most of this came from three CMU courses: Robot Dynamics &amp; Analysis, Modern Control Theory, and Optimal Control &amp;
-      Reinforcement Learning. I've written forward kinematics and Jacobians from scratch using screw theory, tuned PID and LQR
-      controllers, planned paths with A*, built an EKF SLAM, and used iLQR and a small neural network policy to balance a
-      two-wheeled inverted pendulum. Most of it was simulated in Webots, MATLAB or Python.
+      Some sample works from my controls courses at CMU. Over the courses I've worked with basic controllers like PID all the
+      way to LQR, Kalman filters, path planning and trajectory optimization, on both simulations and real hardware. The video
+      and images below are a small sample of the work I've done.
     </p>
     <div class="chips">
       <span>PID</span><span>LQR</span><span>Kalman Filter</span><span>EKF SLAM</span><span>iLQR</span><span>A*</span>
-      <span>Pure Pursuit</span><span>Screw Theory</span><span>Jacobians</span><span>Webots</span><span>MATLAB</span><span>Python</span>
+      <span>Pure Pursuit</span><span>Webots</span><span>MATLAB</span><span>Python</span>
     </div>
     <div class="figs three">
       <figure>
-        <img src="images/fmallick_P1.png" alt="Webots car tracking a track">
-        <figcaption><strong>A car in Webots following a track</strong> using PID speed control and pure pursuit steering.</figcaption>
+        <video src="videos/lqr_pendulum.mp4" poster="images/lqr_pendulum_poster.jpg" autoplay muted loop playsinline></video>
+        <figcaption><strong>An LQR controller keeping a pendulum balanced upright</strong> on real hardware.</figcaption>
       </figure>
       <figure>
-        <img src="images/kalman_states.png" alt="Kalman filter estimated vs true states">
-        <figcaption><strong>Kalman filter on a noisy inverted pendulum:</strong> estimated (red) vs true (blue) states.</figcaption>
+        <img src="images/fmallick_P1.png" alt="Simulated car driving around a track">
+        <figcaption><strong>A simulated car driving itself around a race track,</strong> with plots of its speed and steering.</figcaption>
       </figure>
       <figure>
-        <img src="images/dragrace_states.png" alt="iLQR drag race states">
-        <figcaption><strong>iLQR "drag race":</strong> the wheel spins a full 2π in about 3 s while the body tilt stays under 0.08 rad.</figcaption>
+        <img src="images/dragrace_states.png" alt="Balancing robot spinning its wheel one full turn">
+        <figcaption><strong>A balancing robot spinning its wheel one full turn</strong> without falling over.</figcaption>
       </figure>
     </div>
     <a class="more" href="dynamics_skills.html">See the inverted pendulum project →</a>
@@ -64,50 +62,83 @@
   <section id="ml">
     <h2>Machine Learning &amp; AI</h2>
     <p>
-      Two CMU courses back to back: Machine Learning &amp; AI for Engineers, then Intro to Deep Learning. I started with the
-      classics, logistic regression, SVMs (solving the optimization myself with cvxopt instead of calling a library), decision
-      trees and random forests. Then sequence models like LSTMs and GRUs, and finally transformers, masked autoencoders and
-      VAEs in PyTorch, applied to physics and engineering data.
+      Some sample works from my machine learning and AI courses at CMU. Over the courses I've worked with basic models like
+      decision trees and SVMs, all the way to deeper models like transformers and variational autoencoders (VAEs). The images
+      below are a small sample of the work I've done.
     </p>
     <div class="chips">
       <span>PyTorch</span><span>scikit-learn</span><span>SVM</span><span>Random Forest</span><span>LSTM / GRU</span>
-      <span>Transformer</span><span>ViT / Masked Autoencoder</span><span>β-VAE</span><span>PCA</span><span>t-SNE</span>
+      <span>Transformer</span><span>Autoencoder</span><span>VAE</span>
     </div>
     <div class="figs three">
       <figure>
-        <img src="images/hw7_cell19_out0.png" alt="Transformer prediction of the Burgers equation">
-        <figcaption><strong>Transformer on the 1D Burgers equation:</strong> one test case showing the true solution, the model's prediction, and the difference.</figcaption>
+        <img src="images/hw7_cell19_out0.png" alt="Transformer predicting a fluid flow over time">
+        <figcaption><strong>A transformer model trying to predict how a simple fluid flow changes over time,</strong> next to the real answer.</figcaption>
       </figure>
       <figure>
-        <img src="images/hw8_cell24_out1.png" alt="t-SNE of masked autoencoder embeddings">
-        <figcaption><strong>Masked autoencoder (ViT):</strong> t-SNE of the learned features for the 1D advection equation, colored by advection speed.</figcaption>
+        <img src="images/hw8_cell24_out1.png" alt="Map of what a model learned from wave patterns">
+        <figcaption><strong>A map of what a model learned from different wave patterns.</strong> Each dot is one wave, colored by how fast it moves.</figcaption>
       </figure>
       <figure>
-        <img src="images/hw9_cell20_out0.png" alt="Airfoils generated by a beta-VAE">
-        <figcaption><strong>New airfoil shapes</strong> generated by sampling a β-VAE trained on airfoil profiles.</figcaption>
+        <img src="images/hw9_cell20_out0.png" alt="Airfoil shapes generated by a VAE">
+        <figcaption><strong>Sample airfoil shapes generated by a variational autoencoder.</strong> The idea was to come up with new wing designs using a VAE.</figcaption>
       </figure>
     </div>
-    <a class="more" href="rul.html">See the jet engine (RUL) project →</a>
+    <a class="more" href="rul.html">See the jet engine project →</a>
   </section>
 
   <!-- REGULATORY -->
   <section id="regulatory">
     <h2>Regulatory &amp; Biomedical</h2>
-    <p>
-      From my biomedical engineering degree at Rowan. In FEA I built a 2D solver in MATLAB (BristolFE) and used SolidWorks
-      Simulation to check hip implant fatigue against ISO 7206. In a medical device regulatory bootcamp we ran a mock company
-      taking a hip implant through an FDA 510(k): SOPs, design history file, CAPA forms, an ISO 13485 audit and ISO 14971 risk
-      management. Biomechanics covered gait, ground reaction forces and inverse dynamics. On the research side, I did the risk
-      analysis and standards research for the exoskeleton project.
-    </p>
-    <div class="chips">
-      <span>FEA</span><span>SolidWorks Simulation</span><span>ISO 7206</span><span>FDA 510(k)</span><span>ISO 13485</span>
-      <span>ISO 14971</span><span>Design Controls</span><span>CAPA</span><span>Gait Analysis</span><span>OpenSim</span>
+    <p>Some sample works from my biomedical engineering degree at Rowan, and my research.</p>
+    <div class="cats">
+      <div>
+        <h4>Finite Element Analysis</h4>
+        <ul>
+          <li>Built a simple 2D FEA solver in MATLAB</li>
+          <li>Ran virtual tensile tests and stress studies in SolidWorks Simulation</li>
+          <li>Checked hip implant fatigue against ISO 7206</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Medical Device Regulatory Bootcamp</h4>
+        <ul>
+          <li>Ran a mock medical device company for a hip implant</li>
+          <li>Worked toward an FDA 510(k) submission</li>
+          <li>Wrote SOPs, CAPA forms and a design history file</li>
+          <li>ISO 13485 audit and ISO 14971 risk management</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Biomechanics &amp; Research</h4>
+        <ul>
+          <li>Gait, ground reaction forces and inverse dynamics</li>
+          <li>Risk analysis and standards research for the exoskeleton</li>
+        </ul>
+      </div>
+    </div>
+    <div class="figs two">
+      <figure>
+        <img src="images/fea_specimen_stress.png" alt="Stress in a test specimen being pulled">
+        <figcaption><strong>Stress in a test specimen being pulled apart.</strong> Warmer colors mean more stress.</figcaption>
+      </figure>
+      <figure>
+        <img src="images/fea_plate_stress.png" alt="Stress in a plate with holes">
+        <figcaption><strong>Seeing how a plate's shape and holes change where stress builds up.</strong></figcaption>
+      </figure>
+      <figure>
+        <img src="images/meddev_qms_site.png" alt="Mock company document system">
+        <figcaption><strong>Our mock company's document system,</strong> where the SOPs, CAPA forms and FDA files lived.</figcaption>
+      </figure>
+      <figure>
+        <img src="images/meddev_extraction_results.png" alt="Extraction test results">
+        <figcaption><strong>Results from extraction tests on the implant,</strong> part of checking what chemicals it could release.</figcaption>
+      </figure>
     </div>
     <div class="figs one">
       <figure>
-        <img src="images/Risk_Mitigation_Resized.png" alt="Risk mitigation matrix for the exoskeleton">
-        <figcaption><strong>Risk mitigation matrix from the exoskeleton project:</strong> each risk scored for severity and likelihood, and matched to a standard.</figcaption>
+        <img src="images/Risk_Mitigation_Resized.png" alt="Exoskeleton risk matrix">
+        <figcaption><strong>Risk matrix from the exoskeleton project:</strong> each risk scored and matched to a standard.</figcaption>
       </figure>
     </div>
   </section>
@@ -116,89 +147,92 @@
   <section id="sensors">
     <h2>Sensors &amp; Digital Signal Processing</h2>
     <p>
-      This came out of my research: getting a WitMotion HWT906 IMU to stream cleanly into a Raspberry Pi, and then into an
-      error-state Kalman filter (ESKF) that tracks the foot. Most of the work wasn't the filter math, it was making sure the data
-      going in was actually good. Roughly in the order I did it:
+      Some sample works from my research: getting an IMU (a small motion sensor) to stream clean data into a Raspberry Pi,
+      and then into a filter that tracks where the foot is. Most of the work was making sure the data going in was actually
+      good. Roughly in the order I did it:
     </p>
     <div class="chips">
-      <span>IMU</span><span>ESKF</span><span>Zero Velocity Updates</span><span>Allan Deviation</span><span>Serial / UART</span>
-      <span>Baud Rate</span><span>Aliasing</span><span>Low-pass Filter</span><span>Clock Drift</span><span>Raspberry Pi</span><span>Python</span>
+      <span>IMU</span><span>Kalman Filter (ESKF)</span><span>Allan Deviation</span><span>Serial / UART</span>
+      <span>Baud Rate</span><span>Aliasing</span><span>Low-pass Filter</span><span>Raspberry Pi</span><span>Python</span>
     </div>
 
-    <h3>1. Characterize the sensor</h3>
-    <p>Before trusting any reading, I recorded the IMU sitting still to measure its noise. Those numbers set the filter's noise values.</p>
+    <h3>1. Figure out how noisy the sensor is</h3>
+    <p>I recorded the sensor sitting completely still. Any movement in the readings is just noise, and those numbers get used later to set up the filter.</p>
     <div class="figs two">
       <figure>
-        <img src="images/imu_allan_deviation.png" alt="Allan deviation of accelerometer and gyroscope">
-        <figcaption><strong>Allan deviation of the accelerometer and gyro,</strong> used to pick the noise values in the filter.</figcaption>
+        <img src="images/imu_allan_deviation.png" alt="Allan deviation plots">
+        <figcaption><strong>How the sensor's noise changes depending on how long you average for.</strong> Used to set up the filter.</figcaption>
       </figure>
       <figure>
-        <img src="images/imu_noise_hist.png" alt="Noise histograms with Gaussian fits">
-        <figcaption><strong>Noise on every axis with Gaussian fits</strong> (5 minutes stationary at 1000 Hz).</figcaption>
+        <img src="images/imu_noise_hist.png" alt="Noise histograms">
+        <figcaption><strong>The noise on each axis</strong> while the sensor sat still for 5 minutes.</figcaption>
       </figure>
     </div>
 
-    <h3>2. Pick the sample rate and avoid aliasing</h3>
+    <h3>2. Take readings fast enough (aliasing)</h3>
     <p>
-      Walking needs roughly 500 to 1000 Hz. The real signal should stay under about 0.4× the sample rate, otherwise fast vibration
-      folds back in as fake slow motion, which would mess up step detection. I set the IMU's hardware low-pass filter to around
-      40% of the streaming rate.
+      If you don't take readings fast enough, fast motion can show up as fake slow motion. It's the same thing as a car wheel
+      in a video that looks like it's spinning backwards. For walking, about 500 to 1000 readings a second is enough, and I set
+      the sensor's built-in filter to cut out anything too fast to be captured properly.
     </p>
 
-    <h3>3. Find a baud rate that doesn't drop data</h3>
-    <p>I compared 460800 vs 921600 baud with 6 and 9 axes, streaming at 1000 Hz for 120 s each.</p>
-    <div class="figs two">
+    <h3>3. Find settings that don't drop data</h3>
+    <p>
+      I tried different baud rates (how fast data travels down the cable) and sample rates. At 1000 readings a second, the
+      faster setting made the sensor's timing go haywire, and the slower one still dropped some packets. Going down to 500
+      readings a second at 460800 baud, with all 9 axes on, got rid of the drops, so that's what I used for the walking trials.
+    </p>
+    <div class="figs one">
       <figure>
-        <img src="images/imu_baud_921_9ax.png" alt="921600 baud 9-axis timing">
-        <figcaption><strong>921600 baud, 9 axis:</strong> the sensor's own clock goes unstable, 5,806 irregular intervals.</figcaption>
+        <img src="images/imu_baud_921_9ax.png" alt="921600 baud at 1000 Hz">
+        <figcaption><strong>921600 baud at 1000 Hz:</strong> thousands of irregular gaps in the sensor's timing (red dots).</figcaption>
       </figure>
       <figure>
-        <img src="images/imu_baud_460_9ax.png" alt="460800 baud 9-axis timing">
-        <figcaption><strong>460800 baud, 9 axis:</strong> 32 drops in 120 s, much more stable. This is what I went with.</figcaption>
-      </figure>
-    </div>
-
-    <h3>4. Keep an eye on the clocks</h3>
-    <p>The IMU and the Pi each have their own clock. They drift apart slowly, so I smooth the host timestamps and check every trial before using it.</p>
-    <div class="figs two">
-      <figure>
-        <img src="images/imu_clock_drift.png" alt="Host minus IMU clock drift">
-        <figcaption><strong>Host vs IMU clock:</strong> about 1.2 s of drift over 120 s, and it's a straight line, so it's a steady skew, not random.</figcaption>
+        <img src="images/imu_baud_460_9ax.png" alt="460800 baud at 1000 Hz">
+        <figcaption><strong>460800 baud at 1000 Hz:</strong> much better, but still 32 dropped packets in 2 minutes.</figcaption>
       </figure>
       <figure>
-        <img src="images/imu_500hz_trial.png" alt="500 Hz trial timing">
-        <figcaption><strong>Final setup at 500 Hz for a walking trial:</strong> a steady ~1.98 ms between samples and zero drops.</figcaption>
+        <img src="images/imu_500hz_trial.png" alt="460800 baud at 500 Hz">
+        <figcaption><strong>460800 baud at 500 Hz:</strong> zero dropped packets during a walking trial.</figcaption>
       </figure>
     </div>
 
-    <h3>5. Then track the foot</h3>
-    <p>With clean data going in, the ESKF tracked walks on a taped course: about 3 in error on a 118 in straight walk, about 6 in on a 256 in path with turns, and about 9 to 10 in of drift after a full loop.</p>
+    <h3>A side note on clocks</h3>
+    <p>The sensor and the Raspberry Pi each keep their own clock, and they slowly drift apart. Not a big problem here, but something to keep in mind with any real time system.</p>
+    <div class="figs one">
+      <figure class="narrow">
+        <img src="images/imu_clock_drift.png" alt="Pi and sensor clocks drifting apart">
+        <figcaption><strong>The Pi's clock and the sensor's clock drifting apart</strong> by about 1.2 s over 2 minutes.</figcaption>
+      </figure>
+    </div>
+
+    <h3>4. Track the foot</h3>
+    <p>
+      With clean data going in, I tracked walks on a taped course. The tracked distance was off by about 3 in on a 118 in
+      straight walk, about 6 in on a 256 in path with turns, and the full loop ended about 9 to 10 in from where it started.
+    </p>
     <div class="figs two">
       <figure>
-        <img src="images/eskf_2d_trajectories.png" alt="2D foot trajectories">
-        <figcaption><strong>2D foot tracks for 3 walks:</strong> a straight line, part of a square, and a full loop back to the start.</figcaption>
+        <img src="images/eskf_2d_trajectories.png" alt="2D foot tracks">
+        <figcaption><strong>Foot tracks for 3 walks, seen from above:</strong> a straight line, part of a square, and a full loop.</figcaption>
       </figure>
       <figure>
-        <img src="images/eskf_3d_trajectories.png" alt="3D foot trajectories">
-        <figcaption><strong>The same walks in 3D:</strong> you can see the foot lift during each swing and sit flat during stance.</figcaption>
+        <img src="images/eskf_3d_trajectories.png" alt="3D foot tracks">
+        <figcaption><strong>The same walks in 3D:</strong> the foot lifts during each step and sits flat in between.</figcaption>
+      </figure>
+    </div>
+    <p>For comparison, here's what a foot path normally looks like according to other studies (images from Google, not my data). Ours has the same up and down step shape.</p>
+    <div class="figs two">
+      <figure>
+        <img src="images/ref_foot_traj_optitrack.jpg" alt="Reference foot trajectory from a motion capture system">
+        <figcaption><strong>Reference (from Google):</strong> a foot path measured with a motion capture system.</figcaption>
+      </figure>
+      <figure>
+        <img src="images/ref_foot_traj_profiles.jpg" alt="Reference foot height profiles">
+        <figcaption><strong>Reference (from Google):</strong> foot height over a few steps.</figcaption>
       </figure>
     </div>
     <a class="more" href="prosthetics.html">See the research this feeds into →</a>
-  </section>
-
-  <!-- ROS2 -->
-  <section id="ros2">
-    <h2>ROS2</h2>
-    <p>
-      Earlier this summer I started working through the F1TENTH course, a 1/10 scale self-driving race car, writing ROS2 nodes in
-      Python and testing them in the F1TENTH gym simulator. So far: publisher and subscriber nodes, automatic emergency braking
-      using time-to-collision from the LiDAR scan and odometry, wall following with a PID controller, and follow-the-gap obstacle
-      avoidance. Next up is SLAM and pure pursuit, then moving from simulation onto the real car.
-    </p>
-    <div class="chips">
-      <span>ROS2</span><span>rclpy</span><span>LiDAR</span><span>LaserScan</span><span>Odometry</span><span>Ackermann Drive</span>
-      <span>PID</span><span>Follow the Gap</span><span>F1TENTH Gym</span><span>Ubuntu / WSL</span>
-    </div>
   </section>
 
 </div>

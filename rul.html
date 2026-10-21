@@ -46,11 +46,11 @@
     <div class="figs two">
       <figure>
         <img src="images/fig_tsne.png" alt="t-SNE of encoder embeddings">
-        <figcaption><strong>t-SNE of the learned embeddings:</strong> the first 25% of each engine's life (green) vs the last 25% (red).</figcaption>
+        <figcaption><strong>What the model learned:</strong> each dot is a moment in an engine's life. Healthy engines (green) and worn out engines (red) end up in separate groups.</figcaption>
       </figure>
       <figure>
         <img src="images/fig_hi_curves.png" alt="Health indicator curves for five engines">
-        <figcaption><strong>Health indicator for 5 engines:</strong> flat while healthy, rising as they wear out.</figcaption>
+        <figcaption><strong>A health score for 5 engines:</strong> flat while healthy, climbing as they wear out.</figcaption>
       </figure>
     </div>
   </section>
@@ -64,11 +64,11 @@
     <div class="figs two">
       <figure>
         <img src="images/fig_fd001.png" alt="Actual vs predicted RUL on FD001 for both models">
-        <figcaption><strong>FD001 test set:</strong> actual vs predicted RUL for every engine, and the spread of errors for both models.</figcaption>
+        <figcaption><strong>Predicted vs actual remaining life for every test engine,</strong> for both models, and how far off they were.</figcaption>
       </figure>
       <figure>
         <img src="images/fig_rul_estimation.png" alt="Embed-RUL similarity matching for one test engine">
-        <figcaption><strong>How Embed-RUL predicts:</strong> one test engine's health curve matched against the training engines (true RUL 112, predicted 120).</figcaption>
+        <figcaption><strong>How Embed-RUL makes a guess:</strong> it compares one engine's health score with engines it has seen before (true remaining life 112 cycles, guess 120).</figcaption>
       </figure>
     </div>
   </section>

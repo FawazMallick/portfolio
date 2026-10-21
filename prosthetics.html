@@ -74,7 +74,7 @@
     <div class="figs one">
       <figure>
         <img src="images/quadratic_fits.png" alt="Quadratic fits of the six cues against landing position">
-        <figcaption><strong>Quadratic fits for the 6 cues against landing position.</strong> Red dots are training steps (3,798 steps), x and y are where the foot landed (forward and sideways).</figcaption>
+        <figcaption><strong>How each cue relates to where the foot lands.</strong> Each surface is fit to my step data (red dots, 3,798 steps).</figcaption>
       </figure>
     </div>
     <p>
@@ -94,7 +94,7 @@
     <div class="figs one">
       <figure>
         <img src="images/intent_heatmap.png" alt="Heatmaps of the landing estimate updating through the swing">
-        <figcaption><strong>The guess sharpens as the swing goes on.</strong> Each row is one step of a 180° turn. Left to right: the starting guess, then each cue as it arrives, then the landing update that becomes the next step's guess. Green × is where the foot really landed, red + is the prediction.</figcaption>
+        <figcaption><strong>The guess gets sharper as the step goes on.</strong> Each row is one step of a 180° turn. Left to right: the starting guess, then each new cue, then the measured landing that becomes the next step's guess. Green × is where the foot really landed, red + is the prediction.</figcaption>
       </figure>
     </div>
   </section>
@@ -112,12 +112,12 @@
     </div>
     <div class="figs two">
       <figure>
-        <img src="images/turn_trajectories.png" alt="Foot trajectories for turn angles from 0 to 180 degrees">
-        <figcaption><strong>Walking trials from 0° to 180° turns,</strong> tracked by my IMU pipeline (one trial per angle shown).</figcaption>
+        <img src="images/imu_90deg_trials.png" alt="IMU foot tracks for trials walked on a 90 degree path">
+        <figcaption><strong>An example of collecting IMU data</strong> for trials walked on a 90° path, as shown by the outline.</figcaption>
       </figure>
       <figure>
-        <img src="images/eskf_2d_trajectories.png" alt="Tracked foot paths on a taped course">
-        <figcaption><strong>Checking the tracker on a taped course:</strong> about 2.5% distance error on a straight walk, and about 10 in of drift after a full 15 step loop.</figcaption>
+        <img src="images/intent_prediction_landing.png" alt="Actual foot paths vs predicted landing spots">
+        <figcaption><strong>Actual vs predicted:</strong> the blue line is the actual path of each step, and the purple dots are where the model predicted the step would land.</figcaption>
       </figure>
     </div>
   </section>

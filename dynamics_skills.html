@@ -40,11 +40,11 @@
     <div class="figs two">
       <figure>
         <img src="images/lqr_states.png" alt="LQR closed loop states">
-        <figcaption><strong>LQR from a 0.1 rad tilt:</strong> all four states settle back to zero.</figcaption>
+        <figcaption><strong>LQR bringing the robot back upright</strong> after starting tilted.</figcaption>
       </figure>
       <figure>
         <img src="images/lqr_animation.png" alt="LQR stabilized pendulum snapshot">
-        <figcaption><strong>Snapshot of the LQR balanced pendulum.</strong></figcaption>
+        <figcaption><strong>Snapshot of the robot balancing with LQR.</strong></figcaption>
       </figure>
     </div>
   </section>
@@ -59,11 +59,11 @@
     <div class="figs two">
       <figure>
         <img src="images/kalman_states.png" alt="Kalman filter estimated vs true states">
-        <figcaption><strong>Kalman filter:</strong> estimated (red) vs true (blue) states over 10 s.</figcaption>
+        <figcaption><strong>The filter's estimate (red) vs what's really happening (blue).</strong></figcaption>
       </figure>
       <figure>
         <img src="images/kalman_animation.png" alt="True vs estimated pendulum">
-        <figcaption><strong>True (blue) vs estimated (red) pendulum</strong> at one moment in time.</figcaption>
+        <figcaption><strong>The real robot (blue) vs where the filter thinks it is (red)</strong> at one moment.</figcaption>
       </figure>
     </div>
   </section>
@@ -78,11 +78,11 @@
     <div class="figs three">
       <figure>
         <img src="images/ilqr_compare.png" alt="LQR vs iLQR from a large tilt">
-        <figcaption><strong>LQR vs iLQR</strong> starting from a big 0.8 rad tilt, with torque limited to 1 Nm.</figcaption>
+        <figcaption><strong>LQR vs iLQR</strong> recovering from a big tilt with limited motor power.</figcaption>
       </figure>
       <figure>
         <img src="images/dragrace_states.png" alt="iLQR drag race states">
-        <figcaption><strong>Drag race:</strong> wheel angle reaches 2π while the body stays near upright.</figcaption>
+        <figcaption><strong>Drag race:</strong> the wheel spins one full turn while the body stays upright.</figcaption>
       </figure>
       <figure>
         <img src="images/dragrace_animation.png" alt="Drag race snapshot">
@@ -102,11 +102,11 @@
     <div class="figs two">
       <figure>
         <img src="images/part2a_states.png" alt="Hand tuned linear gains from 0.1 rad">
-        <figcaption><strong>Hand-tuned linear gains</strong> K = [10, 1, 100, 10] balancing from a 0.1 rad tilt.</figcaption>
+        <figcaption><strong>A hand-tuned controller</strong> balancing the robot from a small tilt.</figcaption>
       </figure>
       <figure>
         <img src="images/part2b_nn.png" alt="Neural network policy vs linear gains">
-        <figcaption><strong>Neural network policy (red) vs linear gains (blue)</strong> over 6 s.</figcaption>
+        <figcaption><strong>Neural network (red) vs hand-tuned controller (blue)</strong> balancing the robot for 6 s.</figcaption>
       </figure>
     </div>
   </section>

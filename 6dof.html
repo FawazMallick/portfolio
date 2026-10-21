@@ -8,9 +8,9 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --accent: #00d4ff; --accent-dim: #0099cc; --accent-light: rgba(0,212,255,0.12);
-      --bg: #0a0e27; --card: #0f1429; --border: #1a2240;
-      --text: #e8ecf1; --text-dim: #a8b2c1; --muted: #6b7684;
+      --accent: #0077a8; --accent-dim: #005f86; --accent-light: rgba(0,119,168,0.12);
+      --bg: #f5efe0; --card: #fbf8ef; --border: #ddd3bc;
+      --text: #111111; --text-dim: #2b2b2b; --muted: #555555;
       --nav-h: 64px; --sec-nav-h: 44px;
     }
     html { scroll-behavior: smooth; }
@@ -19,7 +19,7 @@
     /* ── Main nav ── */
     nav {
       position: sticky; top: 0; z-index: 100; height: var(--nav-h);
-      background: rgba(10,14,39,0.92); backdrop-filter: blur(12px);
+      background: rgba(245,239,224,0.92); backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
       display: flex; align-items: center; justify-content: space-between; padding: 0 40px;
     }
@@ -30,7 +30,7 @@
     /* ── Section nav ── */
     .sec-nav {
       position: sticky; top: var(--nav-h); z-index: 90; height: var(--sec-nav-h);
-      background: rgba(15,20,41,0.97); backdrop-filter: blur(8px);
+      background: rgba(251,248,239,0.97); backdrop-filter: blur(8px);
       border-bottom: 1px solid var(--border);
       display: flex; align-items: center; gap: 0; padding: 0 40px; overflow-x: auto;
     }
@@ -48,16 +48,16 @@
 
     /* ── Typography ── */
     .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
-    .tag { background: var(--accent-light); color: var(--accent); border: 1px solid rgba(0,212,255,0.25);
+    .tag { background: var(--accent-light); color: var(--accent); border: 1px solid rgba(0,119,168,0.25);
            border-radius: 4px; padding: 3px 10px; font-size: 0.72rem; font-weight: 700;
            text-transform: uppercase; letter-spacing: 0.08em; }
     .page-header { margin-bottom: 48px; }
-    .page-header h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; color: #fff; margin-bottom: 10px; letter-spacing: -.02em; }
+    .page-header h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; color: #111; margin-bottom: 10px; letter-spacing: -.02em; }
     .page-header .subtitle { font-size: 1rem; color: var(--accent); font-weight: 500; margin-bottom: 24px; }
     .abstract { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 24px 28px; margin-bottom: 48px; }
     .abstract-label { font-size: 0.72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
     .abstract p { font-size: 0.97rem; color: var(--text-dim); line-height: 1.8; margin: 0; }
-    h2 { font-size: 1.5rem; font-weight: 700; color: #fff; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 2px solid var(--border); }
+    h2 { font-size: 1.5rem; font-weight: 700; color: #111; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 2px solid var(--border); }
     h3 { font-size: 1.05rem; font-weight: 600; color: var(--accent); margin-top: 26px; margin-bottom: 10px; }
     p { font-size: 0.97rem; color: var(--text-dim); line-height: 1.8; margin-bottom: 14px; }
     p strong { color: var(--text); }
@@ -73,17 +73,17 @@
     /* ── Callout boxes ── */
     .box-problem { background: rgba(239,68,68,0.07); border-left: 4px solid #ef4444; padding: 18px 20px; margin: 20px 0; border-radius: 0 6px 6px 0; }
     .box-method  { background: rgba(59,130,246,0.07); border-left: 4px solid #3b82f6; padding: 18px 20px; margin: 20px 0; border-radius: 0 6px 6px 0; }
-    .box-result  { background: rgba(34,197,94,0.07);  border-left: 4px solid #22c55e; padding: 18px 20px; margin: 20px 0; border-radius: 0 6px 6px 0; }
+    .box-result  { background: rgba(34,197,94,0.07);  border-left: 4px solid #15803d; padding: 18px 20px; margin: 20px 0; border-radius: 0 6px 6px 0; }
     .box-problem p, .box-method p, .box-result p { margin-bottom: 8px; }
     .box-problem p:last-child, .box-method p:last-child, .box-result p:last-child { margin-bottom: 0; }
 
     /* ── Tables ── */
     .table-wrap { overflow-x: auto; margin: 20px 0; }
     table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
-    th { background: rgba(0,212,255,0.08); color: var(--accent); font-weight: 600; text-align: left;
+    th { background: rgba(0,119,168,0.08); color: var(--accent); font-weight: 600; text-align: left;
          padding: 10px 14px; border-bottom: 2px solid var(--border); font-size: 0.78rem; text-transform: uppercase; letter-spacing: .05em; }
-    td { padding: 9px 14px; color: var(--text-dim); border-bottom: 1px solid rgba(26,34,64,0.6); }
-    tr:hover td { background: rgba(0,212,255,0.03); }
+    td { padding: 9px 14px; color: var(--text-dim); border-bottom: 1px solid rgba(221,211,188,0.6); }
+    tr:hover td { background: rgba(0,119,168,0.03); }
     td.hi { color: var(--text); font-weight: 600; }
 
     /* ── Metric cards ── */
@@ -108,13 +108,13 @@
 
     /* ── Publication card ── */
     .pub-card {
-      background: rgba(0,212,255,0.05); border: 1px solid rgba(0,212,255,0.2);
+      background: rgba(0,119,168,0.05); border: 1px solid rgba(0,119,168,0.2);
       border-radius: 8px; padding: 24px 28px; margin: 32px 0;
     }
     .pub-card .pub-title { font-size: 1rem; font-weight: 600; color: var(--text); line-height: 1.5; margin-bottom: 6px; }
     .pub-card .pub-authors { font-size: 0.88rem; color: var(--text-dim); margin-bottom: 4px; }
     .pub-card .pub-venue { font-size: 0.85rem; color: var(--accent); margin-bottom: 14px; }
-    .pub-card a.btn-doi { background: var(--accent); color: #000; padding: 8px 18px;
+    .pub-card a.btn-doi { background: var(--accent); color: #fff; padding: 8px 18px;
                           border-radius: 6px; font-weight: 700; font-size: 0.82rem; text-decoration: none;
                           display: inline-block; transition: opacity .25s; }
     .pub-card a.btn-doi:hover { opacity: .85; }

@@ -9,16 +9,16 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --accent: #00d4ff;
-      --accent-dim: #0099cc;
-      --accent-light: rgba(0, 212, 255, 0.15);
-      --bg: #0a0e27;
-      --card: #0f1429;
-      --card-hover: #151d3a;
-      --border: #1a2240;
-      --text: #e8ecf1;
-      --text-dim: #a8b2c1;
-      --muted: #6b7684;
+      --accent: #0077a8;
+      --accent-dim: #005f86;
+      --accent-light: rgba(0,119,168,0.15);
+      --bg: #f5efe0;
+      --card: #fbf8ef;
+      --card-hover: #efe7d3;
+      --border: #ddd3bc;
+      --text: #111111;
+      --text-dim: #2b2b2b;
+      --muted: #555555;
       --success: #00d676;
       --nav-h: 64px;
     }
@@ -40,7 +40,7 @@
       top: 0;
       z-index: 100;
       height: var(--nav-h);
-      background: rgba(10, 14, 39, 0.85);
+      background: rgba(245,239,224,0.85);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
@@ -77,8 +77,8 @@
       justify-content: center;
       text-align: center;
       padding: 80px 20px 80px;
-      background: linear-gradient(135deg, rgba(0,212,255,0.05) 0%, rgba(0,102,204,0.03) 50%, rgba(10,14,39,0) 100%),
-                  radial-gradient(ellipse at 50% 0%, #0d1f3d 0%, var(--bg) 60%);
+      background: linear-gradient(135deg, rgba(0,119,168,0.05) 0%, rgba(0,119,168,0.03) 50%, rgba(245,239,224,0) 100%),
+                  radial-gradient(ellipse at 50% 0%, #efe6cf 0%, var(--bg) 60%);
       position: relative;
       overflow: hidden;
     }
@@ -88,7 +88,7 @@
       position: absolute;
       width: 600px;
       height: 600px;
-      background: radial-gradient(circle, rgba(0, 212, 255, 0.08) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(0,119,168,0.08) 0%, transparent 70%);
       border-radius: 50%;
       top: -200px;
       right: -200px;
@@ -107,20 +107,20 @@
       border: 3px solid var(--accent);
       object-fit: cover;
       margin-bottom: 32px;
-      box-shadow: 0 0 50px rgba(0, 212, 255, 0.3), inset 0 0 30px rgba(0, 212, 255, 0.1);
+      box-shadow: 0 0 50px rgba(0,119,168,0.3), inset 0 0 30px rgba(0,119,168,0.1);
       animation: pulse-glow 3s ease-in-out infinite;
     }
 
     @keyframes pulse-glow {
-      0%, 100% { box-shadow: 0 0 50px rgba(0, 212, 255, 0.3), inset 0 0 30px rgba(0, 212, 255, 0.1); }
-      50% { box-shadow: 0 0 70px rgba(0, 212, 255, 0.5), inset 0 0 40px rgba(0, 212, 255, 0.15); }
+      0%, 100% { box-shadow: 0 0 50px rgba(0,119,168,0.3), inset 0 0 30px rgba(0,119,168,0.1); }
+      50% { box-shadow: 0 0 70px rgba(0,119,168,0.5), inset 0 0 40px rgba(0,119,168,0.15); }
     }
 
     #hero h1 {
       font-size: clamp(2.4rem, 6vw, 4rem);
       font-weight: 700;
       letter-spacing: -0.03em;
-      color: #fff;
+      color: #111;
       margin-bottom: 8px;
     }
 
@@ -183,7 +183,7 @@
     h2.section-title {
       font-size: 1.6rem;
       font-weight: 700;
-      color: #fff;
+      color: #111;
       margin-bottom: 28px;
       display: flex;
       align-items: center;
@@ -199,8 +199,8 @@
       font-size: 0.72rem;
       font-weight: 600;
       color: var(--accent);
-      background: rgba(0,195,255,0.1);
-      border: 1px solid rgba(0,195,255,0.25);
+      background: rgba(0,119,168,0.1);
+      border: 1px solid rgba(0,119,168,0.25);
       border-radius: 4px;
       padding: 2px 8px;
       letter-spacing: 0.08em;
@@ -234,7 +234,7 @@
       background: var(--card-hover);
       transform: translateY(-4px);
       border-color: var(--accent-dim);
-      box-shadow: 0 8px 24px rgba(0,195,255,0.12);
+      box-shadow: 0 8px 24px rgba(0,119,168,0.12);
     }
     .card .card-tag {
       font-size: 0.68rem;
@@ -247,7 +247,7 @@
     .card h3 {
       font-size: 1rem;
       font-weight: 700;
-      color: #fff;
+      color: #111;
       margin-bottom: 8px;
       line-height: 1.3;
     }
@@ -288,7 +288,7 @@
       font-size: 0.8rem;
       color: var(--accent);
       text-decoration: none;
-      border: 1px solid rgba(0,195,255,0.25);
+      border: 1px solid rgba(0,119,168,0.25);
       border-radius: 4px;
       padding: 4px 10px;
     }
@@ -311,7 +311,7 @@
     .course-item strong {
       display: block;
       font-size: 0.9rem;
-      color: #fff;
+      color: #111;
       margin-bottom: 4px;
     }
     .course-item span {

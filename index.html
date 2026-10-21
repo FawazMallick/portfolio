@@ -325,6 +325,9 @@
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
       .card-grid.three { grid-template-columns: repeat(2, 1fr); }
+      nav { justify-content: flex-start; overflow-x: auto; scrollbar-width: none; }
+      nav::-webkit-scrollbar { display: none; }
+      nav a { flex-shrink: 0; white-space: nowrap; }
     }
     @media (max-width: 600px) {
       nav a { padding: 0 12px; font-size: 0.78rem; }
@@ -343,6 +346,7 @@
   <a href="#professional">Professional</a>
   <a href="#coursework">Technical</a>
   <a href="#publications">Publications</a>
+  <a href="work-with-me.html">Work With Me</a>
 </nav>
 
 <!-- HERO -->

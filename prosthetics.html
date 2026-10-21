@@ -3,492 +3,136 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Real-Time Foot Placement Prediction — Fawaz Mallick</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --accent: #0077a8; --accent-dim: #005f86; --accent-light: rgba(0,119,168,0.12);
-      --bg: #f5efe0; --card: #fbf8ef; --card-hover: #efe7d3; --border: #ddd3bc;
-      --text: #111111; --text-dim: #2b2b2b; --muted: #555555; --nav-h: 64px;
-    }
-    html { scroll-behavior: smooth; }
-    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
-
-    nav {
-      position: sticky; top: 0; z-index: 100; height: var(--nav-h);
-      background: rgba(245,239,224,0.92); backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: space-between; padding: 0 40px;
-    }
-    nav a.logo { color: var(--text); text-decoration: none; font-weight: 600; font-size: 0.95rem; }
-    nav a.back { color: var(--accent); text-decoration: none; font-size: .85rem; font-weight: 500; }
-    nav a.back:hover { opacity: .7; }
-
-    .section-nav {
-      position: sticky; top: var(--nav-h); z-index: 90;
-      background: rgba(245,239,224,0.96); border-bottom: 1px solid var(--border);
-      display: flex; gap: 0; overflow-x: auto; padding: 0 40px; scrollbar-width: none;
-    }
-    .section-nav::-webkit-scrollbar { display: none; }
-    .section-nav a {
-      color: var(--muted); text-decoration: none; font-size: 0.8rem; font-weight: 500;
-      padding: 14px 16px; white-space: nowrap; border-bottom: 2px solid transparent;
-      transition: color .2s, border-color .2s;
-    }
-    .section-nav a:hover, .section-nav a.active { color: var(--accent); border-bottom-color: var(--accent); }
-
-    .container { max-width: 960px; margin: 0 auto; padding: 60px 24px 100px; }
-
-    .notice-pub {
-      background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.4);
-      border-radius: 8px; padding: 18px 22px; margin-bottom: 36px;
-      display: flex; align-items: flex-start; gap: 14px;
-    }
-    .notice-pub .icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 2px; }
-    .notice-pub p { font-size: 0.92rem; color: #5c4300; line-height: 1.7; margin: 0; }
-    .notice-pub strong { color: #8a5a00; }
-
-    .page-header { margin-bottom: 48px; }
-    .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
-    .tag { background: var(--accent-light); color: var(--accent); border: 1px solid rgba(0,119,168,0.25);
-           border-radius: 4px; padding: 3px 10px; font-size: 0.72rem; font-weight: 700;
-           text-transform: uppercase; letter-spacing: 0.08em; }
-    .page-header h1 { font-size: clamp(1.6rem, 3.5vw, 2.6rem); font-weight: 700; color: #111;
-                      margin-bottom: 10px; letter-spacing: -.02em; line-height: 1.2; }
-    .page-header .subtitle { font-size: 1rem; color: var(--accent); font-weight: 500; margin-bottom: 24px; }
-
-    .abstract { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 24px 28px; margin-bottom: 16px; }
-    .abstract-label { font-size: 0.72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
-    .abstract p { font-size: 0.97rem; color: var(--text-dim); line-height: 1.8; margin: 0; }
-
-    section { margin-bottom: 90px; scroll-margin-top: calc(var(--nav-h) + 50px); }
-    h2 { font-size: 1.7rem; font-weight: 700; color: #111; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--border); }
-    h3 { font-size: 1.1rem; font-weight: 600; color: var(--accent); margin-top: 28px; margin-bottom: 12px; }
-    h4 { font-size: 0.95rem; font-weight: 600; color: #111; margin-bottom: 8px; margin-top: 18px; }
-    p { font-size: 0.97rem; color: var(--text-dim); line-height: 1.8; margin-bottom: 14px; }
-    p strong { color: var(--text); }
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { opacity: .8; }
-    ul { list-style: none; padding: 0; margin: 10px 0; }
-    ul li { margin-bottom: 7px; padding-left: 22px; position: relative; font-size: .95rem; color: var(--text-dim); }
-    ul li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-weight: 600; }
-
-    .box-problem { background: rgba(220,38,38,0.07); border-left: 4px solid #dc2626; padding: 18px 20px; margin: 20px 0; border-radius: 0 6px 6px 0; }
-    .box-method  { background: rgba(59,130,246,0.07); border-left: 4px solid #3b82f6; padding: 18px 20px; margin: 20px 0; border-radius: 0 6px 6px 0; }
-    .box-result  { background: rgba(34,197,94,0.07); border-left: 4px solid #15803d; padding: 18px 20px; margin: 20px 0; border-radius: 0 6px 6px 0; }
-    .box-problem p, .box-method p, .box-result p { margin-bottom: 8px; }
-    .box-problem p:last-child, .box-method p:last-child, .box-result p:last-child { margin-bottom: 0; }
-
-    table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 0.88rem; }
-    th { background: var(--card); color: var(--accent); padding: 9px 14px; text-align: left; border: 1px solid var(--border); font-weight: 600; font-size: 0.82rem; }
-    td { padding: 8px 14px; border: 1px solid var(--border); color: var(--text-dim); }
-    tr:nth-child(even) td { background: rgba(0,119,168,0.03); }
-    td.best { color: #15803d; font-weight: 600; }
-    .table-caption { font-size: 0.84rem; color: var(--muted); margin-top: 6px; font-style: italic; text-align: center; }
-
-    figure { margin: 30px 0; }
-    figure img { max-width: 100%; border-radius: 8px; border: 1px solid var(--border); display: block; transition: border-color .25s; }
-    figure img:hover { border-color: var(--accent); }
-    figcaption { font-size: 0.86rem; color: var(--muted); margin-top: 10px; font-style: italic; text-align: center; line-height: 1.6; }
-    .fig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 30px 0; }
-    @media (max-width: 680px) { .fig-grid { grid-template-columns: 1fr; } }
-
-    .metric-row { display: flex; flex-wrap: wrap; gap: 16px; margin: 20px 0; }
-    .metric-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 18px 22px; text-align: center; flex: 1; min-width: 130px; }
-    .metric-card .num { font-size: 1.8rem; font-weight: 700; color: var(--accent); }
-    .metric-card .unit { font-size: 0.82rem; color: var(--text-dim); }
-    .metric-card .lbl { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
-
-    .eq { background: var(--card); border: 1px solid var(--border); border-radius: 6px;
-          padding: 14px 20px; font-family: 'Georgia', serif; font-style: italic;
-          font-size: 0.97rem; color: var(--text); margin: 14px 0; text-align: center; }
-    .eq-num { float: right; font-style: normal; color: var(--muted); font-size: 0.86rem; }
-
-    .references ol { padding-left: 20px; }
-    .references li { font-size: 0.88rem; color: var(--text-dim); margin-bottom: 10px; line-height: 1.6; }
-
-    footer { border-top: 1px solid var(--border); text-align: center; padding: 32px 20px; color: var(--muted); font-size: .85rem; }
-    footer a { color: var(--accent); }
-
-    @media (max-width: 768px) { nav { padding: 0 20px; } .section-nav { padding: 0 20px; } .container { padding: 40px 16px 80px; } }
-  </style>
+  <title>I Know Your Next Move | Fawaz Mallick</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="site.css">
 </head>
 <body>
 
-<nav>
-  <a class="logo" href="index.html">Fawaz Mallick</a>
+<nav class="top">
+  <a href="index.html">Fawaz Mallick</a>
   <a class="back" href="index.html">← Back to Portfolio</a>
 </nav>
 
-<div class="section-nav">
-  <a href="#abstract">Abstract</a>
-  <a href="#introduction">Introduction</a>
-  <a href="#background">Background</a>
-  <a href="#method">Method</a>
-  <a href="#system">System</a>
-  <a href="#experiments">Experiments</a>
-  <a href="#results">Results</a>
-  <a href="#discussion">Discussion</a>
-  <a href="#future">Future Work</a>
-  <a href="#references">References</a>
-</div>
-
 <div class="container">
 
-  <div class="notice-pub">
-    <div class="icon">⚠️</div>
-    <p>
-      <strong>Ongoing Work — CMU Graduate Research.</strong>
-      This page presents ongoing work, as part of a Master's Thesis. The current content of this page is only to give an idea of the work being explored, and is not finalized as of yet. As such, some technical details and materials have been left out.
-    </p>
-  </div>
-
   <div class="page-header">
-    <div class="tag-row">
-      <span class="tag">Bayesian Inference</span>
-      <span class="tag">IMU / ZUPT-INS</span>
-      <span class="tag">Real-Time Control</span>
-      <span class="tag">Gait Analysis</span>
-      <span class="tag">Prosthetics</span>
-      <span class="tag">CMU · RA Research</span>
-    </div>
-    <h1>Real-Time Foot Placement Prediction via a Single Heel-Mounted IMU</h1>
-    <p class="subtitle">Using Sequential Feature-Based Probabilities — Fawaz Mallick, Carnegie Mellon University</p>
+    <div class="kicker">Ongoing Research · CMU · PI: Dr. Hartmut Geyer</div>
+    <h1>I know your next move.</h1>
+    <p class="subtitle">Predicting where the foot will land, using a single IMU on the foot.</p>
   </div>
 
-  <div class="abstract" id="abstract">
-    <div class="abstract-label">Abstract</div>
+  <div class="note">
+    This is ongoing work for my master's, it is not published. What's here is where the project is right now,
+    and it keeps changing as I collect more trials.
+  </div>
+
+  <div class="lead">
+    <div class="label">Abstract</div>
     <p>
-      Accurate early prediction of foot placement is critical for proactive control of powered lower-limb prostheses
-      and exoskeletons. This work evaluates a Bayesian foot placement predictor based on the framework of
-      Chen et al.&nbsp;[9] in a <strong>real-time online setting</strong> for the first time, with predictions
-      delivered at <strong>100 Hz with &lt;10 ms latency</strong> from a live heel-mounted IMU stream.
-      The evaluation extends to three additional features (not disclosed here)
-      trained subject-specifically from <strong>IMU dead-reckoning, requiring no motion-capture laboratory</strong>.
-      Evaluated on <strong>108 over-ground walking steps</strong>, the best configuration achieves
-      <strong>RMSE<sub>|d|</sub> = 29.3 cm</strong> with predictions issued <strong>376 ms before heel-strike</strong>.
-      Subject-specific IMU training reduces placement error by <strong>46%</strong> over out-of-domain motion-capture models.
+      This ongoing work focuses on using biomechanical cues to predict the final landing location of the human foot,
+      so that the prediction can be fed to a prosthetic controller before the foot actually lands. Everything runs off one
+      IMU on the heel, so there's no motion capture lab needed.
     </p>
   </div>
 
-  <!-- ── INTRODUCTION ─────────────────────────────────────────── -->
-  <section id="introduction">
-    <h2>I. Introduction</h2>
-
-    <div class="box-problem">
-      <p><strong>Clinical motivation:</strong> Powered prosthetic ankles and exoskeleton joints must configure
-      impedance and trajectory <em>before</em> heel-strike; reactive ground-contact strategies sacrifice push-off
-      energy and impair stability&nbsp;[2]. Foot placement prediction during the swing phase is therefore a central
-      problem in wearable robotics&nbsp;[1]. Lower-limb amputees fall at nearly twice the rate of age-matched controls,
-      often during transitional locomotion tasks a predictive controller that anticipates landing position could
-      enable pre-emptive impedance adjustments and reduce falls.</p>
-    </div>
-
+  <section>
+    <h2>Prosthetics react after the foot lands, which is too late to set up for the step.</h2>
     <p>
-      A single IMU on the shoe provides the natural sensing modality: lightweight, infrastructure-free, and
-      continuously worn. Zero-velocity updates (ZUPTs) during stance anchor a navigation EKF and bound drift,
-      enabling centimetre-level per-step trajectory estimation&nbsp;[3,&nbsp;4].
+      Powered prosthetic ankles and exoskeletons need to set their stiffness and trajectory <em>before</em> heel strike.
+      If they wait for ground contact and then react, they lose push-off energy and stability [2]. Lower limb amputees also fall at
+      nearly twice the rate of people their age, a lot of the time during turns and other transitions. A controller that knows
+      where the foot is going to land could adjust ahead of time.
     </p>
-
     <p>
-      Prior foot placement predictors rely on gaze sensors&nbsp;[5], stereo vision&nbsp;[6], deep learning on
-      multi-sensor sequences&nbsp;[7], or neuro-fuzzy step-length regressors&nbsp;[8]. Chen et al.&nbsp;[9] proposed
-      the most IMU-compatible approach: a Bayesian predictor using six swing-phase features from a heel-mounted IMU
-      that sequentially updates a 2-D foot placement grid. Xiong et al.&nbsp;[10] extended it to complex terrains.
-      <strong>Prior work evaluates either online reactive strategies or offline predictive strategies on stored
-      trajectories.</strong> This work evaluates the Bayesian framework in real time on live hardware,
-      closing the gap between offline prediction and practical deployment.
+      A single IMU on the shoe is the natural sensor for this: it's light, cheap and you can wear it all day. Every time the foot
+      is flat on the ground it is (briefly) not moving, and that zero velocity moment can be used to stop the IMU's drift from
+      growing [3, 4]. Other people have predicted foot placement using eye tracking [5], cameras [6], deep learning on multiple
+      sensors [7] and step length models [8]. Chen et al. [9] came up with the approach closest to what I want: a Bayesian
+      predictor that uses features from a heel IMU during the swing.
     </p>
   </section>
 
-  <!-- ── BACKGROUND ───────────────────────────────────────────── -->
-  <section id="background">
-    <h2>II. Background: Chen et al. Framework</h2>
-
+  <section>
+    <h2>Chen et al. found 6 biomechanical cues during the swing that are strong predictors of the next foot placement.</h2>
     <p>
-      Chen et al.&nbsp;[9] model foot placement as a probability distribution over a discrete grid of cells
-      C&nbsp;=&nbsp;(x<sub>i</sub>,&nbsp;y<sub>i</sub>) covering area A. A Gaussian prior centred on the mean of
-      the two previous steps is updated sequentially as each swing-phase feature f<sub>j</sub> is detected:
+      As the foot swings, a few moments in the motion say a lot about where it will land. Chen et al. [9] proposed six:
     </p>
-    <div class="eq">
-      P<sub>j</sub>(C) = α<sub>j</sub> · P(f<sub>j,m</sub> | C) · P<sub>j−1</sub>(C)
-      <span class="eq-num">(1)</span>
-    </div>
-    <p>
-      The per-cell likelihood uses a learned expected-value surface h<sub>j</sub>(x<sub>i</sub>, y<sub>i</sub>)
-      and per-feature residual std γ<sub>j</sub>:
-    </p>
-    <div class="eq">
-      P(f<sub>j,m</sub> | C) = (1 / √(2π γ<sub>j</sub>)) · exp( −(f<sub>j,m</sub> − h<sub>j</sub>(x<sub>i</sub>, y<sub>i</sub>))² / 2γ<sub>j</sub>² )
-      <span class="eq-num">(2)</span>
-    </div>
-    <p>
-      The predicted placement is the weighted centroid of the final posterior. Each grid evaluation takes
-      ≈150 ms per step in MATLAB as reported by Chen et al.&nbsp;[9] too slow for real-time prosthesis control.
-      This paper achieves &lt;10 ms per step.
-    </p>
-  </section>
-
-  <!-- ── METHOD ───────────────────────────────────────────────── -->
-  <section id="method">
-    <h2>III. Proposed Extensions</h2>
-
-    <h3>A. Extended Feature Set (8 Features)</h3>
-    <p>
-      We retain the six swing-phase features of Chen et al.&nbsp;[9] (f<sub>A</sub>–f<sub>F</sub>) and add
-      three novel <strong>inter-step features</strong>, two of which are used in the sequential update, which can be estimated from IMU dead-reckoning.
-      No laboratory, motion-capture system, or additional sensor is required these values are computed
-      entirely from the ongoing ZUPT-INS trajectory.
-    </p>
-
     <table>
-      <tr><th>Feature</th><th>Description</th><th>Unit</th><th>Source</th></tr>
-      <tr><td>f<sub>A</sub></td><td>AP velocity extremum</td><td>m/s</td><td>Chen et al. [9]</td></tr>
-      <tr><td>f<sub>B</sub></td><td>ML velocity positive peak</td><td>m/s</td><td>Chen et al. [9]</td></tr>
-      <tr><td>f<sub>C</sub></td><td>Vertical velocity positive peak</td><td>m/s</td><td>Chen et al. [9]</td></tr>
-      <tr><td>f<sub>D</sub></td><td>Peak vertical position</td><td>m</td><td>Chen et al. [9]</td></tr>
-      <tr><td>f<sub>E</sub></td><td>AP position at vertical apex</td><td>m</td><td>Chen et al. [9]</td></tr>
-      <tr><td>f<sub>F</sub></td><td>ML position at vertical apex</td><td>m</td><td>Chen et al. [9]</td></tr>
-      <tr><td><strong>F<sub>7</sub></strong></td><td><strong>From IMU dead-reckoning</strong></td><td>m</td><td><strong>Extended</strong></td></tr>
-      <tr><td><strong>F<sub>8</sub></strong></td><td><strong>From IMU dead-reckoning</strong></td><td>m</td><td><strong>Extended</strong></td></tr>
+      <tr><th>Cue</th><th>What it is</th></tr>
+      <tr><td>fA</td><td>Forward (AP) velocity peak</td></tr>
+      <tr><td>fB</td><td>Sideways (ML) velocity peak</td></tr>
+      <tr><td>fC</td><td>Vertical velocity peak</td></tr>
+      <tr><td>fD</td><td>Highest point of the foot</td></tr>
+      <tr><td>fE</td><td>Forward position at the highest point</td></tr>
+      <tr><td>fF</td><td>Sideways position at the highest point</td></tr>
     </table>
-    <p class="table-caption">Table I. Swing-phase features. f<sub>A</sub>–f<sub>F</sub> replicate Chen et al. [9]; F<sub>7</sub>, F<sub>8</sub> are novel inter-step features requiring no laboratory infrastructure.</p>
-
-    <h3>B. Modified Prior Distribution</h3>
     <p>
-      Unlike Chen et al., who centre their prior on the mean of the two most recent <em>measured</em> placements,
-      our prior anchors on the single most recent <em>predicted</em> centroid, compatible with real-time
-      deployment where ground-truth positions are unavailable. At the start of each swing phase:
+      To use them, each cue gets fit as a quadratic surface over where the foot actually landed. I generated these fits from my own
+      step data: every step is normalized, and the fit tells you what value of the cue you'd expect for any landing spot.
     </p>
-    <div class="eq">
-      p<sub>0</sub>(x<sub>g</sub>) ∝ { 1 (k ≤ 1),  1 + (β / √(2π σ<sub>p</sub>)) · exp(−‖x<sub>g</sub> − x̂<sup>(k−1)</sup>‖² / 2σ<sub>p</sub>²)  (k ≥ 2) }
-      <span class="eq-num">(3)</span>
+    <div class="figs one">
+      <figure>
+        <img src="images/quadratic_fits.png" alt="Quadratic fits of the six cues against landing position">
+        <figcaption><strong>Quadratic fits for the 6 cues against landing position.</strong> Red dots are training steps (3,798 steps), x and y are where the foot landed (forward and sideways).</figcaption>
+      </figure>
     </div>
     <p>
-      where σ<sub>p</sub> = 0.10 m and β = 0.5. For k ≥ 2 in the IMU variant, x̂<sup>(k−1)</sup> is replaced by
-      the centroid of the landing-probability update (§III.C), so each step's prior is anchored to the most accurate
-      available position estimate.
+      The prediction itself works on a grid of possible landing spots. It starts with a guess (the prior), and every time a cue shows
+      up during the swing, the grid gets updated and the guess narrows down.
     </p>
+  </section>
 
-    <h3>C. IMU Landing Probability Update (9th Bayesian Observation)</h3>
+  <section>
+    <h2>The IMU also tells us where the foot actually landed, and that's extra information we can use.</h2>
     <p>
-      At heel-strike, the ZUPT-INS provides a dead-reckoned landing estimate x̂<sub>IMU</sub> ∈ ℝ². We treat
-      this as a <strong>9th Bayesian observation</strong>:
+      I track the foot with an error-state Kalman filter and zero velocity updates, so at every heel strike I know where the foot
+      landed. Chen et al.'s method doesn't use this. My extension: after each step, treat the measured landing spot as one more
+      update on the grid, and carry that corrected position forward as the starting guess for the next step. So each step's
+      prediction starts from a better place than the last one.
     </p>
-
-    <div class="fig-grid">
+    <div class="figs one">
       <figure>
-        <img src="images/fig_training.png" alt="IMU-8 training foot placements (n=9,279 steps)">
-        <figcaption>
-          Fig. 3. IMU-8 training foot placements (n = 9,279 steps after 1-σ lateral and previous-step
-          outlier filters). Left: scatter of AP vs. ML foot placement positions. Right: step length (AP,
-          mean 165 cm, σ = 30 cm) and step width (ML, mean 0.2 cm, σ = 2 cm) distributions.
-          Training data collected over 96 free-walking sessions, no treadmill or motion capture.
-        </figcaption>
-      </figure>
-      <figure>
-        <img src="images/fig_gamma.png" alt="Per-feature residual standard deviations γ_j across model variants">
-        <figcaption>
-          Fig. 5. Per-feature residual std γ<sub>j</sub> across all four model variants (VICON-6, VICON-8,
-          IMU-6, IMU-8). IMU-8's γ<sub>y<sub>g,prev</sub></sub> = 0.035 approaches the VICON-8 value of 0.125,
-          validating the 1-σ lateral filter that removes turn-contaminated training steps.
-        </figcaption>
+        <img src="images/intent_heatmap.png" alt="Heatmaps of the landing estimate updating through the swing">
+        <figcaption><strong>The guess sharpens as the swing goes on.</strong> Each row is one step of a 180° turn. Left to right: the starting guess, then each cue as it arrives, then the landing update that becomes the next step's guess. Green × is where the foot really landed, red + is the prediction.</figcaption>
       </figure>
     </div>
   </section>
 
-  <!-- ── SYSTEM ────────────────────────────────────────────────── -->
-  <section id="system">
-    <h2>IV–V. System Architecture &amp; IMU Processing</h2>
-
-    <h3>Sensor Setup</h3>
-    <div class="box-method">
-      <p><strong>Hardware:</strong> A single <strong>HWT906 IMU (100 Hz, 16-bit)</strong> taped to the heel side
-      of the shoe, matching Chen et al.&nbsp;[9]. Raw accelerometer and gyroscope readings are transformed to the
-      world frame using the IMU's onboard quaternion filter.</p>
-      <p><strong>Stance detection:</strong> World-frame linear acceleration magnitude &lt; 3.0 m/s² <em>and</em>
-      gyroscope magnitude &lt; 100 deg/s for ≥ 20 consecutive samples. A minimum of 30 swing samples is required
-      to suppress false toe-offs.</p>
+  <section>
+    <h2>Right now, it predicts landing spots on turns it has never seen to within about 12 cm.</h2>
+    <p>
+      I walked paths with turns from 0° to 180°, tracked every step with the IMU, trained on the 0° to 135° turns and then tested
+      on the 180° turns, which the model never saw. Using the 4 cue subset from Chen et al. (fA, fC, fE, fF) actually did better than all 6.
+    </p>
+    <div class="metrics">
+      <div class="metric"><div class="num">~12 cm</div><div class="lbl">mean landing error, 180° turns (4 cues)</div></div>
+      <div class="metric"><div class="num">~17 cm</div><div class="lbl">mean landing error with all 6 cues</div></div>
+      <div class="metric"><div class="num">3,798</div><div class="lbl">training steps, both feet</div></div>
     </div>
-
-    <h3>ZUPT-INS EKF</h3>
-    <p>
-      A 6-state EKF tracking position <strong>p</strong> and velocity <strong>v</strong> is maintained throughout
-      the gait cycle&nbsp;[3]. At each toe-off, position and covariance are reset to <strong>p</strong> = <strong>0</strong>
-      and <strong>P</strong> = 10<sup>−6</sup><strong>I</strong>, bounding dead-reckoning drift to within one swing
-      phase. Rebula drift correction&nbsp;[4] removes residual linear velocity bias:
-    </p>
-    <div class="eq">
-      ṽ[k] = v[k] − (k/N) · v[N]
-    </div>
-    <p>
-      The ZUPT-INS dead-reckoned positions serve triple duty: feature extraction during swing, inter-step feature
-      labelling (x<sub>g,prev</sub>, y<sub>g,prev</sub>), and the landing update at heel-strike.
-    </p>
-
-    <h3>Real-Time Feature Extraction Timing</h3>
-    <p>
-      Features f<sub>A</sub>–f<sub>C</sub> are velocity extrema detected early in swing.
-      Features f<sub>D</sub>–f<sub>F</sub> require the vertical apex to have passed (mid-swing).
-      All six original features plus the two inter-step features are available at approximately
-      <strong>50% of the swing phase</strong>, providing <strong>≈376 ms of prediction lead time</strong>
-      before heel-strike, more than 2× the prosthetic ankle actuation budget (~150 ms).
-    </p>
-  </section>
-
-  <!-- ── EXPERIMENTS ───────────────────────────────────────────── -->
-  <section id="experiments">
-    <h2>VI. Experimental Setup</h2>
-
-    <h3>A. VICON Offline Baseline (Cross-Subject)</h3>
-    <p>
-      To replicate and extend the offline evaluation of Chen et al.&nbsp;[9], we use the Camargo et al.
-      dataset&nbsp;[11]: VICON (200 Hz), IMU, and EMG from 22 able-bodied subjects walking at 0.5–1.85 m/s
-      on a treadmill. Subjects AB06–AB12 are used for training (n = 10,323 steps); AB13 is held out for
-      cross-subject evaluation (n = 1,306 steps). This is a purely <em>offline</em> test, features are
-      extracted from stored trajectories and ground-truth labels are VICON marker data.
-    </p>
-
-    <h3>B. Subject-Specific IMU Training (No Lab Required)</h3>
-    <p>
-      Regression surfaces and γ values for IMU-trained models are fitted entirely from data collected during
-      <strong>unconstrained free-walking across 96 separate sessions</strong> (indoor corridors, hallways,
-      varying speed). No treadmill or motion-capture system is used. ZUPT-INS dead-reckoned placements serve
-      as both training inputs (x<sub>g</sub>, y<sub>g</sub>) and feature labels.
-    </p>
-    <p>
-      Quality filters retain steps with swing duration &lt; 1.5 s; 0.10 &lt; x<sub>IMU</sub> &lt; 2.50 m;
-      |y<sub>IMU</sub>| &lt; 2.00 m → n<sub>6</sub> = 10,916 steps. For the 8-feature model, a 1-σ lateral
-      filter removes turn-contaminated steps.
-    </p>
-
-    <h3>C. Real-Time Evaluation Session</h3>
-    <div class="box-method">
-      <p><strong>Protocol:</strong> A single real-time evaluation session of 121 steps of level-ground
-      over-ground walking was recorded. After quality filtering: 111 steps remain; the first 3 (warm-up)
-      are excluded, leaving <strong>n = 108 evaluation steps</strong>. The Bayesian grid predictor runs
-      live at 100 Hz on the raw IMU stream, no post-processing.</p>
-      <p><strong>Configurations tested:</strong> 8 total, crossing training source (VICON / IMU) ×
-      feature set (6-feat / 8-feat) × landing update (±). All eight are evaluated on the same 108 steps.</p>
+    <div class="figs two">
+      <figure>
+        <img src="images/turn_trajectories.png" alt="Foot trajectories for turn angles from 0 to 180 degrees">
+        <figcaption><strong>Walking trials from 0° to 180° turns,</strong> tracked by my IMU pipeline (one trial per angle shown).</figcaption>
+      </figure>
+      <figure>
+        <img src="images/eskf_2d_trajectories.png" alt="Tracked foot paths on a taped course">
+        <figcaption><strong>Checking the tracker on a taped course:</strong> about 2.5% distance error on a straight walk, and about 10 in of drift after a full 15 step loop.</figcaption>
+      </figure>
     </div>
   </section>
 
-  <!-- ── RESULTS ───────────────────────────────────────────────── -->
-  <section id="results">
-    <h2>VII. Results</h2>
-
-    <div class="metric-row">
-      <div class="metric-card"><div class="num">29.3</div><div class="unit">cm</div><div class="lbl">Best RMSE<sub>|d|</sub> (IMU Variant 4)</div></div>
-      <div class="metric-card"><div class="num">376</div><div class="unit">ms</div><div class="lbl">Prediction lead time before heel-strike</div></div>
-      <div class="metric-card"><div class="num">&lt;10</div><div class="unit">ms</div><div class="lbl">Per-step grid inference (vs. ≈150 ms prior art)</div></div>
-      <div class="metric-card"><div class="num">46%</div><div class="unit">reduction</div><div class="lbl">IMU vs. VICON-trained error on free walking</div></div>
-    </div>
-
-    <h3>A. VICON Offline Cross-Validation (Treadmill — Table II)</h3>
-    <table>
-      <tr><th>Subject</th><th>Model</th><th>n steps</th><th>RMSE<sub>x</sub> (cm)</th><th>RMSE<sub>y</sub> (cm)</th><th>RMSE<sub>|d|</sub> (cm)</th></tr>
-      <tr><td>AB06</td><td>Variant 1</td><td>1815</td><td>9.9</td><td>2.2</td><td>8.4</td></tr>
-      <tr><td>AB06</td><td>Variant 3</td><td>1815</td><td class="best">5.0</td><td>2.3</td><td class="best">4.4</td></tr>
-      <tr><td>AB07</td><td>Variant 1</td><td>1698</td><td>11.5</td><td>3.6</td><td>10.2</td></tr>
-      <tr><td>AB07</td><td>Variant 3</td><td>1698</td><td class="best">6.0</td><td>3.6</td><td class="best">6.1</td></tr>
-      <tr><td>AB09</td><td>Variant 1</td><td>1604</td><td>10.9</td><td>3.1</td><td>9.8</td></tr>
-      <tr><td>AB09</td><td>Variant 3</td><td>1604</td><td class="best">5.2</td><td>3.8</td><td class="best">5.5</td></tr>
-      <tr><td>AB13 †</td><td>Variant 1</td><td>1306</td><td>9.7</td><td>3.3</td><td>8.9</td></tr>
-      <tr><td>AB13 †</td><td>Variant 3</td><td>1306</td><td class="best">5.8</td><td>3.6</td><td class="best">6.8</td></tr>
-    </table>
-    <p class="table-caption">Table II. VICON model — per-subject leave-one-out on Camargo treadmill data. † AB13 is cross-subject (unseen during training). Variant 3 reduces AP error ≈45% vs. Variant 1, consistent with Chen et al. [9].</p>
-
-    <h3>B. Real-Walking Evaluation — All 8 Configurations (Table III)</h3>
-    <table>
-      <tr><th>Train</th><th>Variant</th><th>RMSE<sub>x</sub> (cm)</th><th>RMSE<sub>y</sub> (cm)</th><th>RMSE<sub>|d|</sub> (cm)</th><th>Mean |d| (cm)</th></tr>
-      <tr><td rowspan="4">VICON</td><td>Variant 1</td><td>50.4</td><td>11.4</td><td>51.7</td><td>44.8</td></tr>
-      <tr><td>Variant 2</td><td>49.2</td><td>10.5</td><td>50.3</td><td>44.1</td></tr>
-      <tr><td>Variant 3</td><td>53.4</td><td>8.8</td><td>54.1</td><td>35.6</td></tr>
-      <tr><td>Variant 4</td><td>53.1</td><td>8.9</td><td>53.8</td><td>37.2</td></tr>
-      <tr><td rowspan="4">IMU</td><td>Variant 1</td><td>28.4</td><td>22.6</td><td>36.3</td><td>32.3</td></tr>
-      <tr><td>Variant 2</td><td>30.1</td><td>10.0</td><td>31.7</td><td>24.7</td></tr>
-      <tr><td>Variant 3</td><td>27.2</td><td>11.7</td><td>29.6</td><td>23.3</td></tr>
-      <tr><td><strong>Variant 4</strong></td><td class="best">27.0</td><td class="best">11.4</td><td class="best">29.3</td><td class="best">23.3</td></tr>
-    </table>
-    <p class="table-caption">Table III. Real-walking prediction error (n = 108 over-ground steps). Best configuration bold/green. VICON-trained models degrade 7× on free walking; IMU subject-specific training restores accuracy.</p>
-
-    <figure>
-      <img src="images/fig_results.png" alt="Foot placement prediction RMSE for all 8 configurations (n=108 steps)">
-      <figcaption>
-        Fig. 4. Foot placement prediction RMSE for all eight configurations (n = 108 evaluation steps).
-        Dashed line separates VICON-trained (left) from IMU-trained (right). VICON models achieve &lt;7 cm
-        on the lab treadmill but degrade to ~54 cm RMSE<sub>|d|</sub> on free walking — a 7× domain gap.
-        IMU subject-specific training reduces this to 29.3 cm (46% improvement). The best result,
-        IMU Variant 4, is labelled at 29.3 cm.
-      </figcaption>
-    </figure>
-
-    <h3>C. Online Timing (Table IV)</h3>
-    <table>
-      <tr><th>Metric</th><th>Value</th></tr>
-      <tr><td>Mean swing duration</td><td>778 ± 91 ms</td></tr>
-      <tr><td>Toe-off → prediction (apex)</td><td>402 ms</td></tr>
-      <tr><td><strong>Prediction lead time before heel-strike</strong></td><td class="best">376 ms</td></tr>
-      <tr><td><strong>Per-step grid update</strong></td><td class="best">&lt;10 ms</td></tr>
-      <tr><td>Chen et al. grid-map [9]</td><td>~150 ms</td></tr>
-      <tr><td>Prosthetic ankle actuation budget</td><td>~150 ms</td></tr>
-    </table>
-    <p class="table-caption">Table IV. Online timing, 108-step session. Prediction lead time (376 ms) exceeds the prosthetic actuation budget by more than 2×. Per-step inference at &lt;10 ms is a 15× speedup over the MATLAB implementation of Chen et al. [9].</p>
-
-    <div class="box-result">
-      <p><strong>Key findings:</strong></p>
-      <ul>
-        <li><strong>Domain gap (7× error increase):</strong> VICON-trained models achieve &lt;7 cm on the treadmill but degrade to ≈54 cm RMSE<sub>|d|</sub> on free walking, driven by differences in constrained vs. variable-speed kinematics, spontaneous direction changes, and footwear-surface dynamics</li>
-        <li><strong>IMU subject-specific training closes the gap:</strong> Training on 96 free-walking sessions (no lab equipment) reduces free-walking error to 29.3 cm a 46% reduction over VICON models</li>
-        <li><strong>Landing update corrects lateral drift:</strong> For IMU Variant 1, the 9th observation reduces RMSE<sub>|d|</sub> by 4.6 cm (−12.7%)</li>
-        <li><strong>Inter-step features require the lateral filter </strong>
-        <li><strong>376 ms lead time:</strong> Predictions are emitted at ≈52% of the swing phase, well within the ~150 ms actuation budget of powered prosthetic ankles</li>
-        <li><strong>&lt;10 ms per step:</strong> 15× faster than Chen et al.'s MATLAB implementation, enabling real-time embedded deployment</li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- ── DISCUSSION ────────────────────────────────────────────── -->
-  <section id="discussion">
-    <h2>VIII. Discussion</h2>
-
-    <p>
-      The large VICON-to-free-walking domain gap arises because treadmill walking enforces a constrained,
-      periodic gait pattern at fixed speeds, while free walking involves variable speed, spontaneous direction
-      changes, and different footwear-surface dynamics. Subject-specific IMU training in the deployment
-      environment eliminates this gap <em>without any laboratory infrastructure</em> the subject simply
-      walks freely in the corridors where the device will be used.
-    </p>
-    <p>
-      The 1-σ lateral filter is a practical necessity when walking sessions contain turns. Turn steps have
-      |y<sub>IMU</sub>| far outside the straight-line distribution, poisoning the inter-step regression . Curating a straight-line sub-dataset is sufficient to recover reliable ML inter-step
-      features without additional hardware.
-    </p>
-    <p>
-      For real amputee users, foot IMU data originates from the prosthetic limb whose motion is actively
-      controlled by the device using that signal to predict the placement the device must achieve introduces
-      circular reasoning. A <strong>contralateral hip or thigh IMU</strong> avoids this dependency, and proves to be the primary direction to explore, in order to extend the work on amputee patients
-    </p>
-  </section>
-
-  <!-- ── FUTURE WORK ───────────────────────────────────────────── -->
-  <section id="future">
-    <h2>IX. Active Exploration &amp; Future Work</h2>
-    <p>
-      This is ongoing work. Current active areas of investigation include:
-    </p>
-    <ul>
-      <li><strong>Neural network architectures:</strong> Benchmarking LSTM, temporal CNN, and transformer-based sequence models against the Bayesian baseline, exploring whether learned representations capture placement patterns that the hand-engineered features miss</li>
-      <li><strong>Hip-only intent detection:</strong> Deriving equivalent swing-phase features from a hip- or thigh-mounted IMU to avoid the circular-sensing problem for amputee users (prosthetic limb sensors reflect device output, not user intent)</li>
-      <li><strong>Multi-subject validation:</strong> Validating against optical motion capture across multiple subjects to obtain absolute error bounds beyond single-subject evaluation</li>
-      <li><strong>Embedded deployment:</strong> Evaluating latency and power budget on microcontroller platforms typical of powered prosthetic knees and ankles</li>
-      <li><strong>3-D landing targets:</strong> Extending from 2-D foot placement to full 3-D landing target by relating swing-phase features to step height</li>
+  <section>
+    <h2>Next, I want to close the loop and move the sensor off the prosthetic.</h2>
+    <ul class="plain">
+      <li><strong>One filter:</strong> predict each step during the swing, correct it at heel strike, carry it forward. This is in progress.</li>
+      <li><strong>Hip or thigh IMU:</strong> on an amputee, a foot IMU would sit on the prosthetic itself, so the device would be predicting from its own motion. Moving the sensor up the leg avoids that.</li>
+      <li><strong>Learning based models:</strong> compare LSTMs and other sequence models against the Bayesian approach.</li>
+      <li><strong>Embedded hardware:</strong> check timing, noise and latency on the kind of hardware a prosthetic would actually use.</li>
     </ul>
   </section>
 
-  <!-- ── REFERENCES ────────────────────────────────────────────── -->
-  <section id="references" class="references">
+  <section class="refs">
     <h2>References</h2>
     <ol>
       <li>M. R. Islam, X. Shen, and E. Sazonov, "Sensors and machine learning methods for intent detection in lower-limb prosthetic devices: a review," <em>IEEE Sensors J.</em>, vol. 25, no. 12, pp. 21054–21066, 2025.</li>
@@ -500,8 +144,6 @@
       <li>S.-W. Lee and A. Asbeck, "A deep learning-based approach for foot placement prediction," <em>IEEE Robot. Autom. Lett.</em>, preprint, June 2023.</li>
       <li>S. Sahoo et al., "Prediction of step length using neuro-fuzzy approach suitable for prosthesis control," <em>IEEE Trans. Instrum. Meas.</em>, vol. 69, no. 8, pp. 5658–5665, 2020.</li>
       <li>X. Chen, K. Zhang, H. Liu, Y. Leng, and C. Fu, "A probability distribution model-based approach for foot placement prediction in the early swing phase with a wearable IMU sensor," <em>IEEE Trans. Neural Syst. Rehabil. Eng.</em>, vol. 29, pp. 2595–2606, 2021.</li>
-      <li>J. Xiong et al., "A probability fusion approach for foot placement prediction in complex terrains," <em>IEEE Trans. Neural Syst. Rehabil. Eng.</em>, vol. 31, pp. 4591–4600, 2023.</li>
-      <li>J. Camargo, A. Ramanathan, W. Flanagan, and A. Young, "A comprehensive, open-source dataset of lower limb biomechanics in multiple conditions of stairs, ramps, and level-ground ambulation," <em>J. Biomechanics</em>, vol. 119, p. 110320, 2021.</li>
     </ol>
   </section>
 
@@ -512,19 +154,5 @@
   <p style="margin-top:10px;"><a href="mailto:fawazmallick9@gmail.com">fawazmallick9@gmail.com</a> · <a href="https://www.linkedin.com/in/fawaz-mallick/" target="_blank">LinkedIn</a></p>
 </footer>
 
-<script>
-  const secLinks = document.querySelectorAll('.section-nav a');
-  const sections = document.querySelectorAll('section[id]');
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        secLinks.forEach(l => l.classList.remove('active'));
-        const a = document.querySelector(`.section-nav a[href="#${e.target.id}"]`);
-        if (a) { a.classList.add('active'); a.scrollIntoView({inline:'center', behavior:'smooth'}); }
-      }
-    });
-  }, { rootMargin: '-20% 0px -70% 0px' });
-  sections.forEach(s => observer.observe(s));
-</script>
 </body>
 </html>

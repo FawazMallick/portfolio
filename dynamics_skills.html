@@ -1,591 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>TWIP Optimal Control — Fawaz Mallick</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --accent: #0077a8; --accent-dim: #005f86; --accent-light: rgba(0,119,168,0.12);
-      --bg: #f5efe0; --card: #fbf8ef; --card-hover: #efe7d3; --border: #ddd3bc;
-      --text: #111111; --text-dim: #2b2b2b; --muted: #555555; --nav-h: 64px;
-    }
-    html { scroll-behavior: smooth; }
-    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
-
-    nav {
-      position: sticky; top: 0; z-index: 100; height: var(--nav-h);
-      background: rgba(245,239,224,0.92); backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: space-between; padding: 0 40px;
-    }
-    nav a.logo { color: var(--text); text-decoration: none; font-weight: 600; font-size: 0.95rem; }
-    nav a.back { color: var(--accent); text-decoration: none; font-size: .85rem; font-weight: 500; }
-    nav a.back:hover { opacity: .7; }
-
-    .section-nav {
-      position: sticky; top: var(--nav-h); z-index: 90;
-      background: rgba(245,239,224,0.96); border-bottom: 1px solid var(--border);
-      display: flex; gap: 0; overflow-x: auto; padding: 0 40px; scrollbar-width: none;
-    }
-    .section-nav::-webkit-scrollbar { display: none; }
-    .section-nav a {
-      color: var(--muted); text-decoration: none; font-size: 0.8rem; font-weight: 500;
-      padding: 14px 16px; white-space: nowrap; border-bottom: 2px solid transparent;
-      transition: color .2s, border-color .2s;
-    }
-    .section-nav a:hover, .section-nav a.active { color: var(--accent); border-bottom-color: var(--accent); }
-
-    .container { max-width: 960px; margin: 0 auto; padding: 60px 24px 100px; }
-
-    .page-header { margin-bottom: 60px; }
-    .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
-    .tag { background: var(--accent-light); color: var(--accent); border: 1px solid rgba(0,119,168,0.25);
-           border-radius: 4px; padding: 3px 10px; font-size: 0.72rem; font-weight: 700;
-           text-transform: uppercase; letter-spacing: 0.08em; }
-    .page-header h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; color: #111;
-                      margin-bottom: 10px; letter-spacing: -.02em; line-height: 1.2; }
-    .page-header .subtitle { font-size: 1rem; color: var(--accent); font-weight: 500; margin-bottom: 24px; }
-
-    .abstract { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 24px 28px; margin-bottom: 16px; }
-    .abstract-label { font-size: 0.72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
-    .abstract p { font-size: 0.97rem; color: var(--text-dim); line-height: 1.8; margin: 0; }
-
-    section { margin-bottom: 90px; scroll-margin-top: calc(var(--nav-h) + 50px); }
-    h2 { font-size: 1.7rem; font-weight: 700; color: #111; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--border); }
-    h3 { font-size: 1.1rem; font-weight: 600; color: var(--accent); margin-top: 32px; margin-bottom: 12px; }
-    h4 { font-size: 0.95rem; font-weight: 600; color: #111; margin-bottom: 8px; margin-top: 18px; }
-    p { font-size: 0.97rem; color: var(--text-dim); line-height: 1.8; margin-bottom: 14px; }
-    p strong { color: var(--text); }
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { opacity: .8; }
-    ul { list-style: none; padding: 0; margin: 10px 0; }
-    ul li { margin-bottom: 7px; padding-left: 22px; position: relative; font-size: .95rem; color: var(--text-dim); }
-    ul li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-weight: 600; }
-
-    .box-problem { background: rgba(220,38,38,0.07); border-left: 4px solid #dc2626; padding: 18px 20px; margin: 20px 0; border-radius: 0 6px 6px 0; }
-    .box-method  { background: rgba(59,130,246,0.07); border-left: 4px solid #3b82f6; padding: 18px 20px; margin: 20px 0; border-radius: 0 6px 6px 0; }
-    .box-result  { background: rgba(34,197,94,0.07); border-left: 4px solid #15803d; padding: 18px 20px; margin: 20px 0; border-radius: 0 6px 6px 0; }
-    .box-problem p, .box-method p, .box-result p { margin-bottom: 8px; }
-    .box-problem p:last-child, .box-method p:last-child, .box-result p:last-child { margin-bottom: 0; }
-
-    table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 0.88rem; }
-    th { background: var(--card); color: var(--accent); padding: 9px 14px; text-align: left; border: 1px solid var(--border); font-weight: 600; font-size: 0.82rem; }
-    td { padding: 8px 14px; border: 1px solid var(--border); color: var(--text-dim); }
-    tr:nth-child(even) td { background: rgba(0,119,168,0.03); }
-    td.best { color: #15803d; font-weight: 700; }
-
-    figure { margin: 30px 0; }
-    figure img { max-width: 100%; border-radius: 8px; border: 1px solid var(--border); display: block; transition: border-color .25s; }
-    figure img:hover { border-color: var(--accent); }
-    figcaption { font-size: 0.86rem; color: var(--muted); margin-top: 10px; font-style: italic; text-align: center; line-height: 1.6; }
-    .fig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 30px 0; }
-    @media (max-width: 680px) { .fig-grid { grid-template-columns: 1fr; } }
-
-    .eq { background: var(--card); border: 1px solid var(--border); border-radius: 6px;
-          padding: 14px 20px; font-family: 'Georgia', serif; font-style: italic;
-          font-size: 0.97rem; color: var(--text); margin: 14px 0; }
-
-    .matrix-block { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px 24px; margin: 16px 0; font-family: 'Georgia', serif; font-size: 0.93rem; color: var(--text-dim); line-height: 2.0; }
-    .matrix-block strong { color: var(--accent); display: block; margin-bottom: 8px; font-family: 'Inter', sans-serif; font-size: 0.82rem; letter-spacing: .08em; text-transform: uppercase; }
-
-    .param-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin: 20px 0; }
-    .param-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
-    .param-card .sym { font-size: 1.3rem; color: var(--accent); font-family: 'Georgia', serif; font-style: italic; }
-    .param-card .val { font-size: 1.1rem; font-weight: 700; color: #111; margin: 4px 0; }
-    .param-card .lbl { font-size: 0.8rem; color: var(--muted); }
-
-    .convergence-table { font-size: 0.85rem; }
-
-    .perf-highlight { display: flex; gap: 20px; flex-wrap: wrap; margin: 20px 0; }
-    .perf-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px 24px; text-align: center; flex: 1; min-width: 160px; }
-    .perf-card .num { font-size: 2rem; font-weight: 700; color: var(--accent); }
-    .perf-card .unit { font-size: 0.85rem; color: var(--text-dim); }
-    .perf-card .lbl { font-size: 0.78rem; color: var(--muted); margin-top: 4px; }
-    .perf-card.best .num { color: #15803d; }
-
-    .references ol { padding-left: 20px; }
-    .references li { font-size: 0.88rem; color: var(--text-dim); margin-bottom: 10px; line-height: 1.6; }
-
-    footer { border-top: 1px solid var(--border); text-align: center; padding: 32px 20px; color: var(--muted); font-size: .85rem; }
-    footer a { color: var(--accent); }
-
-    @media (max-width: 768px) { nav { padding: 0 20px; } .section-nav { padding: 0 20px; } .container { padding: 40px 16px 80px; } }
-  </style>
+  <title>Inverted Pendulum Control | Fawaz Mallick</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="site.css">
 </head>
 <body>
 
-<nav>
-  <a class="logo" href="index.html">Fawaz Mallick</a>
+<nav class="top">
+  <a href="index.html">Fawaz Mallick</a>
   <a class="back" href="index.html">← Back to Portfolio</a>
 </nav>
-
-<div class="section-nav">
-  <a href="#abstract">Abstract</a>
-  <a href="#system">System</a>
-  <a href="#lqr">LQR</a>
-  <a href="#kalman">Kalman Filter</a>
-  <a href="#ilqr">iLQR</a>
-  <a href="#nn">NN Policy</a>
-  <a href="#results">Summary</a>
-  <a href="#references">References</a>
-</div>
 
 <div class="container">
 
   <div class="page-header">
-    <div class="tag-row">
-      <span class="tag">Python</span>
-      <span class="tag">LQR</span>
-      <span class="tag">Kalman Filter</span>
-      <span class="tag">iLQR</span>
-      <span class="tag">Neural Network Policy</span>
-      <span class="tag">Imitation Learning</span>
-      <span class="tag">CMU · MCT &amp; OCRL</span>
-    </div>
-    <h1>TWIP Optimal Control</h1>
-    <p class="subtitle">Two-Wheeled Inverted Pendulum: LQR → Kalman Filter → iLQR → Neural Network Policy</p>
+    <div class="kicker">Controls · Python · CMU Optimal Control &amp; Reinforcement Learning</div>
+    <h1>Controls project: two-wheeled inverted pendulum, LQR vs. NN</h1>
+    <p class="subtitle">Trying different control strategies to control a simulated inverted pendulum.</p>
   </div>
 
-  <div class="abstract" id="abstract">
-    <div class="abstract-label">Abstract</div>
+  <section>
+    <h2>A two-wheeled inverted pendulum is a good testbed: it falls over on its own, but the model is simple.</h2>
     <p>
-      The two-wheeled inverted pendulum (TWIP), a classic underactuated system that serves as a testbed for
-      progressively more powerful control strategies. Starting from a linearized model, an LQR controller
-      is designed and a Kalman filter is added for noisy state estimation. Moving to the nonlinear dynamics,
-      an iterative LQR (iLQR) achieves large-angle trajectory optimization (drag-race to φ* = 2π rad in
-      ~3 s, 7-iteration convergence). Finally, an imitation-learned neural network policy with only
-      <strong>13 parameters</strong> achieves <strong>7× longer balance time</strong> than the hand-tuned
-      linear baseline through a two-stage training pipeline: behavioral cloning followed by policy optimization.
+      It's a body balanced on top of a wheel axle, like a small Segway. One motor torque drives the wheels. The state is the
+      wheel angle, the body tilt, and how fast each is changing. Linearized around upright, the system is fully controllable and
+      fully observable, so it can be balanced and its state can be estimated from sensors.
     </p>
-  </div>
-
-  <!-- 1. SYSTEM -->
-  <section id="system">
-    <h2>1. System Description</h2>
-
-    <p>
-      The TWIP consists of a motorized wheel assembly (mass m₁, inertia I₁) and a rigid body balanced
-      upright on the axle (mass m₂, inertia I₂, center-of-mass at height l above the axle). A single
-      torque input u drives both wheels. The state vector is:
-    </p>
-    <div class="eq">
-      x = [φ, φ̇, θ, θ̇]ᵀ
-      &nbsp;&nbsp;
-      u = τ (wheel torque, Nm)
-    </div>
-    <p style="font-size:0.88rem; color:var(--muted); text-align:center; margin-top:-6px;">
-      φ = wheel angle (rad) &nbsp;·&nbsp; θ = body tilt angle (rad)
-    </p>
-
-    <h3>Physical Parameters</h3>
-    <div class="param-grid">
-      <div class="param-card"><div class="sym">m₁</div><div class="val">0.173 kg</div><div class="lbl">Wheel mass</div></div>
-      <div class="param-card"><div class="sym">m₂</div><div class="val">0.653 kg</div><div class="lbl">Body mass</div></div>
-      <div class="param-card"><div class="sym">r</div><div class="val">0.0323 m</div><div class="lbl">Wheel radius</div></div>
-      <div class="param-card"><div class="sym">l</div><div class="val">0.043 m</div><div class="lbl">Axle-to-COM height</div></div>
-      <div class="param-card"><div class="sym">I₁</div><div class="val">0.0066 kg·m²</div><div class="lbl">Wheel inertia</div></div>
-      <div class="param-card"><div class="sym">I₂</div><div class="val">0.00084 kg·m²</div><div class="lbl">Body inertia</div></div>
-    </div>
-
-    <h3>Linearized State-Space (at θ = 0, u = 0)</h3>
-    <p>
-      The nonlinear equations of motion are linearized around the upright equilibrium.
-      The resulting continuous-time system (A, B) is:
-    </p>
-    <div class="matrix-block">
-      <strong>A matrix (linearized dynamics)</strong>
-      A = <br>
-      &nbsp;&nbsp;[&nbsp;0.0000 &nbsp; 1.0000 &nbsp; &nbsp;0.0000 &nbsp; 0.0000&nbsp;]<br>
-      &nbsp;&nbsp;[&nbsp;0.0000 &nbsp; 0.0000 &nbsp; −17.2834 &nbsp; 0.0000&nbsp;]<br>
-      &nbsp;&nbsp;[&nbsp;0.0000 &nbsp; 0.0000 &nbsp; &nbsp;0.0000 &nbsp; 1.0000&nbsp;]<br>
-      &nbsp;&nbsp;[&nbsp;0.0000 &nbsp; 0.0000 &nbsp; 142.1953 &nbsp; 0.0000&nbsp;]
-    </div>
-    <div class="matrix-block">
-      <strong>B matrix (control input)</strong>
-      B = [0.0000 &nbsp; 141.6431 &nbsp; 0.0000 &nbsp; −62.7448]ᵀ
-    </div>
-
-    <div class="box-result">
-      <p><strong>Controllability rank: 4/4 — system is fully controllable.</strong><br>
-      <strong>Observability rank: 4/4 — system is fully observable.</strong><br>
-      Both conditions are necessary for LQR design and Kalman filter synthesis to be well-posed.</p>
-    </div>
   </section>
 
-  <!-- 2. LQR -->
-  <section id="lqr">
-    <h2>2. LQR Stabilization</h2>
-
+  <section>
+    <h2>LQR balances it from a small tilt.</h2>
     <p>
-      The Linear Quadratic Regulator minimizes the infinite-horizon cost J = ∫(xᵀQx + uᵀRu)dt by
-      solving the continuous Algebraic Riccati Equation (CARE) for the optimal feedback gain K.
-      Cost matrices are designed using the "Bryson rule", each diagonal entry is 1/max_value²:
+      LQR finds the feedback gains that best trade off keeping the robot upright against using too much torque. I weighted
+      the body tilt heavily since that's what makes it fall. Starting tilted 0.1 rad, it settles back to upright within about 2 seconds.
     </p>
-
-    <div class="box-method">
-      <p><strong>State limits &amp; Q-weighting:</strong></p>
-      <ul>
-        <li>φ_max = 2π rad → Q[0,0] = 0.0253</li>
-        <li>φ̇_max = 10 rad/s → Q[1,1] = 0.0100</li>
-        <li>θ_max = 0.2 rad → Q[2,2] = <strong>25.0</strong> (body angle heavily penalized)</li>
-        <li>θ̇_max = 2.0 rad/s → Q[3,3] = 0.2500</li>
-        <li>R = [[0.04]] (control effort penalty)</li>
-      </ul>
-    </div>
-
-    <p>
-      The CARE solution yields the optimal feedback gain:
-    </p>
-    <div class="eq">
-      K = [−0.7958 &nbsp; −0.7138 &nbsp; <strong>−51.7877</strong> &nbsp; −4.6309]
-    </div>
-    <p style="font-size:0.88rem; color:var(--muted); text-align:center; margin-top:-6px;">
-      Large gain on θ (body angle) reflects the heavy Q-weighting needed to prevent tipping.
-    </p>
-
-    <div class="fig-grid">
+    <div class="figs two">
       <figure>
-        <img src="images/lqr_states.png" alt="LQR state trajectories">
-        <figcaption>
-          Figure 1: LQR closed-loop state response from initial body tilt θ₀ = 0.1 rad.
-          All four states converge to zero within 5 seconds. The heavy Q-weighting on body angle
-          (Q[2,2] = 25) prioritizes tilt correction over wheel position regulation.
-        </figcaption>
+        <img src="images/lqr_states.png" alt="LQR closed loop states">
+        <figcaption><strong>LQR from a 0.1 rad tilt:</strong> all four states settle back to zero.</figcaption>
       </figure>
       <figure>
-        <img src="images/lqr_animation.png" alt="LQR animated trajectory">
-        <figcaption>
-          Figure 2: Animated snapshot of LQR-stabilized TWIP trajectory. The robot recovers
-          from a small initial tilt without overshoot, demonstrating the regulator's
-          effectiveness in the linear operating regime.
-        </figcaption>
+        <img src="images/lqr_animation.png" alt="LQR stabilized pendulum snapshot">
+        <figcaption><strong>Snapshot of the LQR balanced pendulum.</strong></figcaption>
       </figure>
     </div>
   </section>
 
-  <!-- 3. KALMAN -->
-  <section id="kalman">
-    <h2>3. Kalman Filter State Estimation</h2>
-
+  <section>
+    <h2>A Kalman filter estimates the full state from noisy sensors.</h2>
     <p>
-      In practice, not all states are directly measurable and sensors introduce noise. A discrete-time
-      Kalman filter (dt = 0.01 s) is designed to estimate the full state from three noisy measurements:
-      wheel angle φ, body angle θ, and body angular velocity θ̇.
+      In real life you don't get perfect measurements. I measured the wheel angle, body tilt and body rate with added noise
+      and used a Kalman filter to estimate all four states. It tracks the wheel well. The tilt estimate is the noisiest, which
+      makes sense since I gave that measurement the most noise.
     </p>
-
-    <div class="box-method">
-      <p><strong>Noise covariances (diagonal):</strong></p>
-      <ul>
-        <li>Process noise Qf: [0.01, 0.01, 0.001, 0.001] — wheel states noisier than body</li>
-        <li>Measurement noise Rf: [0.1, 0.5, 0.01] — body angle most uncertain (σ² = 0.5), body angular velocity most precise</li>
-      </ul>
-    </div>
-
-    <p>
-      The discrete Kalman gain K_kf is computed from the steady-state discrete Riccati equation.
-      The filter is initialized with x̂₀ = [0, 0, 0, 0] while the true state starts at x₀ = [0, 0, 0.1, 0].
-    </p>
-
-    <div class="fig-grid">
+    <div class="figs two">
       <figure>
-        <img src="images/kalman_states.png" alt="Kalman filter state estimation">
-        <figcaption>
-          Figure 3: Kalman filter performance under additive process and measurement noise.
-          The estimated state (blue) converges to the true state (orange) within approximately
-          2 seconds, despite body angle measurement noise σ² = 0.5. Wheel velocity (unobserved
-          directly) is estimated accurately via the dynamic model.
-        </figcaption>
+        <img src="images/kalman_states.png" alt="Kalman filter estimated vs true states">
+        <figcaption><strong>Kalman filter:</strong> estimated (red) vs true (blue) states over 10 s.</figcaption>
       </figure>
       <figure>
-        <img src="images/kalman_animation.png" alt="Kalman animated">
-        <figcaption>
-          Figure 4: Animated comparison of true vs. estimated state trajectories under
-          measurement noise. The Kalman-estimated state (dotted) closely tracks the true
-          system evolution, enabling the LQR controller to operate on clean state estimates.
-        </figcaption>
+        <img src="images/kalman_animation.png" alt="True vs estimated pendulum">
+        <figcaption><strong>True (blue) vs estimated (red) pendulum</strong> at one moment in time.</figcaption>
       </figure>
     </div>
   </section>
 
-  <!-- 4. iLQR -->
-  <section id="ilqr">
-    <h2>4. iLQR Trajectory Optimization</h2>
-
-    <div class="box-problem">
-      <p><strong>Limitation of linear LQR:</strong> The LQR is derived from the linearized dynamics at
-      θ = 0. For large-angle maneuvers such as a "drag race" where the wheel must rotate a full 2π
-      radians, the linearization is invalid and the LQR controller fails. A nonlinear trajectory
-      optimizer is required.</p>
-    </div>
-
+  <section>
+    <h2>For big moves, LQR's straight line approximation breaks down, so I used iLQR.</h2>
     <p>
-      Iterative LQR (iLQR) extends LQR to nonlinear systems by repeatedly linearizing along the
-      current trajectory, solving a local LQR, and updating the trajectory via a forward pass with
-      a line search. Starting from a warm-start trajectory (linear policy clipped to ±1 Nm), iLQR
-      optimizes over a horizon of T = 300 steps (dt = 0.001 s).
+      LQR is designed around upright, so it struggles far from it. iLQR keeps re-linearizing along the trajectory and
+      improving it, which handles the full nonlinear dynamics. For a "drag race", the wheel had to spin one full turn (2π)
+      while keeping the body up. It got there in about 3 seconds with the tilt staying under 0.08 rad.
     </p>
-
-    <div class="box-method">
-      <p><strong>iLQR parameters:</strong></p>
-      <ul>
-        <li>Horizon T = 300 steps (0.3 s), dt = 0.001 s</li>
-        <li>Initial state x₀ = [0, 0, 0.8, 0] (large body tilt)</li>
-        <li>Control limits: u ∈ [−1, 1] Nm</li>
-        <li>Same Q, R as LQR; terminal cost Q_f = 100·Q</li>
-        <li>Regularization λ = 1×10⁻⁶; tolerance 1×10⁻⁴</li>
-        <li>Warm start: u_bar[k] = −K·x_bar[k], clipped to ±1</li>
-      </ul>
-    </div>
-
-    <h3>Convergence (Stabilization Task)</h3>
-    <table class="convergence-table">
-      <tr><th>Iteration</th><th>Cost J</th><th>ΔJ (cost decrease)</th></tr>
-      <tr><td>1</td><td>127,905.39</td><td>5.169</td></tr>
-      <tr><td>2</td><td>127,900.24</td><td>5.148</td></tr>
-      <tr><td>3</td><td>127,895.12</td><td>5.126</td></tr>
-      <tr><td>4</td><td>127,890.01</td><td>5.105</td></tr>
-      <tr><td>5</td><td>127,884.93</td><td>5.083</td></tr>
-      <tr><td>6</td><td>127,883.28</td><td>1.648</td></tr>
-      <tr><td class="best">7</td><td class="best">127,883.28</td><td class="best">0.000 — converged</td></tr>
-    </table>
-
-    <h3>Drag-Race: φ* = 2π Maneuver</h3>
-    <p>
-      For the drag-race task, the target state is x* = [2π, 0, 0, 0] one complete wheel revolution
-      while maintaining body upright. The horizon is extended to T = 10,000 steps (10 s). iLQR converges
-      in a single pass.
-    </p>
-
-    <div class="box-result">
-      <p><strong>Drag-race results:</strong></p>
-      <ul>
-        <li>Target: φ* = 6.2832 rad (2π)</li>
-        <li>Achieved: φ_final = 6.2832 rad error <strong>0.001 rad (0.06%)</strong></li>
-        <li>Time to target: <strong>~3.0 seconds</strong></li>
-        <li>Body tilt at completion: θ_final = −7.7×10⁻⁹ rad (effectively zero)</li>
-      </ul>
-    </div>
-
-    <div class="fig-grid">
+    <div class="figs three">
       <figure>
-        <img src="images/ilqr_compare.png" alt="iLQR convergence comparison">
-        <figcaption>
-          Figure 5: iLQR optimization convergence over 7 iterations. Each iteration reduces
-          the total cost by ~5 units through backward Riccati sweeps and forward trajectory
-          updates. The final trajectory exploits the nonlinear dynamics to achieve lower cost
-          than the warm-start linear policy.
-        </figcaption>
+        <img src="images/ilqr_compare.png" alt="LQR vs iLQR from a large tilt">
+        <figcaption><strong>LQR vs iLQR</strong> starting from a big 0.8 rad tilt, with torque limited to 1 Nm.</figcaption>
       </figure>
       <figure>
-        <img src="images/dragrace_states.png" alt="Drag-race state trajectories">
-        <figcaption>
-          Figure 6: iLQR drag-race maneuver state evolution. Wheel angle φ (blue) reaches
-          2π radians in approximately 3 seconds while body tilt θ (orange) remains bounded
-          near zero throughout. This large-angle maneuver is inaccessible to the linear LQR.
-        </figcaption>
-      </figure>
-    </div>
-
-    <figure>
-      <img src="images/dragrace_animation.png" alt="Drag-race animation">
-      <figcaption>
-        Figure 7: Animated drag-race trajectory snapshot. The TWIP accelerates forward (wheel
-        rotation φ → 2π) while the iLQR controller actively maintains body balance. The
-        sequence shows the nonlinear trajectory that linear control theory cannot plan.
-      </figcaption>
-    </figure>
-  </section>
-
-  <!-- 5. NN POLICY -->
-  <section id="nn">
-    <h2>5. Neural Network Policy</h2>
-
-    <div class="box-problem">
-      <p><strong>Motivation:</strong> Can a small neural network trained purely from data match
-      or exceed the performance of the analytically derived linear controller? This question is
-      central to learning-based control: replacing hand-derived controllers with learned policies
-      that may generalize better to nonlinear regimes.</p>
-    </div>
-
-    <h3>Architecture</h3>
-    <p>
-      A deliberately minimal network is used to isolate the learning signal from model capacity:
-    </p>
-    <div class="eq">
-      π_θ(x) : ℝ⁴ → ℝ &nbsp;&nbsp; [φ, φ̇, θ, θ̇] → τ
-    </div>
-    <ul>
-      <li>Input layer: 4 neurons (full state vector)</li>
-      <li>Hidden layer: 2 neurons, tanh activation</li>
-      <li>Output layer: 1 neuron (torque), linear activation</li>
-      <li><strong>Total parameters: 13</strong> (W₁: 4×2, b₁: 2, W₂: 1×2, b₂: 1)</li>
-    </ul>
-
-    <h3>Training Pipeline</h3>
-
-    <h4>Stage 1 — Behavioral Cloning (Imitation Learning)</h4>
-    <p>
-      1,000 random states are sampled uniformly from [−1, 1]⁴. The network is trained to mimic
-      the linear policy outputs u = −K·x using L-BFGS-B (max 2,000 iterations).
-    </p>
-    <ul>
-      <li>Initial MSE loss: 3,444.80</li>
-      <li>Post-imitation MSE: <strong>0.0002</strong> near-perfect behavioral cloning</li>
-      <li>Survival time after imitation only: 0.009 s (slight improvement over linear, not yet meaningful)</li>
-    </ul>
-
-    <h4>Stage 2 — Policy Optimization (Fine-Tuning)</h4>
-    <p>
-      The pre-trained network is fine-tuned by directly maximizing survival time using L-BFGS-B
-      with parameter bounds [−10, 10] (max 5,000 iterations). The cost function is negative
-      survival time, the optimizer drives the policy to keep the robot balanced as long as possible.
-    </p>
-
-    <h3>Performance Comparison</h3>
-    <div class="perf-highlight">
-      <div class="perf-card">
-        <div class="num">6</div>
-        <div class="unit">ms</div>
-        <div class="lbl">Linear policy K=[10,1,100,10]<br>hand-tuned gains</div>
-      </div>
-      <div class="perf-card">
-        <div class="num">9</div>
-        <div class="unit">ms</div>
-        <div class="lbl">NN after imitation only<br>(4→2→1, 13 params)</div>
-      </div>
-      <div class="perf-card best">
-        <div class="num">42</div>
-        <div class="unit">ms</div>
-        <div class="lbl">NN after fine-tuning<br>+7× vs. linear baseline</div>
-      </div>
-    </div>
-
-    <table>
-      <tr><th>Policy</th><th>Architecture</th><th>Training</th><th>Survival Time</th><th>vs. Baseline</th></tr>
-      <tr><td>Linear K=[10,1,100,10]</td><td>4 gains</td><td>hand-tuned</td><td>0.006 s</td><td>baseline</td></tr>
-      <tr><td>NN (imitation only)</td><td>4→2→1 (tanh)</td><td>behavioral cloning, MSE=0.0002</td><td>0.009 s</td><td>+1.5×</td></tr>
-      <tr><td class="best">NN (fine-tuned)</td><td class="best">4→2→1 (tanh)</td><td class="best">BC + policy opt.</td><td class="best">0.042 s</td><td class="best">+7.0×</td></tr>
-    </table>
-
-    <div class="fig-grid">
-      <figure>
-        <img src="images/part2a_states.png" alt="Linear policy state trajectories">
-        <figcaption>
-          Figure 8: State trajectories under hand-tuned linear gains K=[10,1,100,10]. The system
-          falls (|θ| &gt; 1.5 rad) at t = 0.006 s from an initial tilt of 0.1 rad — illustrating
-          that a non-optimal linear gain set fails immediately even from a small perturbation.
-        </figcaption>
+        <img src="images/dragrace_states.png" alt="iLQR drag race states">
+        <figcaption><strong>Drag race:</strong> wheel angle reaches 2π while the body stays near upright.</figcaption>
       </figure>
       <figure>
-        <img src="images/part2b_nn.png" alt="Neural network policy">
-        <figcaption>
-          Figure 9: Neural network policy (4→2→1, 13 parameters). Despite being smaller than
-          many single-layer networks, the fine-tuned NN achieves 42 ms balance time — 7× longer
-          than the linear baseline — by learning a nonlinear mapping from state to torque.
-        </figcaption>
-      </figure>
-    </div>
-
-    <h3>Surrogate Optimization (Part 1)</h3>
-    <p>
-      As a precursor to the TWIP experiments, the Rosenbrock (banana) function in 4D was used to
-      test NN surrogate-based optimization — a technique where a neural network approximates a
-      black-box objective before optimizing it. Key finding: with 100–1000 training samples,
-      surrogate accuracy is insufficient for reliable global optimization.
-    </p>
-
-    <div class="fig-grid">
-      <figure>
-        <img src="images/part1a_banana.png" alt="Rosenbrock function">
-        <figcaption>
-          Figure 11: 4D Rosenbrock function landscape (projected). The global minimum at
-          x* = [1,1,1,1] lies in a narrow curved valley, challenging for both neural
-          surrogates and gradient-free optimizers with limited samples.
-        </figcaption>
-      </figure>
-      <figure>
-        <img src="images/part1b_learned.png" alt="Learned surrogate optimization">
-        <figcaption>
-          Figure 12: NN surrogate optimization results with 100–1000 training samples.
-          Constrained (L-BFGS-B) and unconstrained (Nelder-Mead) minimizers of the learned
-          surrogate deviate significantly from the true global minimum, achieving true-function
-          values 4–1211× larger than f(x*) = 0.
-        </figcaption>
+        <img src="images/dragrace_animation.png" alt="Drag race snapshot">
+        <figcaption><strong>Snapshot of the drag race.</strong></figcaption>
       </figure>
     </div>
   </section>
 
-  <!-- 6. SUMMARY -->
-  <section id="results">
-    <h2>6. Summary &amp; Key Takeaways</h2>
-
-    <div class="box-result">
-      <p><strong>Control progression on TWIP:</strong></p>
-      <ul>
-        <li><strong>LQR:</strong> Optimal for small perturbations. Feedback gain K = [−0.796, −0.714, −51.79, −4.63] stabilizes from θ₀ = 0.1 rad in &lt;5 s.</li>
-        <li><strong>Kalman Filter:</strong> Recovers clean state from noisy observations. Estimated state converges within ~2 s.</li>
-        <li><strong>iLQR:</strong> Unlocks large-angle maneuvers. 7-iteration convergence, drag-race error 0.001 rad (0.06%).</li>
-        <li><strong>NN Policy:</strong> 13-parameter network achieves 7× survival improvement through imitation + direct policy optimization.</li>
-      </ul>
-    </div>
+  <section>
+    <h2>A small neural network policy can balance it too.</h2>
     <p>
-      The TWIP demonstrates the value of iterative model improvement: linear tools (LQR, Kalman) are
-      precise and efficient in the small-angle regime, while nonlinear tools (iLQR, NN) unlock the
-      full operating envelope. Imitation learning provides a strong initialization that dramatically
-      accelerates policy optimization, a pattern central to modern robot learning systems.
+      Last, I swapped the controller for a small neural network that maps the state straight to a torque. It was first trained
+      to copy a linear controller, then fine-tuned to keep the robot balanced as long as possible. With 4 hidden neurons it kept
+      the pendulum up for the full 6 second run, and its body tilt stayed within about ±0.15 rad, compared to about ±0.22 rad
+      for hand-tuned linear gains under the same conditions.
     </p>
+    <div class="figs two">
+      <figure>
+        <img src="images/part2a_states.png" alt="Hand tuned linear gains from 0.1 rad">
+        <figcaption><strong>Hand-tuned linear gains</strong> K = [10, 1, 100, 10] balancing from a 0.1 rad tilt.</figcaption>
+      </figure>
+      <figure>
+        <img src="images/part2b_nn.png" alt="Neural network policy vs linear gains">
+        <figcaption><strong>Neural network policy (red) vs linear gains (blue)</strong> over 6 s.</figcaption>
+      </figure>
+    </div>
   </section>
 
-  <!-- REFERENCES -->
-  <section id="references" class="references">
+  <section class="refs">
     <h2>References</h2>
     <ol>
-      <li>
-        Anderson, B. D. O., &amp; Moore, J. B. (1990).
-        <em>Optimal Control: Linear Quadratic Methods.</em> Prentice-Hall.
-      </li>
-      <li>
-        Kalman, R. E. (1960).
-        <em>A new approach to linear filtering and prediction problems.</em>
-        Journal of Basic Engineering, 82(1), 35–45.
-      </li>
-      <li>
-        Li, W., &amp; Todorov, E. (2004).
-        <em>Iterative linear quadratic regulator design for nonlinear biological movement systems.</em>
-        ICINCO 2004.
-      </li>
-      <li>
-        Ross, S., Gordon, G., &amp; Bagnell, D. (2011).
-        <em>A reduction of imitation learning and structured prediction to no-regret online learning.</em>
-        AISTATS 2011.
-      </li>
+      <li>Anderson, B. D. O., &amp; Moore, J. B. (1990). <em>Optimal Control: Linear Quadratic Methods</em>. Prentice-Hall.</li>
+      <li>Kalman, R. E. (1960). A new approach to linear filtering and prediction problems. <em>Journal of Basic Engineering</em>, 82(1), 35–45.</li>
+      <li>Li, W., &amp; Todorov, E. (2004). Iterative linear quadratic regulator design for nonlinear biological movement systems. <em>ICINCO 2004</em>.</li>
     </ol>
   </section>
 
-</div><!-- /container -->
+</div>
 
 <footer>
   <p>&copy; 2026 Fawaz Mallick. All rights reserved.</p>
   <p style="margin-top:10px;"><a href="mailto:fawazmallick9@gmail.com">fawazmallick9@gmail.com</a> · <a href="https://www.linkedin.com/in/fawaz-mallick/" target="_blank">LinkedIn</a></p>
 </footer>
-
-<script>
-  const secLinks = document.querySelectorAll('.section-nav a');
-  const sections = document.querySelectorAll('section[id]');
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        secLinks.forEach(l => l.classList.remove('active'));
-        const a = document.querySelector(`.section-nav a[href="#${e.target.id}"]`);
-        if (a) { a.classList.add('active'); a.scrollIntoView({inline:'center', behavior:'smooth'}); }
-      }
-    });
-  }, { rootMargin: '-20% 0px -70% 0px' });
-  sections.forEach(s => observer.observe(s));
-</script>
 
 </body>
 </html>

@@ -9,9 +9,9 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --accent: #0077a8;
-      --accent-dim: #005f86;
-      --accent-light: rgba(0,119,168,0.15);
+      --accent: #111111;
+      --accent-dim: #444444;
+      --accent-light: rgba(0,0,0,0.15);
       --bg: #f5efe0;
       --card: #fbf8ef;
       --card-hover: #efe7d3;
@@ -77,7 +77,7 @@
       justify-content: center;
       text-align: center;
       padding: 80px 20px 80px;
-      background: linear-gradient(135deg, rgba(0,119,168,0.05) 0%, rgba(0,119,168,0.03) 50%, rgba(245,239,224,0) 100%),
+      background: linear-gradient(135deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.03) 50%, rgba(245,239,224,0) 100%),
                   radial-gradient(ellipse at 50% 0%, #efe6cf 0%, var(--bg) 60%);
       position: relative;
       overflow: hidden;
@@ -88,7 +88,7 @@
       position: absolute;
       width: 600px;
       height: 600px;
-      background: radial-gradient(circle, rgba(0,119,168,0.08) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(0,0,0,0.08) 0%, transparent 70%);
       border-radius: 50%;
       top: -200px;
       right: -200px;
@@ -107,13 +107,13 @@
       border: 3px solid var(--accent);
       object-fit: cover;
       margin-bottom: 32px;
-      box-shadow: 0 0 50px rgba(0,119,168,0.3), inset 0 0 30px rgba(0,119,168,0.1);
+      box-shadow: 0 6px 24px rgba(0,0,0,0.12);
       animation: pulse-glow 3s ease-in-out infinite;
     }
 
     @keyframes pulse-glow {
-      0%, 100% { box-shadow: 0 0 50px rgba(0,119,168,0.3), inset 0 0 30px rgba(0,119,168,0.1); }
-      50% { box-shadow: 0 0 70px rgba(0,119,168,0.5), inset 0 0 40px rgba(0,119,168,0.15); }
+      0%, 100% { box-shadow: 0 6px 24px rgba(0,0,0,0.12); }
+      50% { box-shadow: 0 8px 30px rgba(0,0,0,0.16); }
     }
 
     #hero h1 {
@@ -199,8 +199,8 @@
       font-size: 0.72rem;
       font-weight: 600;
       color: var(--accent);
-      background: rgba(0,119,168,0.1);
-      border: 1px solid rgba(0,119,168,0.25);
+      background: rgba(0,0,0,0.1);
+      border: 1px solid rgba(0,0,0,0.25);
       border-radius: 4px;
       padding: 2px 8px;
       letter-spacing: 0.08em;
@@ -234,7 +234,7 @@
       background: var(--card-hover);
       transform: translateY(-4px);
       border-color: var(--accent-dim);
-      box-shadow: 0 8px 24px rgba(0,119,168,0.12);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
     }
     .card .card-tag {
       font-size: 0.68rem;
@@ -267,33 +267,25 @@
     /* ── IMAGE CARDS (3 columns) ── */
     section.wide { max-width: 1100px; }
     .card-grid.three { grid-template-columns: repeat(3, 1fr); }
+    .card-grid.three .card { display: flex; flex-direction: column; }
+    .card-grid.three .card .card-arrow { margin-top: auto; padding-top: 14px; }
     .card .card-img {
       display: block;
       width: calc(100% + 40px);
-      height: 190px;
+      aspect-ratio: 3 / 2;
+      height: auto;
       margin: -22px -20px 18px;
-      object-fit: cover;
-      object-position: center top;
+      padding: 8px;
+      object-fit: contain;
       border-radius: 10px 10px 0 0;
       border-bottom: 1px solid var(--border);
       background: #fff;
     }
-    .card .card-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 16px;
-    }
-    .card .card-links a {
-      font-size: 0.8rem;
-      color: var(--accent);
-      text-decoration: none;
-      border: 1px solid rgba(0,119,168,0.25);
-      border-radius: 4px;
-      padding: 4px 10px;
-    }
-    .card .card-links a:hover { background: var(--accent-light); }
-    div.card:hover { transform: none; }
+    .card .card-img.dark { background: #000; }
+
+    /* ── ONGOING PROJECTS ── */
+    .card.ongoing { cursor: default; }
+    .card.ongoing:hover { transform: none; box-shadow: none; border-color: var(--border); background: var(--card); }
 
     /* ── COURSEWORK LIST ── */
     .course-list {
@@ -347,6 +339,7 @@
   <a href="#story">Story</a>
   <a href="#research">Research</a>
   <a href="#projects">Projects</a>
+  <a href="#ongoing">Ongoing</a>
   <a href="#professional">Professional</a>
   <a href="#coursework">Technical</a>
   <a href="#publications">Publications</a>
@@ -382,7 +375,7 @@
   <div class="card-grid three">
 
     <a class="card" href="6dof.html">
-      <img class="card-img" src="images/ResultsImage%20(1).png" alt="Femur fracture realignment on the Robossis surgical robot">
+      <img class="card-img dark" src="images/ResultsImage%20(1).png" alt="Femur fracture realignment on the Robossis surgical robot">
       <div class="card-tag">Surgical Robotics</div>
       <h3>Can robots be useful tools during surgery?</h3>
       <p>Femur fractures are a significant problem resulting from high-impact collisions such as car crashes. The femur being the strongest bone, surrounded by dense muscles, means surgeons have a hard time realigning the bone manually during fracture realignment surgery. This work explores algorithm development to be deployed on an already developed fracture alignment robotic system.</p>
@@ -390,7 +383,7 @@
     </a>
 
     <a class="card" href="exoskeleton.html">
-      <img class="card-img" src="images/Hip%20Brace%20(1).png" alt="Instrumented hip brace">
+      <img class="card-img" src="images/card_hip_brace.png" alt="OpenSim model with the instrumented hip brace">
       <div class="card-tag">Wearable Robotics · Published</div>
       <h3>Exoskeletons make good walking aids?... Maybe</h3>
       <p>Falls are a leading cause of injury amongst the elderly and those with gait impairments. This work explored whether a sufficient hardware system can be developed to measure biomechanical interactions between a human and an exoskeleton device, while also testing those cues against a customized simulation model.</p>
@@ -398,7 +391,7 @@
     </a>
 
     <a class="card" href="prosthetics.html">
-      <img class="card-img" src="images/intent_prediction_landing.png" alt="Actual vs. predicted foot landing paths">
+      <img class="card-img" src="images/intent_heatmap.png" alt="Heatmaps of the predicted landing spot sharpening through the swing">
       <div class="card-tag">Current Research · Intent Prediction</div>
       <h3>I know your next move.</h3>
       <p>Currently working on methods for real-time prediction of human biomechanical intent. The idea is to have accurate predictions which can be integrated with a prosthetic leg to make user-leg coordination natural and intuitive.</p>
@@ -412,7 +405,7 @@
 <section id="projects" class="wide">
   <h2 class="section-title">Projects <span class="tag">Engineering Work</span></h2>
   <p style="margin-bottom: 32px; color: var(--text-dim);">
-    Independent engineering projects applying control theory and machine learning to real systems.
+    Projects from my coursework, applying control theory and machine learning.
   </p>
 
   <div class="card-grid three">
@@ -426,12 +419,39 @@
     </a>
 
     <a class="card" href="dynamics_skills.html">
-      <img class="card-img" src="images/kalman_animation.png" alt="Two-wheeled inverted pendulum animation">
+      <img class="card-img" src="images/card_kalman.png" alt="True vs estimated inverted pendulum">
       <div class="card-tag">Controls · LQR · Neural Network</div>
       <h3>Controls Project: Two-Wheeled Inverted Pendulum, LQR vs. NN</h3>
       <p>Trying different control strategies to control a simulated inverted pendulum.</p>
       <span class="card-arrow">Read more →</span>
     </a>
+
+  </div>
+</section>
+
+<!-- ONGOING PROJECTS -->
+<section id="ongoing" class="wide">
+  <h2 class="section-title">Ongoing Projects <span class="tag">In Progress</span></h2>
+
+  <div class="card-grid three">
+
+    <div class="card ongoing">
+      <div class="card-tag">Rocketry · Team Competition</div>
+      <h3>Carnegie Mellon Rocket Command</h3>
+      <p>A 9-month engineering design competition that challenges students to build, test, and launch high-powered rockets carrying scientific payloads.</p>
+    </div>
+
+    <div class="card ongoing">
+      <div class="card-tag">Controls · Multi-Robot</div>
+      <h3>Drone Robot Coordination Control</h3>
+      <p>This controls project focuses on using a joint drone system to pick up and drop off objects on a self-balancing robot.</p>
+    </div>
+
+    <div class="card ongoing">
+      <div class="card-tag">Deep Learning · Drones</div>
+      <h3>AI Based Drone Trajectory Planning</h3>
+      <p>Using a deep learning architecture to guide a drone through 3D space in real life.</p>
+    </div>
 
   </div>
 </section>
@@ -458,15 +478,12 @@
   <h2 class="section-title">Technical Stuff</h2>
 
   <div class="card-grid" style="grid-template-columns: 1fr;">
-    <div class="card">
+    <a class="card" href="technical.html">
+      <div class="card-tag">Controls · ML &amp; AI · Regulatory &amp; Biomedical · Sensors &amp; DSP · ROS2</div>
       <h3>Technical Stuff</h3>
       <p>Things I have done and learnt through my journey. The nitty gritty that takes time and effort.</p>
-      <div class="card-links">
-        <a href="ml_skills.html">Machine Learning &amp; Deep Learning →</a>
-        <a href="controls.html">Robotics &amp; Controls →</a>
-        <a href="fundamentals.html">Regulatory &amp; Medical Device →</a>
-      </div>
-    </div>
+      <span class="card-arrow">Take a look →</span>
+    </a>
   </div>
 </section>
 

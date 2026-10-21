@@ -264,6 +264,37 @@
       letter-spacing: 0.05em;
     }
 
+    /* ── IMAGE CARDS (3 columns) ── */
+    section.wide { max-width: 1100px; }
+    .card-grid.three { grid-template-columns: repeat(3, 1fr); }
+    .card .card-img {
+      display: block;
+      width: calc(100% + 40px);
+      height: 190px;
+      margin: -22px -20px 18px;
+      object-fit: cover;
+      object-position: center top;
+      border-radius: 10px 10px 0 0;
+      border-bottom: 1px solid var(--border);
+      background: #fff;
+    }
+    .card .card-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .card .card-links a {
+      font-size: 0.8rem;
+      color: var(--accent);
+      text-decoration: none;
+      border: 1px solid rgba(0,195,255,0.25);
+      border-radius: 4px;
+      padding: 4px 10px;
+    }
+    .card .card-links a:hover { background: var(--accent-light); }
+    div.card:hover { transform: none; }
+
     /* ── COURSEWORK LIST ── */
     .course-list {
       display: grid;
@@ -300,9 +331,12 @@
     footer a:hover { text-decoration: underline; }
 
     /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .card-grid.three { grid-template-columns: repeat(2, 1fr); }
+    }
     @media (max-width: 600px) {
       nav a { padding: 0 12px; font-size: 0.78rem; }
-      .card-grid { grid-template-columns: 1fr; }
+      .card-grid, .card-grid.three { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -314,7 +348,7 @@
   <a href="#research">Research</a>
   <a href="#projects">Projects</a>
   <a href="#professional">Professional</a>
-  <a href="#coursework">Coursework</a>
+  <a href="#coursework">Technical</a>
   <a href="#publications">Publications</a>
 </nav>
 
@@ -329,74 +363,74 @@
 
 <!-- STORY SECTION -->
 <section id="story">
-  <h2 class="section-title">Background</h2>
-   <p>
-    Hi, I'm Fawaz entering the final year of my Master's in Mechanical Engineering at CMU, where I also work part-time as an <a href="https://www.cmu.edu/housing/residential-experience/housefellows.html">Assistant Housefellow</a>, managing a residential community and student staff.
-My background is in Biomedical Engineering, and my experiences since then have taken me across robotics, AI and ML research, medical device development, and residential life. On the technical side I'm most drawn to robotics and control systems, and as I move into my final year I'm deliberately pushing toward hardware and embedded systems getting my hands on physical things rather than staying behind a screen.
-Outside of engineering I play chess, read broadly across philosophy, academia, and personal growth, and have a habit of working my way through every interesting café I can find. 
-  <p style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 0.95rem;">
-    <strong>Tools I work with:</strong> MATLAB , Python (PyTorch, NumPy, Pandas, Scikit-learn), OpenSim, SolidWorks. Coursework spans robot dynamics, control theory, optimal control &amp; RL, machine learning, deep learning, and medical device regulation.
+  <h2 class="section-title">Who Am I</h2>
+  <p>
+    I moved to Dubai, U.A.E. during my first year of life, where I grew up and spent most of my time. Admittedly, although my dreams were big, circumstances led me to believe I lacked the competence required to pursue engineering or science. At 17, after much effort from my mom and uncle, and with generous funding from my father, I came to the U.S. to study. My family hoped the change would inspire something in me, while I was skeptical. But as fate would have it, coming to the U.S. and its education system awoke in me a level of motivation and confidence I never thought I would achieve. I went from a student who barely passed his high school exams to someone who graduated in biomedical engineering while maintaining part-time jobs and other obligations.
+  </p>
+  <p>
+    Post graduation, I was left with a hunger for more, which brought me to pursue my master's at Carnegie Mellon: my dream school, with a brand for churning out competent and skilled experts in any field. As I look towards completing my master's, I envision myself living a life of abundance, where my career goals to be a scientist and engineer are fulfilled, my dream of having a Ferrari has been realized, and where my family and friends surround me with love and happiness.
+  </p>
+  <p>
+    In the meantime, I spend my time building up the personality and skills I see myself having. During my leisure time I play chess, go on walks, or take part in extracurricular clubs on campus to stay social and active. This portfolio, far from comprehensive, shows you a small glimpse of my professional and academic life so far.
   </p>
 </section>
 
 <!-- RESEARCH -->
-<section id="research">
+<section id="research" class="wide">
   <h2 class="section-title">Research Projects</h2>
 
-  <div class="card-grid">
+  <div class="card-grid three">
 
     <a class="card" href="6dof.html">
-      <div class="card-tag">FIRST RESEARCH · Surgical Robotics</div>
-      <h3>6-DOF Surgical Robot</h3>
-      <p><strong>My First Research Project.</strong> Sophomore year. Designed a modified A* pathfinding algorithm for surgical path planning in 6D configuration space on the Robossis platform. This is where the journey started.</p>
-      <span class="card-arrow">Read the story →</span>
+      <img class="card-img" src="images/ResultsImage%20(1).png" alt="Femur fracture realignment on the Robossis surgical robot">
+      <div class="card-tag">Surgical Robotics</div>
+      <h3>Can robots be useful tools during surgery?</h3>
+      <p>Femur fractures are a significant problem resulting from high-impact collisions such as car crashes. The femur being the strongest bone, surrounded by dense muscles, means surgeons have a hard time realigning the bone manually during fracture realignment surgery. This work explores algorithm development to be deployed on an already developed fracture alignment robotic system.</p>
+      <span class="card-arrow">Read more →</span>
     </a>
 
     <a class="card" href="exoskeleton.html">
+      <img class="card-img" src="images/Hip%20Brace%20(1).png" alt="Instrumented hip brace">
       <div class="card-tag">Wearable Robotics · Published</div>
-      <h3>Wearable Exoskeleton</h3>
-      <p><strong>Theory to Publication.</strong> Built a wearable exoskeleton for gait stabilization, validated it in OpenSim biomechanics simulation, published in IFAC PapersOnLine 2025. Shows the full research cycle.</p>
-      <span class="card-arrow">Explore the design →</span>
+      <h3>Exoskeletons make good walking aids?... Maybe</h3>
+      <p>Falls are a leading cause of injury amongst the elderly and those with gait impairments. This work explored whether a sufficient hardware system can be developed to measure biomechanical interactions between a human and an exoskeleton device, while also testing those cues against a customized simulation model.</p>
+      <span class="card-arrow">Read more →</span>
     </a>
 
     <a class="card" href="prosthetics.html">
-      <div class="card-tag">CURRENT FOCUS · Intent Prediction</div>
-      <h3>Intent Prediction for Prosthetic Leg Application on Amputee</h3>
-      <p><strong>Current RA Research.</strong> Bayesian modeling to predict foot placement intent from IMU data. Why? Because 2M+ amputees deserve prosthetics that anticipate, not just react. Future: multi-modal sensing.</p>
-      <span class="card-arrow">Dive into the problem →</span>
+      <img class="card-img" src="images/intent_prediction_landing.png" alt="Actual vs. predicted foot landing paths">
+      <div class="card-tag">Current Research · Intent Prediction</div>
+      <h3>I know your next move.</h3>
+      <p>Currently working on methods for real-time prediction of human biomechanical intent. The idea is to have accurate predictions which can be integrated with a prosthetic leg to make user-leg coordination natural and intuitive.</p>
+      <span class="card-arrow">Read more →</span>
     </a>
 
   </div>
 </section>
 
 <!-- PROJECTS -->
-<section id="projects">
+<section id="projects" class="wide">
   <h2 class="section-title">Projects <span class="tag">Engineering Work</span></h2>
   <p style="margin-bottom: 32px; color: var(--text-dim);">
     Independent engineering projects applying control theory and machine learning to real systems.
   </p>
 
-  <div class="card-grid">
+  <div class="card-grid three">
 
     <a class="card" href="rul.html">
-      <div class="card-tag">Deep Learning · PyTorch · C-MAPSS</div>
-      <h3>AI for Remaining Useful Life Estimation</h3>
-      <p>Compared GRU baseline (RMSE 13.17) against Embed-RUL autoencoder on NASA turbofan engine data across 4 operating conditions. Asymmetric loss, PCA preprocessing, t-SNE embedding analysis.</p>
-      <span class="card-arrow">Read the paper →</span>
+      <img class="card-img" src="images/fig_tsne.png" alt="t-SNE of learned engine embeddings">
+      <div class="card-tag">Deep Learning · PyTorch</div>
+      <h3>AI can tell you when you should expect to buy a new machine.</h3>
+      <p>Unplanned machine failures are costly. This project compares two deep learning approaches on NASA's turbofan engine dataset to see how well they can estimate how much useful life a jet engine has left.</p>
+      <span class="card-arrow">Read more →</span>
     </a>
 
     <a class="card" href="dynamics_skills.html">
-      <div class="card-tag">LQR · iLQR · Neural Network Policy</div>
-      <h3>TWIP Optimal Control</h3>
-      <p>Two-wheeled inverted pendulum as a testbed: LQR stabilization → Kalman filtering → iLQR trajectory optimization → imitation-learned NN policy achieving 7× longer balance than the linear baseline.</p>
-      <span class="card-arrow">Read the paper →</span>
-    </a>
-
-    <a class="card" href="prosthetics.html">
-      <div class="card-tag">Bayesian Inference · IMU · Real-Time</div>
-      <h3>Real-Time Foot Placement Prediction</h3>
-      <p>Sequential Bayesian grid predictor extended with ZUPT-INS inter-step features and a 9th-observation landing update. 108 over-ground steps, RMSE = 29.3 cm, 376 ms lead time, &lt;10 ms per step.</p>
-      <span class="card-arrow">Read the paper →</span>
+      <img class="card-img" src="images/kalman_animation.png" alt="Two-wheeled inverted pendulum animation">
+      <div class="card-tag">Controls · LQR · Neural Network</div>
+      <h3>Controls Project: Two-Wheeled Inverted Pendulum, LQR vs. NN</h3>
+      <p>Trying different control strategies to control a simulated inverted pendulum.</p>
+      <span class="card-arrow">Read more →</span>
     </a>
 
   </div>
@@ -413,7 +447,7 @@ Outside of engineering I play chess, read broadly across philosophy, academia, a
     <a class="card" href="professional.html">
       <div class="card-tag">CMU · Rowan University · 2023–Present</div>
       <h3>Leadership &amp; Professional Experience</h3>
-      <p>Graduate Research Assistant (PI: Dr. Hartmut Geyer) · Assistant Housefellow · Research Associate at Robossis and Rowan · University Fellow · Peer Tutor · Community Assistant. Scroll through the full timeline.</p>
+      <p>The different academic and para-professional experiences I have cultivated throughout the years.</p>
       <span class="card-arrow">View full timeline →</span>
     </a>
   </div>
@@ -421,34 +455,18 @@ Outside of engineering I play chess, read broadly across philosophy, academia, a
 
 <!-- COURSE EXPERIENCE -->
 <section id="coursework">
-  <h2 class="section-title">Course Experience <span class="tag">Coursework</span></h2>
-  <p style="margin-bottom: 32px; color: var(--text-dim);">
-    Honorable mentions from coursework that built the technical foundation: Robot Dynamics &amp; Analysis, Modern Control Theory, Optimal Control &amp; RL, Intro to Deep Learning, and Medical Device Regulation.
-  </p>
+  <h2 class="section-title">Technical Stuff</h2>
 
-  <div class="card-grid">
-
-    <a class="card" href="ml_skills.html">
-      <div class="card-tag">Two Courses · Consecutive Semesters</div>
-      <h3>Machine Learning &amp; Deep Learning</h3>
-      <p>Machine Learning &amp; AI for Engineers (classical ML → GRU/LSTM → RUL prediction on NASA C-MAPSS) + Intro to Deep Learning (transformer for Burgers PDE, MAE/ViT for advection, β-VAE for airfoils).</p>
-      <span class="card-arrow">Explore coursework →</span>
-    </a>
-
-    <a class="card" href="controls.html">
-      <div class="card-tag">Robotics &amp; Controls</div>
-      <h3>Robot Dynamics, Control Theory &amp; Optimal Control</h3>
-      <p>RDA (screw theory, Jacobians, SE(3)) → MCT (PID, Kalman filters, EKF SLAM, Webots P1–P5) → OCRL (iLQR, trajectory optimization, NN policies). The progression from kinematics to learning-based control.</p>
-      <span class="card-arrow">Explore coursework →</span>
-    </a>
-
-    <a class="card" href="fundamentals.html">
-      <div class="card-tag">Regulatory &amp; Medical Device</div>
-      <h3>FEA, Biomechanics &amp; Device Regulation</h3>
-      <p>2D FEA solver for implant stress analysis, ISO 7206 fatigue standards, FDA 510(k) regulatory bootcamp (Class III hip implant), toxicological risk assessment, and gait biomechanics fundamentals.</p>
-      <span class="card-arrow">Explore coursework →</span>
-    </a>
-
+  <div class="card-grid" style="grid-template-columns: 1fr;">
+    <div class="card">
+      <h3>Technical Stuff</h3>
+      <p>Things I have done and learnt through my journey. The nitty gritty that takes time and effort.</p>
+      <div class="card-links">
+        <a href="ml_skills.html">Machine Learning &amp; Deep Learning →</a>
+        <a href="controls.html">Robotics &amp; Controls →</a>
+        <a href="fundamentals.html">Regulatory &amp; Medical Device →</a>
+      </div>
+    </div>
   </div>
 </section>
 

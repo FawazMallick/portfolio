@@ -124,12 +124,31 @@
       margin-bottom: 8px;
     }
 
-    #hero .sub {
-      margin-top: 12px;
-      font-size: 1.2rem;
+    #hero .edu {
+      margin-top: 14px;
+      width: 100%;
+      max-width: 720px;
+    }
+    #hero .edu-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 2px 20px;
+      padding: 6px 0;
+      text-align: left;
+    }
+    #hero .edu-row + .edu-row { border-top: 1px solid var(--border); }
+    #hero .edu-row .degree {
+      font-size: 1.05rem;
       font-weight: 500;
       color: var(--accent);
-      letter-spacing: 0.03em;
+      letter-spacing: 0.01em;
+    }
+    #hero .edu-row .dates {
+      font-size: 0.92rem;
+      color: var(--muted);
+      white-space: nowrap;
     }
 
     #hero .tagline {
@@ -353,8 +372,17 @@
 <div id="hero">
   <img src="images/profile.png" alt="Fawaz Mallick">
   <h1>Fawaz Mallick</h1>
-  <p class="sub">MS Mechanical Engineering · Carnegie Mellon University</p>
-  <p class="tagline">Graduate researcher at CMU building systems that work alongside people, from real-time prosthetic intent prediction to wearable exoskeleton sensing. Previously BS Biomedical Engineering, Rowan University.</p>
+  <div class="edu">
+    <div class="edu-row">
+      <span class="degree">MS Mechanical Engineering · Carnegie Mellon University</span>
+      <span class="dates">2025 – May 2027 (Expected)</span>
+    </div>
+    <div class="edu-row">
+      <span class="degree">BS Biomedical Engineering · Rowan University</span>
+      <span class="dates">Sept 2021 – May 2025</span>
+    </div>
+  </div>
+  <p class="tagline">Graduate researcher at CMU building systems that work alongside people, from real-time prosthetic intent prediction to wearable exoskeleton sensing.</p>
   <div class="scroll-hint">scroll</div>
 </div>
 
